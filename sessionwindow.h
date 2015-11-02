@@ -1,5 +1,8 @@
 #ifndef SESSIONWINDOW_H
 #define SESSIONWINDOW_H
+
+//#include <QMainWindow>
+
 #include <QWidget>
 #include <QListWidget>
 
@@ -22,12 +25,7 @@ private:
     QGroupBox *createList();
     QGroupBox *createDataInput();
     QGroupBox *createStream();
+    QWidget *parentPointer;
 
 
 };
-
-
-
-
-#endif // SESSIONWINDOW_H
-
