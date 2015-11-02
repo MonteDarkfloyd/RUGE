@@ -1,7 +1,7 @@
-
 #include <QtWidgets>
-
 #include "sessionwindow.h"
+//#include "ui_sessionwindow.h"
+
 
 
 void Window::clearGroup(){
@@ -40,7 +40,8 @@ QListIterator<QObject *> i(atemp->children());
 while (i.hasNext())
 {
     QRadioButton* b = qobject_cast<QRadioButton*>( i.next() );
-    if (b > 0 && b->isChecked()) {
+    if (b > 0 && b->isChecked())
+    {
      sum = sum + 1;
     }
 }
@@ -55,7 +56,7 @@ btemp->setVisible(1);
 void Window::thirdVisible(){
 QObjectList temp = this->children();
 QGroupBox *btemp = (QGroupBox*)temp.at(4);
-btemp->setVisible(1);
+btemp->setVisible(0);
 
 }
 
@@ -63,25 +64,30 @@ btemp->setVisible(1);
 
 
 Window::Window(QWidget *parent)
-    : QWidget(parent)
 {
+    parentPointer = parent;
     QHBoxLayout *hor1 = new QHBoxLayout(this);
+
     QVBoxLayout *ver1 = new QVBoxLayout(this);
     QVBoxLayout *ver2 = new QVBoxLayout(this);
 
     ver1->addWidget(createList());
 
 
+    QHBoxLayout *hor2 = new QHBoxLayout(this);
+
+
 
     QGroupBox *protocol = createProtocolSelection();
-    protocol->setAccessibleName(QString("protocol"));
-    protocol->setAccessibleDescription(QString("protocol"));
+   // protocol->setAccessibleName(QString("protocol"));
+   // protocol->setAccessibleDescription(QString("protocol"));
     ver2->addWidget(protocol);
     QGroupBox *data = createDataInput();
     data->setAccessibleName("data");
     ver2->addWidget(data);
     QGroupBox *stream = this->createStream();
     stream->setAccessibleName("stream");
+
     ver2->addWidget(stream);
     ver2->addSpacerItem(new QSpacerItem(0,0,QSizePolicy::Expanding, QSizePolicy::Expanding));
 
@@ -90,6 +96,7 @@ Window::Window(QWidget *parent)
 
     hor1->addLayout(ver1);
     hor1->addLayout(ver2);
+
 
 
     setLayout(hor1);
@@ -108,8 +115,13 @@ Window::Window(QWidget *parent)
 
 QGroupBox *Window::createProtocolSelection()
 {
+    QVBoxLayout *newmain = new QVBoxLayout;
     QHBoxLayout *main = new QHBoxLayout;
-
+    QHBoxLayout *hor2 = new QHBoxLayout;
+    QLabel *nameLabel = new QLabel("Session Name :");
+    QLineEdit *sessionName = new QLineEdit("Enter new session name");
+    hor2->addWidget(nameLabel);
+    hor2->addWidget(sessionName);
     QVBoxLayout *eth = new QVBoxLayout;
     QVBoxLayout *ip = new QVBoxLayout;
     QVBoxLayout *protocols = new QVBoxLayout;
@@ -165,10 +177,16 @@ QGroupBox *Window::createProtocolSelection()
     protocols->addStretch();
 
 
-    QGroupBox *protocolBox = new QGroupBox(tr("Protocol Selection"));
-    protocolBox->setLayout(main);
+    QGroupBox *protocolBox = new QGroupBox(tr("Session"));
+
     protocolBox->setVisible(0);
     protocolBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+
+    newmain->addLayout(hor2);
+    newmain->addSpacerItem(new QSpacerItem(0,20));
+    newmain->addLayout(main);
+
+    protocolBox->setLayout(newmain);
     return protocolBox;
 
 
@@ -188,6 +206,9 @@ QGroupBox *Window::createList()
     list->addWidget(newSession);
     group->addButton(newSession);
     connect(newSession, newSession->clicked, this , &Window::firstVisible);
+    list->addSpacerItem(new QSpacerItem(0,20,QSizePolicy::Fixed, QSizePolicy::Fixed));
+
+    list->addWidget(new QLabel("Predefined Sessions :"),0,Qt::AlignHCenter);
 
 
     QPushButton *tcpFlood = new QPushButton("TCP Flood attack");
@@ -304,7 +325,8 @@ QGroupBox *Window::createDataInput()
     h2->addWidget(clearButton,0,Qt::AlignLeft);
     connect( clearButton, clearButton->clicked , this, this->clearGroup);
     h2->addWidget(confirmButton,0,Qt::AlignRight);
-    connect( confirmButton, confirmButton->clicked , this, this->thirdVisible);
+    connect( confirmButton, confirmButton->clicked , this, this->close );
+    connect( confirmButton, confirmButton->clicked ,parentPointer, parentPointer->hide );
     v4->addLayout(h2);
     groupBox->setLayout(v4);
     groupBox->setVisible(0);
@@ -320,6 +342,17 @@ QGroupBox *Window::createStream()
 
        groupBox->setVisible(0);
        return groupBox;
-
-
 }
+
+/*SessionWindow::SessionWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::SessionWindow)
+{
+    ui->setupUi(this);
+}
+
+SessionWindow::~SessionWindow()
+{
+    delete ui;
+}
+*/
