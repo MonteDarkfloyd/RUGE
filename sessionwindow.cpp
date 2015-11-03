@@ -1,7 +1,8 @@
-
 #include <QtWidgets>
-
 #include "sessionwindow.h"
+#include "session.h"
+//#include "ui_sessionwindow.h"
+
 
 
 void Window::clearGroup(){
@@ -16,6 +17,133 @@ void Window::clearGroup(){
          b->clear();
         }
     }
+    QComboBox* tempCombo = qobject_cast<QComboBox*>(btemp->children().at(10));
+     tempCombo->setItemText(0,"");
+
+
+
+}
+
+
+void Window::displaySession(Session* session){
+    QObjectList temp = this->children();
+    QGroupBox *atemp = (QGroupBox*)temp.at(2);
+    atemp->setVisible(1);
+    QGroupBox *btemp = (QGroupBox*)temp.at(3);
+    btemp->setVisible(1);
+
+    QLineEdit* tempLine = qobject_cast<QLineEdit*>(atemp->children().at(2));
+    tempLine->setText(session->sessName);
+
+
+    if(session->ipVersion =="IPv4")
+        qobject_cast<QRadioButton*>(atemp->children().at(4))->setChecked(true);
+
+    if(session->ipVersion =="IPv6")
+         qobject_cast<QRadioButton*>(atemp->children().at(5))->setChecked(true);
+
+    if(session->protocol =="TCP")
+        qobject_cast<QRadioButton*>(atemp->children().at(6))->setChecked(true);
+
+    if(session->protocol =="UDP")
+        qobject_cast<QRadioButton*>(atemp->children().at(7))->setChecked(true);
+
+    if(session->protocol =="ICMP")
+        qobject_cast<QRadioButton*>(atemp->children().at(8))->setChecked(true);
+
+    if(session->protocol =="STCP")
+        qobject_cast<QRadioButton*>(atemp->children().at(9))->setChecked(true);
+
+
+    QComboBox* tempCombo = qobject_cast<QComboBox*>(btemp->children().at(10));
+     tempCombo->setItemText(0,session->payload);
+
+
+     tempLine = qobject_cast<QLineEdit*>(btemp->children().at(2));
+         tempLine->setText(session->srcIP);
+     tempLine = qobject_cast<QLineEdit*>(btemp->children().at(4));
+         tempLine->setText(session->srcMAC);
+     tempLine = qobject_cast<QLineEdit*>(btemp->children().at(6));
+         tempLine->setText(session->dstIP);
+     tempLine = qobject_cast<QLineEdit*>(btemp->children().at(8));
+         tempLine->setText(session->dstMAC);
+
+QVBoxLayout* tempLayout = qobject_cast<QVBoxLayout*>(btemp->children().at(0));
+QPushButton* saveButton = qobject_cast<QPushButton*>(btemp->children().at(12));
+
+saveButton->setText("Save as new");
+QPushButton* newButton = new QPushButton("Save changes");
+connect( newButton, newButton->clicked, this, this->close);
+connect( newButton, newButton->clicked, this, this->createSession);
+connect( newButton, newButton->clicked, this, this->editSession);
+//connect( newButton, newButton->clicked , parentPointer , parentPointer->displaySessions );
+tempLayout->addWidget(newButton);
+
+
+}
+
+void Window::editSession(){
+    parentPointer->editSession(this->newSession);
+
+}
+
+void Window::createSession(){
+    QString _sessName;
+    QString _srcIP;
+    QString _dstIP;
+    QString _srcMAC;
+    QString _dstMAC;
+    QString _payload;
+    QString _protocol;
+    QString _ipVersion;
+
+
+    QObjectList temp = this->children();
+    QGroupBox *atemp = (QGroupBox*)temp.at(2);
+    QGroupBox *btemp = (QGroupBox*)temp.at(3);
+
+
+    QLineEdit* tempLine = qobject_cast<QLineEdit*>(atemp->children().at(2));
+    _sessName = tempLine->text();
+
+    if(qobject_cast<QRadioButton*>(atemp->children().at(4))->isChecked())
+        _ipVersion = "IPv4";
+
+    if(qobject_cast<QRadioButton*>(atemp->children().at(5))->isChecked())
+        _ipVersion = "IPv6";
+
+    if(qobject_cast<QRadioButton*>(atemp->children().at(6))->isChecked())
+        _protocol = "TCP";
+
+    if(qobject_cast<QRadioButton*>(atemp->children().at(7))->isChecked())
+        _protocol = "UDP";
+
+    if(qobject_cast<QRadioButton*>(atemp->children().at(8))->isChecked())
+        _protocol = "ICMP";
+
+    if(qobject_cast<QRadioButton*>(atemp->children().at(9))->isChecked())
+        _protocol = "STCP";
+
+
+   QComboBox* tempCombo = qobject_cast<QComboBox*>(btemp->children().at(10));
+    _payload = tempCombo->currentText();
+
+    tempLine = qobject_cast<QLineEdit*>(btemp->children().at(2));
+    _srcIP = tempLine->text();
+    tempLine = qobject_cast<QLineEdit*>(btemp->children().at(4));
+    _srcMAC = tempLine->text();
+    tempLine = qobject_cast<QLineEdit*>(btemp->children().at(6));
+    _dstIP = tempLine->text();
+    tempLine = qobject_cast<QLineEdit*>(btemp->children().at(8));
+    _dstMAC = tempLine->text();
+
+    this->newSession =  new Session(_sessName,_srcIP,
+                       _dstIP,
+                       _srcMAC,
+                       _dstMAC,
+                       _payload,
+                       _protocol,
+                       _ipVersion);
 
 
 
@@ -40,7 +168,8 @@ QListIterator<QObject *> i(atemp->children());
 while (i.hasNext())
 {
     QRadioButton* b = qobject_cast<QRadioButton*>( i.next() );
-    if (b > 0 && b->isChecked()) {
+    if (b > 0 && b->isChecked())
+    {
      sum = sum + 1;
     }
 }
@@ -55,33 +184,36 @@ btemp->setVisible(1);
 void Window::thirdVisible(){
 QObjectList temp = this->children();
 QGroupBox *btemp = (QGroupBox*)temp.at(4);
-btemp->setVisible(1);
+btemp->setVisible(0);
 
 }
 
-
-
-
-Window::Window(QWidget *parent)
-    : QWidget(parent)
-{
+/*Window::Window(TrafficWindow *parent, Session* session, int a){
+    this->parentPointer = parent;
     QHBoxLayout *hor1 = new QHBoxLayout(this);
+
     QVBoxLayout *ver1 = new QVBoxLayout(this);
     QVBoxLayout *ver2 = new QVBoxLayout(this);
 
     ver1->addWidget(createList());
 
 
+    //QHBoxLayout *hor2 = new QHBoxLayout(this);
+
+
 
     QGroupBox *protocol = createProtocolSelection();
-    protocol->setAccessibleName(QString("protocol"));
-    protocol->setAccessibleDescription(QString("protocol"));
+    protocol->setVisible(1);
+   // protocol->setAccessibleName(QString("protocol"));
+   // protocol->setAccessibleDescription(QString("protocol"));
     ver2->addWidget(protocol);
     QGroupBox *data = createDataInput();
+    data->setVisible(1);
     data->setAccessibleName("data");
     ver2->addWidget(data);
     QGroupBox *stream = this->createStream();
     stream->setAccessibleName("stream");
+
     ver2->addWidget(stream);
     ver2->addSpacerItem(new QSpacerItem(0,0,QSizePolicy::Expanding, QSizePolicy::Expanding));
 
@@ -90,6 +222,62 @@ Window::Window(QWidget *parent)
 
     hor1->addLayout(ver1);
     hor1->addLayout(ver2);
+
+
+
+    setLayout(hor1);
+
+    setWindowTitle(tr("Session Editor"));
+    resize(600, 550);
+
+
+    this->displaySession(session);
+
+
+
+
+
+
+}*/
+
+
+
+
+
+Window::Window(TrafficWindow *parent)
+{
+    this->parentPointer = parent;
+    QHBoxLayout *hor1 = new QHBoxLayout(this);
+
+    QVBoxLayout *ver1 = new QVBoxLayout(this);
+    QVBoxLayout *ver2 = new QVBoxLayout(this);
+
+    ver1->addWidget(createList());
+
+
+    //QHBoxLayout *hor2 = new QHBoxLayout(this);
+
+
+
+    QGroupBox *protocol = createProtocolSelection();
+   // protocol->setAccessibleName(QString("protocol"));
+   // protocol->setAccessibleDescription(QString("protocol"));
+    ver2->addWidget(protocol);
+    QGroupBox *data = createDataInput();
+    data->setAccessibleName("data");
+    ver2->addWidget(data);
+    QGroupBox *stream = this->createStream();
+    stream->setAccessibleName("stream");
+
+    ver2->addWidget(stream);
+    ver2->addSpacerItem(new QSpacerItem(0,0,QSizePolicy::Expanding, QSizePolicy::Expanding));
+
+
+
+
+    hor1->addLayout(ver1);
+    hor1->addLayout(ver2);
+
 
 
     setLayout(hor1);
@@ -108,8 +296,13 @@ Window::Window(QWidget *parent)
 
 QGroupBox *Window::createProtocolSelection()
 {
+    QVBoxLayout *newmain = new QVBoxLayout;
     QHBoxLayout *main = new QHBoxLayout;
-
+    QHBoxLayout *hor2 = new QHBoxLayout;
+    QLabel *nameLabel = new QLabel("Session Name :");
+    QLineEdit *sessionName = new QLineEdit();
+    hor2->addWidget(nameLabel);
+    hor2->addWidget(sessionName);
     QVBoxLayout *eth = new QVBoxLayout;
     QVBoxLayout *ip = new QVBoxLayout;
     QVBoxLayout *protocols = new QVBoxLayout;
@@ -165,15 +358,41 @@ QGroupBox *Window::createProtocolSelection()
     protocols->addStretch();
 
 
-    QGroupBox *protocolBox = new QGroupBox(tr("Protocol Selection"));
-    protocolBox->setLayout(main);
+    QGroupBox *protocolBox = new QGroupBox(tr("Session"));
+
     protocolBox->setVisible(0);
     protocolBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+
+    newmain->addLayout(hor2);
+    newmain->addSpacerItem(new QSpacerItem(0,20));
+    newmain->addLayout(main);
+
+    protocolBox->setLayout(newmain);
     return protocolBox;
 
 
 }
 
+
+void Window::clickedNew(){
+    QObjectList temp = this->children();
+    QGroupBox *atemp = (QGroupBox*)temp.at(2);
+    atemp->setVisible(1);
+    QGroupBox *btemp = (QGroupBox*)temp.at(3);
+    btemp->setVisible(0);
+
+    this->clearGroup();
+    qobject_cast<QRadioButton*>(atemp->children().at(4))->setChecked(false);
+    qobject_cast<QRadioButton*>(atemp->children().at(5))->setChecked(false);
+    qobject_cast<QRadioButton*>(atemp->children().at(6))->setChecked(false);
+    qobject_cast<QRadioButton*>(atemp->children().at(7))->setChecked(false);
+    qobject_cast<QRadioButton*>(atemp->children().at(8))->setChecked(false);
+    qobject_cast<QRadioButton*>(atemp->children().at(9))->setChecked(false);
+
+
+
+
+}
 
 QGroupBox *Window::createList()
 {
@@ -187,20 +406,26 @@ QGroupBox *Window::createList()
     newSession->setCheckable(1);
     list->addWidget(newSession);
     group->addButton(newSession);
-    connect(newSession, newSession->clicked, this , &Window::firstVisible);
+    connect(newSession, newSession->clicked, this , this->clickedNew);
+    list->addSpacerItem(new QSpacerItem(0,20,QSizePolicy::Fixed, QSizePolicy::Fixed));
+
+    list->addWidget(new QLabel("Predefined Sessions :"),0,Qt::AlignHCenter);
 
 
     QPushButton *tcpFlood = new QPushButton("TCP Flood attack");
     tcpFlood->setCheckable(1);
     list->addWidget(tcpFlood);
+    connect(tcpFlood, tcpFlood->clicked , this, this->TCPFlood);
     group->addButton(tcpFlood);
     QPushButton *udpFlood = new QPushButton("UDP Flood attack");
     udpFlood->setCheckable(1);
     list->addWidget(udpFlood);
+    connect(udpFlood, udpFlood->clicked , this, this->UDPFlood);
     group->addButton(udpFlood);
     QPushButton *tcpSyn = new QPushButton("TCP SYN/ACK attack");
     tcpSyn->setCheckable(1);
     list->addWidget(tcpSyn);
+    connect(tcpFlood, tcpFlood->clicked , this, this->TCPFlood);
     group->addButton(tcpSyn);
 
     //list->addWidget(new QScrollBar(Qt::Vertical));
@@ -216,6 +441,49 @@ QGroupBox *Window::createList()
 
     return groupBox;
 }
+
+void Window::TCPFlood(){
+    QObjectList temp = this->children();
+    QGroupBox *atemp = (QGroupBox*)temp.at(2);
+    atemp->setVisible(1);
+    QGroupBox *btemp = (QGroupBox*)temp.at(3);
+    btemp->setVisible(1);
+
+    QLineEdit* tempLine = qobject_cast<QLineEdit*>(atemp->children().at(2));
+    tempLine->setText("Predefined TCP Flood");
+
+
+        qobject_cast<QRadioButton*>(atemp->children().at(4))->setChecked(true);
+
+        qobject_cast<QRadioButton*>(atemp->children().at(6))->setChecked(true);
+
+
+
+
+}
+
+
+
+void Window::UDPFlood(){
+    QObjectList temp = this->children();
+    QGroupBox *atemp = (QGroupBox*)temp.at(2);
+    atemp->setVisible(1);
+    QGroupBox *btemp = (QGroupBox*)temp.at(3);
+    btemp->setVisible(1);
+
+    QLineEdit* tempLine = qobject_cast<QLineEdit*>(atemp->children().at(2));
+    tempLine->setText("Predefined UDP Flood");
+
+
+        qobject_cast<QRadioButton*>(atemp->children().at(4))->setChecked(true);
+
+        qobject_cast<QRadioButton*>(atemp->children().at(7))->setChecked(true);
+
+
+
+}
+
+
 
 QGroupBox *Window::createDataInput()
 {
@@ -304,7 +572,23 @@ QGroupBox *Window::createDataInput()
     h2->addWidget(clearButton,0,Qt::AlignLeft);
     connect( clearButton, clearButton->clicked , this, this->clearGroup);
     h2->addWidget(confirmButton,0,Qt::AlignRight);
-    connect( confirmButton, confirmButton->clicked , this, this->thirdVisible);
+    connect( confirmButton, confirmButton->clicked , this, this->close );
+
+
+
+    /*QSignalMapper* signalMapper = new QSignalMapper (parentPointer) ;
+    //connect( confirmButton, confirmButton->clicked , parentPointer->addSession );
+
+    connect(confirmButton, SIGNAL(clicked()) , signalMapper , SLOT(map()) );
+
+    signalMapper->setMapping(this,newSession);
+
+    connect ( signalMapper, SIGNAL(mapped(QObject*)), parentPointer, SLOT(addSession(QObject*)));
+*/
+
+    connect( confirmButton, confirmButton->clicked, this, this->createSession);
+    connect( confirmButton, confirmButton->clicked, this, this->confirmBut);
+    connect( confirmButton, confirmButton->clicked , parentPointer , parentPointer->displaySessions );
     v4->addLayout(h2);
     groupBox->setLayout(v4);
     groupBox->setVisible(0);
@@ -320,6 +604,22 @@ QGroupBox *Window::createStream()
 
        groupBox->setVisible(0);
        return groupBox;
-
-
 }
+
+
+void Window::confirmBut(){
+    parentPointer->addSession(this->newSession);
+}
+
+/*SessionWindow::SessionWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::SessionWindow)
+{
+    ui->setupUi(this);
+}
+
+SessionWindow::~SessionWindow()
+{
+    delete ui;
+}
+*/
