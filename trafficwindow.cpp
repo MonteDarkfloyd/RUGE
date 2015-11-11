@@ -2,6 +2,7 @@
 #include "ui_trafficwindow.h"
 #include "sessionwindow.h"
 #include "session.h"
+#include "predefinedwindow.h"
 
 TrafficWindow::TrafficWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -116,4 +117,11 @@ void TrafficWindow::on_pushButton_2_clicked()
 }
     this->displaySessions();
     lastRow = -1;
+}
+
+
+void TrafficWindow::on_predefinedButton_clicked()
+{
+    predefinedwindow* predefWin = new predefinedwindow(this);
+    predefWin->exec();
 }
