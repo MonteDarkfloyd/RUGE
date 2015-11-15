@@ -26,19 +26,15 @@ public:
 private slots:
     void on_actionQuit_triggered();
 
-    void on_pushButton_pressed();
-
-    void on_pushButton_clicked();
-
-    void on_pushButton_4_clicked();
+    void on_editButton_clicked();
 
     void setRow(int a,int b);
 
 
 
-    void on_pushButton_2_clicked();
+    void on_deleteButton_clicked();
 
-    void on_predefinedButton_clicked();
+    void on_newButton_clicked();
 
 private:
     Ui::TrafficWindow *ui;

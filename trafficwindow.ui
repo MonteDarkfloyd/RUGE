@@ -12,58 +12,80 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>919</width>
-    <height>498</height>
+    <width>1083</width>
+    <height>623</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Traffic Editor</string>
+   <string>RUGE SLIM GUI - Traffic Editor</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>Add new session</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2">
-     <widget class="QPushButton" name="pushButton_4">
-      <property name="text">
-       <string>Edit</string>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="3">
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="text">
-       <string>Delete</string>
+     <widget class="QPushButton" name="saveButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-     </widget>
-    </item>
-    <item row="2" column="4">
-     <widget class="QPushButton" name="pushButton_5">
-      <property name="text">
-       <string>Load Traffic Profile</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="5">
-     <widget class="QPushButton" name="pushButton_3">
       <property name="text">
        <string>Save Traffic Profile</string>
       </property>
      </widget>
     </item>
     <item row="2" column="6">
-     <widget class="QPushButton" name="pushButton_6">
+     <widget class="QPushButton" name="startButton">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>60</height>
+       </size>
+      </property>
       <property name="text">
        <string>Start Transmission</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="0" colspan="7">
+    <item row="2" column="2">
+     <widget class="QPushButton" name="loadButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Load Traffic Profile</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="editButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Edit</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="7">
      <widget class="QTableWidget" name="tableWidget">
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
@@ -87,7 +109,7 @@
        <number>1</number>
       </property>
       <property name="columnCount">
-       <number>6</number>
+       <number>7</number>
       </property>
       <attribute name="horizontalHeaderCascadingSectionResizes">
        <bool>false</bool>
@@ -105,6 +127,11 @@
       <column>
        <property name="text">
         <string>Session Name</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Destination IP</string>
        </property>
       </column>
       <column>
@@ -140,14 +167,6 @@
         <set>AlignLeading|AlignVCenter</set>
        </property>
       </item>
-      <item row="0" column="1">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="textAlignment">
-        <set>AlignTrailing|AlignVCenter</set>
-       </property>
-      </item>
       <item row="0" column="2">
        <property name="text">
         <string/>
@@ -157,16 +176,33 @@
        </property>
       </item>
       <item row="0" column="3">
+       <property name="text">
+        <string/>
+       </property>
        <property name="textAlignment">
         <set>AlignTrailing|AlignVCenter</set>
        </property>
       </item>
       <item row="0" column="4">
+       <property name="text">
+        <string/>
+       </property>
        <property name="textAlignment">
         <set>AlignTrailing|AlignVCenter</set>
        </property>
       </item>
       <item row="0" column="5">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
+       </property>
+      </item>
+      <item row="0" column="6">
+       <property name="text">
+        <string/>
+       </property>
        <property name="textAlignment">
         <set>AlignTrailing|AlignVCenter</set>
        </property>
@@ -174,9 +210,35 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QPushButton" name="predefinedButton">
+     <widget class="QPushButton" name="deleteButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
-       <string>Add predefined session</string>
+       <string>Delete</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QPushButton" name="newButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Add a new session..</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QPushButton" name="resetButton">
+      <property name="text">
+       <string>Reset Engine</string>
       </property>
      </widget>
     </item>
@@ -187,30 +249,70 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>919</width>
+     <width>1083</width>
      <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
-     <string>Menu</string>
+     <string>File</string>
     </property>
+    <addaction name="actionNew_Session"/>
+    <addaction name="actionLoad_Traffic_Profile"/>
+    <addaction name="actionSave_Traffic_Profile"/>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menuEngine">
+    <property name="title">
+     <string>Engine</string>
+    </property>
+    <addaction name="actionSoft_Reset"/>
+    <addaction name="actionHrad_Reset"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuMenu"/>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
+   <addaction name="menuEngine"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionNew_Session">
+   <property name="text">
+    <string>New Session</string>
+   </property>
+  </action>
+  <action name="actionLoad_Traffic_Profile">
+   <property name="text">
+    <string>Load Traffic Profile</string>
+   </property>
+  </action>
+  <action name="actionSave_Traffic_Profile">
+   <property name="text">
+    <string>Save Traffic Profile</string>
+   </property>
+  </action>
+  <action name="actionSoft_Reset">
+   <property name="text">
+    <string>Soft Reset</string>
+   </property>
+  </action>
+  <action name="actionHrad_Reset">
+   <property name="text">
+    <string>Hard Reset</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

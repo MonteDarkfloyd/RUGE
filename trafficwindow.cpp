@@ -2,7 +2,7 @@
 #include "ui_trafficwindow.h"
 #include "sessionwindow.h"
 #include "session.h"
-#include "predefinedwindow.h"
+#include "newsessiondialog.h"
 
 TrafficWindow::TrafficWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,6 +11,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     //connect(ui->tableWidget, SIGNAL(cellClicked(int,int)) , this, SLOT(setRow(int,int)));
     ui->setupUi(this);
     connect(ui->tableWidget, SIGNAL(cellClicked(int,int)) , this, SLOT(setRow(int,int)));
+    connect(ui->actionNew_Session,SIGNAL(triggered(bool)), this, SLOT(on_newButton_clicked()));
 
 
 }
@@ -24,24 +25,10 @@ TrafficWindow::~TrafficWindow()
     delete ui;
 }
 
+// Top menu quit
 void TrafficWindow::on_actionQuit_triggered()
 {
   QApplication::quit();
-}
-
-void TrafficWindow::on_pushButton_pressed()
-{
-    Window* newSess = new Window(this);
-    newSess->show();
-    //this->close();
-}
-
-void TrafficWindow::on_pushButton_clicked()
-{
-    Window* newSess = new Window(this);
-    newSess->show();
-    //this->close();
-
 }
 
 
@@ -89,14 +76,14 @@ void TrafficWindow::displaySessions(){
 }
 
 
-
-void TrafficWindow::on_pushButton_4_clicked()
+// Edit button clicked
+void TrafficWindow::on_editButton_clicked()
 {
 
 
 
     if(lastRow >= 0){
-    if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) > 0 ) ){
+    if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
     Session* session = this->sessionList.at(this->lastRow);
     Window* newSess = new Window(this);
     newSess->show();
@@ -107,10 +94,12 @@ void TrafficWindow::on_pushButton_4_clicked()
 
 }
 
-void TrafficWindow::on_pushButton_2_clicked()
+
+// Delete button
+void TrafficWindow::on_deleteButton_clicked()
 {
     if(lastRow >= 0){
-    if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) > 0 ) ){
+    if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
         this->sessionList.removeAt(lastRow);
     }
 
@@ -119,9 +108,9 @@ void TrafficWindow::on_pushButton_2_clicked()
     lastRow = -1;
 }
 
-
-void TrafficWindow::on_predefinedButton_clicked()
+// New session button
+void TrafficWindow::on_newButton_clicked()
 {
-    predefinedwindow* predefWin = new predefinedwindow(this);
+    NewSessionDialog* predefWin = new NewSessionDialog(this);
     predefWin->exec();
 }
