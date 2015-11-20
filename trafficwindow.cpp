@@ -12,7 +12,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->tableWidget, SIGNAL(cellClicked(int,int)) , this, SLOT(setRow(int,int)));
     connect(ui->actionNew_Session,SIGNAL(triggered(bool)), this, SLOT(on_newButton_clicked()));
-
+    ui->tableWidget->removeRow(0);
 
 }
 
@@ -52,7 +52,7 @@ void TrafficWindow::displaySessions(){
     QListIterator<Session *> i(this->sessionList);
     int row = 0;
     //int col = 0;
-    ui->tableWidget->clear();
+   // ui->tableWidget->clear();
     ui->tableWidget->removeRow(0);
     ui->tableWidget->removeRow(1);
 
@@ -62,11 +62,11 @@ void TrafficWindow::displaySessions(){
 
      ui->tableWidget->insertRow(row);
      ui->tableWidget->setItem(row,0, new QTableWidgetItem(temp->sessName));
-     ui->tableWidget->setItem(row,1, new QTableWidgetItem(QString::number(temp->multiply)));
-     ui->tableWidget->setItem(row,2, new QTableWidgetItem(QString::number(temp->rampup)));
-     ui->tableWidget->setItem(row,3, new QTableWidgetItem(QString::number(temp->offset)));
-     ui->tableWidget->setItem(row,4, new QTableWidgetItem(QString::number(temp->loopover)));
-     ui->tableWidget->setItem(row,5, new QTableWidgetItem(QString::number(temp->loopovertimespan)));
+     ui->tableWidget->setItem(row,2, new QTableWidgetItem(QString::number(temp->multiply)));
+     ui->tableWidget->setItem(row,3, new QTableWidgetItem(QString::number(temp->rampup)));
+     ui->tableWidget->setItem(row,4, new QTableWidgetItem(QString::number(temp->offset)));
+     ui->tableWidget->setItem(row,5, new QTableWidgetItem(QString::number(temp->loopover)));
+     ui->tableWidget->setItem(row,6, new QTableWidgetItem(QString::number(temp->loopovertimespan)));
      row = row +1;
 
     }
@@ -101,6 +101,7 @@ void TrafficWindow::on_deleteButton_clicked()
     if(lastRow >= 0){
     if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
         this->sessionList.removeAt(lastRow);
+        ui->deleteButton->setEnabled(false);
     }
 
 }
@@ -113,4 +114,18 @@ void TrafficWindow::on_newButton_clicked()
 {
     NewSessionDialog* predefWin = new NewSessionDialog(this);
     predefWin->exec();
+}
+
+
+// Item is selected ( better way to do this? )
+void TrafficWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
+{
+    ui->deleteButton->setEnabled(true);
+    ui->editButton->setEnabled(true);
+}
+
+void TrafficWindow::on_tableWidget_itemSelectionChanged()
+{
+    ui->deleteButton->setEnabled(true);
+    ui->editButton->setEnabled(true);
 }

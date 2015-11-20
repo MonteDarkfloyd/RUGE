@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <session.h>
+#include <QTableWidgetItem>
 
 
 namespace Ui {
@@ -35,6 +36,10 @@ private slots:
     void on_deleteButton_clicked();
 
     void on_newButton_clicked();
+
+    void on_tableWidget_itemClicked(QTableWidgetItem *item);
+
+    void on_tableWidget_itemSelectionChanged();
 
 private:
     Ui::TrafficWindow *ui;

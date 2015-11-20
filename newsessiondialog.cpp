@@ -11,6 +11,8 @@ NewSessionDialog::NewSessionDialog(TrafficWindow *parent) :
     // Get rid of the help button from top right.
     this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     ui->setupUi(this);
+    // Disable OK button
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
 }
 
 NewSessionDialog::~NewSessionDialog()
@@ -34,4 +36,10 @@ void NewSessionDialog::on_createButton_clicked()
     this->accept();
     Window* newSess = new Window(parentPointer);
     newSess->show();
+}
+
+
+void NewSessionDialog::on_listWidget_itemClicked(QListWidgetItem *item)
+{
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( true );
 }

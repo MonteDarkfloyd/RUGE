@@ -2,6 +2,7 @@
 #define NEWSESSIONDIALOG_H
 
 #include <QDialog>
+#include <QListWidgetItem>
 #include "trafficwindow.h"
 
 namespace Ui {
@@ -20,6 +21,9 @@ private slots:
     void on_buttonBox_accepted();
 
     void on_createButton_clicked();
+
+
+    void on_listWidget_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::NewSessionDialog *ui;
