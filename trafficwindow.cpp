@@ -62,6 +62,10 @@ void TrafficWindow::displaySessions(){
 
      ui->tableWidget->insertRow(row);
      ui->tableWidget->setItem(row,0, new QTableWidgetItem(temp->sessName));
+
+     // Disable name editing
+     ui->tableWidget->item(row,0)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+
      ui->tableWidget->setItem(row,2, new QTableWidgetItem(QString::number(temp->multiply)));
      ui->tableWidget->setItem(row,3, new QTableWidgetItem(QString::number(temp->rampup)));
      ui->tableWidget->setItem(row,4, new QTableWidgetItem(QString::number(temp->offset)));
@@ -101,11 +105,16 @@ void TrafficWindow::on_deleteButton_clicked()
     if(lastRow >= 0){
     if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
         this->sessionList.removeAt(lastRow);
-        ui->deleteButton->setEnabled(false);
+
     }
 
 }
     this->displaySessions();
+
+    // Disable delete and edit buttons because the selected was deleted
+    ui->deleteButton->setEnabled(false);
+    ui->editButton->setEnabled(false);
+
     lastRow = -1;
 }
 
@@ -117,13 +126,8 @@ void TrafficWindow::on_newButton_clicked()
 }
 
 
-// Item is selected ( better way to do this? )
-void TrafficWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
-{
-    ui->deleteButton->setEnabled(true);
-    ui->editButton->setEnabled(true);
-}
-
+// Item selection is changed either by clicking or using keyboard
+// Enable delete and edit buttons
 void TrafficWindow::on_tableWidget_itemSelectionChanged()
 {
     ui->deleteButton->setEnabled(true);

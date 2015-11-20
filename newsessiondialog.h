@@ -22,8 +22,7 @@ private slots:
 
     void on_createButton_clicked();
 
-
-    void on_listWidget_itemClicked(QListWidgetItem *item);
+    void on_listWidget_itemSelectionChanged();
 
 private:
     Ui::NewSessionDialog *ui;

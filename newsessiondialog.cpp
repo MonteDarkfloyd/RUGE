@@ -25,7 +25,7 @@ NewSessionDialog::~NewSessionDialog()
 void NewSessionDialog::on_buttonBox_accepted()
 {
     // TODO:    check selected and send data to sessionwindow
-    //          Where are predeffined sessions saved?
+    //          Where are predefined sessions saved?
     Window* newSess = new Window(parentPointer);
     newSess->show();
 }
@@ -38,8 +38,8 @@ void NewSessionDialog::on_createButton_clicked()
     newSess->show();
 }
 
-
-void NewSessionDialog::on_listWidget_itemClicked(QListWidgetItem *item)
+// Item is selected from the list, enable ok button.
+void NewSessionDialog::on_listWidget_itemSelectionChanged()
 {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( true );
 }
