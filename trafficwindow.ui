@@ -23,11 +23,17 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="3" column="0" colspan="7">
      <widget class="QTableWidget" name="tableWidget">
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked</set>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
       </property>
       <property name="selectionBehavior">
        <enum>QAbstractItemView::SelectItems</enum>
@@ -45,7 +51,7 @@
        <number>1</number>
       </property>
       <property name="columnCount">
-       <number>7</number>
+       <number>6</number>
       </property>
       <attribute name="horizontalHeaderCascadingSectionResizes">
        <bool>false</bool>
@@ -54,20 +60,18 @@
        <number>140</number>
       </attribute>
       <attribute name="horizontalHeaderStretchLastSection">
-       <bool>true</bool>
+       <bool>false</bool>
       </attribute>
       <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderCascadingSectionResizes">
        <bool>false</bool>
       </attribute>
       <row/>
       <column>
        <property name="text">
         <string>Session Name</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Destination IP</string>
        </property>
       </column>
       <column>
@@ -103,6 +107,14 @@
         <set>AlignLeading|AlignVCenter</set>
        </property>
       </item>
+      <item row="0" column="1">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
+       </property>
+      </item>
       <item row="0" column="2">
        <property name="text">
         <string/>
@@ -135,14 +147,6 @@
         <set>AlignTrailing|AlignVCenter</set>
        </property>
       </item>
-      <item row="0" column="6">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="textAlignment">
-        <set>AlignTrailing|AlignVCenter</set>
-       </property>
-      </item>
      </widget>
     </item>
     <item row="0" column="2">
@@ -154,7 +158,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Reset Engine</string>
+       <string>Soft Reset</string>
       </property>
      </widget>
     </item>
@@ -191,34 +195,6 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="6">
-     <widget class="QPushButton" name="editButton">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="sizeIncrement">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="baseSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Edit session</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
      <widget class="QLabel" name="RugeIPLabel">
       <property name="text">
@@ -235,7 +211,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Add a new session..</string>
+       <string>Add session..</string>
       </property>
      </widget>
     </item>
@@ -284,6 +260,40 @@
       </property>
      </widget>
     </item>
+    <item row="2" column="6">
+     <widget class="QPushButton" name="editButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Edit session</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -308,8 +318,8 @@
     <property name="title">
      <string>Engine</string>
     </property>
-    <addaction name="actionSoft_Reset"/>
     <addaction name="actionHrad_Reset"/>
+    <addaction name="actionSoft_Reset"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">

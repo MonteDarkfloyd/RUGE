@@ -18,7 +18,6 @@ public:
     explicit TrafficWindow(QWidget *parent = 0);
     void displaySessions();
     void addSession(Session* newSess);
-    int lastRow;
     void editSession(Session *Sess);
 
 
@@ -29,10 +28,6 @@ private slots:
 
     void on_editButton_clicked();
 
-    void setRow(int a,int b);
-
-
-
     void on_deleteButton_clicked();
 
     void on_newButton_clicked();
@@ -40,9 +35,12 @@ private slots:
     void on_tableWidget_itemSelectionChanged();
 
 
+    void on_tableWidget_itemEntered(QTableWidgetItem *item);
+
 private:
     Ui::TrafficWindow *ui;
     QList<Session *> sessionList;
+    int lastRow;
 
 };
 

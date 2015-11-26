@@ -8,17 +8,16 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::TrafficWindow)
 {
-    //connect(ui->tableWidget, SIGNAL(cellClicked(int,int)) , this, SLOT(setRow(int,int)));
+
     ui->setupUi(this);
-    connect(ui->tableWidget, SIGNAL(cellClicked(int,int)) , this, SLOT(setRow(int,int)));
     connect(ui->actionNew_Session,SIGNAL(triggered(bool)), this, SLOT(on_newButton_clicked()));
     ui->tableWidget->removeRow(0);
 
+    // Set table headers to be the same size.
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
 }
 
-void TrafficWindow::setRow(int a,int b){
-    this->lastRow = a;
-}
 
 TrafficWindow::~TrafficWindow()
 {
@@ -51,10 +50,10 @@ void TrafficWindow::displaySessions(){
 
     QListIterator<Session *> i(this->sessionList);
     int row = 0;
-    //int col = 0;
-   // ui->tableWidget->clear();
-    ui->tableWidget->removeRow(0);
-    ui->tableWidget->removeRow(1);
+
+    // Clear table
+    ui->tableWidget->clearSelection();
+    ui->tableWidget->setRowCount(0);
 
     while (i.hasNext())
     {
@@ -66,12 +65,12 @@ void TrafficWindow::displaySessions(){
      // Disable name editing
      ui->tableWidget->item(row,0)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-     ui->tableWidget->setItem(row,2, new QTableWidgetItem(QString::number(temp->multiply)));
-     ui->tableWidget->setItem(row,3, new QTableWidgetItem(QString::number(temp->rampup)));
-     ui->tableWidget->setItem(row,4, new QTableWidgetItem(QString::number(temp->offset)));
-     ui->tableWidget->setItem(row,5, new QTableWidgetItem(QString::number(temp->loopover)));
-     ui->tableWidget->setItem(row,6, new QTableWidgetItem(QString::number(temp->loopovertimespan)));
-     row = row +1;
+     ui->tableWidget->setItem(row,1, new QTableWidgetItem(QString::number(temp->multiply)));
+     ui->tableWidget->setItem(row,2, new QTableWidgetItem(QString::number(temp->rampup)));
+     ui->tableWidget->setItem(row,3, new QTableWidgetItem(QString::number(temp->offset)));
+     ui->tableWidget->setItem(row,4, new QTableWidgetItem(QString::number(temp->loopover)));
+     ui->tableWidget->setItem(row,5, new QTableWidgetItem(QString::number(temp->loopovertimespan)));
+     row++;
 
     }
 
@@ -84,17 +83,14 @@ void TrafficWindow::displaySessions(){
 void TrafficWindow::on_editButton_clicked()
 {
 
-
-
     if(lastRow >= 0){
-    if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
-    Session* session = this->sessionList.at(this->lastRow);
-    Window* newSess = new Window(this);
-    newSess->show();
-    newSess->displaySession(session);
-    //this->close();
+        if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
+            Session* session = this->sessionList.at(this->lastRow);
+            Window* newSess = new Window(this);
+            newSess->show();
+            newSess->displaySession(session);
+        }
     }
-}
 
 }
 
@@ -111,10 +107,6 @@ void TrafficWindow::on_deleteButton_clicked()
 }
     this->displaySessions();
 
-    // Disable delete and edit buttons because the selected was deleted
-    ui->deleteButton->setEnabled(false);
-    ui->editButton->setEnabled(false);
-
     lastRow = -1;
 }
 
@@ -127,9 +119,48 @@ void TrafficWindow::on_newButton_clicked()
 
 
 // Item selection is changed either by clicking or using keyboard
-// Enable delete and edit buttons
+// Enable delete and edit buttons and change the lastrow variable
+// which tells the selected row.
 void TrafficWindow::on_tableWidget_itemSelectionChanged()
 {
-    ui->deleteButton->setEnabled(true);
-    ui->editButton->setEnabled(true);
+    if(ui->tableWidget->selectedItems().size() > 0){
+        ui->deleteButton->setEnabled(true);
+        ui->editButton->setEnabled(true);
+        this->lastRow = ui->tableWidget->selectedItems().at(0)->row();
+    }
+    else{
+
+        // Nothing is selected or selected was edited or deleted
+        ui->deleteButton->setEnabled(false);
+        ui->editButton->setEnabled(false);
+    }
+
+
+}
+
+// Mouse is over the Name colunm, show tool tip.
+void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
+{
+
+    QString ipdest = "";
+    QString ipsour = "";
+    QString portdest = "??";
+    QString portsour = "??";
+    if(item->column() == 0){
+
+        // Search the right session from list
+        for(int i = 0; i < sessionList.size(); ++i){
+            if(sessionList.at(i)->sessName == item->text()){
+                ipdest = sessionList.at(i)->dstIP;
+                ipsour = sessionList.at(i)->srcIP;
+                // TODO ports
+            }
+        }
+        const QString tooltiptext = "Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n Destination port: " + portdest + "\n Source port: " + portsour;
+        ui->tableWidget->setToolTip(tooltiptext);
+    }
+    else {
+       ui->tableWidget->setToolTip("");
+    }
+
 }
