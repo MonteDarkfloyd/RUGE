@@ -1,5 +1,20 @@
 #include "session.h"
 
+Session::Session (){
+    sessName = "";
+    srcIP = "";
+    dstIP = "";
+    srcMAC = "";
+    payload = "";
+    protocol = "";
+    ipVersion = "";
+    multiply = 0;
+    rampup = 0;
+    offset = 0;
+    loopover = 0;
+    loopovertimespan = 0;
+}
+
 Session::Session(QString name, QString sourceIP, QString destinationIP,
                  QString sourceMAC,QString destinationMAC, QString _payload,
                  QString _protocol, QString _ipversion,

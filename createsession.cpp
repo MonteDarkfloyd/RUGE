@@ -117,8 +117,8 @@ createsession::~createsession()
 
 void createsession::on_pushButton_clicked()
 {
-    MainWindow* w=new MainWindow();
-    w->show();
+  //  MainWindow* w=new MainWindow();
+  //  w->show();
 }
 
 void createsession::on_rb_ip4_toggled(bool checked)

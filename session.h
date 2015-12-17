@@ -6,6 +6,7 @@
 class Session
 {
 public:
+    Session ();
     Session(QString name, QString sourceIP, QString destinationIP,
             QString sourceMAC, QString destinationMAC, QString _payload,
             QString _protocol, QString _ipversion,

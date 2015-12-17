@@ -37,6 +37,8 @@ private slots:
 
     void on_tableWidget_itemEntered(QTableWidgetItem *item);
 
+    void on_loadButton_clicked();
+
 private:
     Ui::TrafficWindow *ui;
     QList<Session *> sessionList;

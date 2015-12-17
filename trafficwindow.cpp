@@ -3,6 +3,10 @@
 #include "sessionwindow.h"
 #include "session.h"
 #include "newsessiondialog.h"
+#include "sessionloader.h"
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QDebug>
 
 TrafficWindow::TrafficWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -163,4 +167,24 @@ void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
        ui->tableWidget->setToolTip("");
     }
 
+}
+
+void TrafficWindow::on_loadButton_clicked()
+{
+    QString error = "";
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Session"),"",tr("Session XML file (*.xml)"));
+    qDebug() << filename;
+    SessionLoader loader(filename);
+    if(filename != ""){
+        if(!loader.checkSession(error) ){
+            QMessageBox messageBox;
+            messageBox.critical(0,"Error",error);
+            messageBox.setFixedSize(500,200);
+        }
+        else{
+            qDebug() << "Create loaded session";
+            this->sessionList.append(loader.loadSession());
+            this->displaySessions();
+        }
+    }
 }
