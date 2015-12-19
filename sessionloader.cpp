@@ -80,18 +80,22 @@ bool SessionLoader::checkSession(QString &error){
                 error = "XML could not be parsed!\nNo/unknown states.";
                 return false;
              }
+             qDebug() << "Control message start";
              if(!checkControlMessage()){
                  error = "XML could not be parsed!\nUnknown protocols or unknown control message headers.";
                  return false;
              }
+             qDebug() << "Payload start";
              if(!buildPayload()){
                  error = "Packet or payload error in XML.";
                  return false;
              }
+             qDebug() << "Timeout start";
              if(!checkTimeout()){
                  error = "XML couldn't be parsed.";
                  return false;
              }
+             qDebug() << "Flow start";
              if(!checkSessionflow()){
                  error = "XML couldn't be parsed.";
                  return false;
@@ -288,41 +292,63 @@ bool SessionLoader::checkControlMessage(){
                 bool rugetotallenght = false;
                 bool udplenght = false;
                 bool udpcheck = false;
+                qDebug() << xml_.name();
 
-                while(!rugetotallenght || !udplenght || !udpcheck){
-                    xml_.readNext();
-                    if (xml_.isEndElement()){
-                        xml_.readNext();
-                    }
-                    if(xml_.atEnd()){
-                        qDebug() << "No control message header variables";
-                        return false;
-                    }
+                while(!xml_.atEnd()){
+                    xml_.readNextStartElement();
                     if(xml_.name() == "RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES"){
-                        if(xml_.attributes().value("OFFSET").toString() == "16"){
-                            if(xml_.attributes().value("VARIABLE").toString() != "ruge_protocol_variable_ipv4_total_length"){
-                                return false;
+                        while(xml_.name() == "RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES"){
+                            if(xml_.attributes().value("OFFSET").toString() == "16"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "ruge_protocol_variable_ipv4_total_length"){
+                                    return false;
+                                }
+                                rugetotallenght = true;
                             }
-                            rugetotallenght = true;
-                        }
-                        else if(xml_.attributes().value("OFFSET").toString() == "38"){
-                            if(xml_.attributes().value("VARIABLE").toString() != "ruge_protocol_variable_udp_length"){
-                                return false;
+                            else if(xml_.attributes().value("OFFSET").toString() == "38"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "ruge_protocol_variable_udp_length"){
+                                    return false;
+                                }
+                                udplenght = true;
                             }
-                            udplenght = true;
-                        }
-                        else if(xml_.attributes().value("OFFSET").toString() == "40"){
-                            if(xml_.attributes().value("VARIABLE").toString() != "ruge_protocol_variable_udp_csum"){
-                                return false;
+                            else if(xml_.attributes().value("OFFSET").toString() == "40"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "ruge_protocol_variable_udp_csum"){
+                                    return false;
+                                }
+                                udpcheck = true;
                             }
-                            udpcheck = true;
-                        }
-                        // TODO? check others??
+                            else if(xml_.attributes().value("OFFSET").toString() == "0"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "MAC_DST"){
+                                    return false;
+                                }
+                            }
+                            else if(xml_.attributes().value("OFFSET").toString() == "6"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "MAC_SRC"){
+                                    return false;
+                                }
+                            }
+                            else if(xml_.attributes().value("OFFSET").toString() == "26"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "IP_SRC"){
+                                    return false;
+                                }
+                            }
+                            else if(xml_.attributes().value("OFFSET").toString() == "30"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "IP_DST"){
+                                    return false;
+                                }
+                            }
                         qDebug() << xml_.name();
+                        xml_.readNextStartElement();
+                        if(xml_.isEndElement()){
+                            xml_.readNextStartElement();
+                        }
+                        }
+                        if(!rugetotallenght || !udplenght || !udpcheck){
+                            return false;
+                        }
+                        qDebug() << "Control message header loop ended";
+                        return true;
                     }
                 }
-                qDebug() << "Control message header loop ended";
-                return true;
             }
         }
         else{
@@ -372,7 +398,7 @@ bool SessionLoader::buildPayload(){
         }
         xml_.readNext();
     }
-    return true;
+    return false;
 }
 
 bool SessionLoader::checkTimeout(){
