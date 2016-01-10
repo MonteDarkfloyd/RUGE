@@ -3,10 +3,16 @@
 #include "sessionwindow.h"
 #include "session.h"
 #include "newsessiondialog.h"
+#include "newsessionwindow.h"
+#include "predef.h"
+#include "createsession.h"
+#include "inter.h"
 #include "sessionloader.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
+
+
 
 TrafficWindow::TrafficWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -37,6 +43,7 @@ void TrafficWindow::on_actionQuit_triggered()
 
 void TrafficWindow::addSession(Session *newSess){
     this->sessionList.append(newSess);
+    this->displaySessions();
 
 }
 
@@ -90,9 +97,9 @@ void TrafficWindow::on_editButton_clicked()
     if(lastRow >= 0){
         if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
             Session* session = this->sessionList.at(this->lastRow);
-            Window* newSess = new Window(this);
+            newsessionwindow* newSess = new newsessionwindow(this,session);
             newSess->show();
-            newSess->displaySession(session);
+            newSess->displaySession();
         }
     }
 
@@ -119,6 +126,8 @@ void TrafficWindow::on_newButton_clicked()
 {
     NewSessionDialog* predefWin = new NewSessionDialog(this);
     predefWin->exec();
+    //createsession* newSess = new createsession();//qobject_cast<TrafficWindow*>(this));
+    //newSess->show();
 }
 
 
@@ -130,6 +139,7 @@ void TrafficWindow::on_tableWidget_itemSelectionChanged()
     if(ui->tableWidget->selectedItems().size() > 0){
         ui->deleteButton->setEnabled(true);
         ui->editButton->setEnabled(true);
+        ui->deleteButton->setEnabled(true);
         this->lastRow = ui->tableWidget->selectedItems().at(0)->row();
     }
     else{
@@ -137,6 +147,7 @@ void TrafficWindow::on_tableWidget_itemSelectionChanged()
         // Nothing is selected or selected was edited or deleted
         ui->deleteButton->setEnabled(false);
         ui->editButton->setEnabled(false);
+        ui->deleteButton->setEnabled(false);
     }
 
 
@@ -146,10 +157,13 @@ void TrafficWindow::on_tableWidget_itemSelectionChanged()
 void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
 {
 
-    QString ipdest = "";
-    QString ipsour = "";
-    QString portdest = "??";
-    QString portsour = "??";
+    QString ipdest = "Default";
+    QString ipsour = "Default";
+    QString macsour = "Default";
+    QString macdest = "Default";
+    QString portdest = "Default";
+    QString portsour = "Default";
+    QString payloadtext = "No Payload";
     if(item->column() == 0){
 
         // Search the right session from list
@@ -157,10 +171,15 @@ void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
             if(sessionList.at(i)->sessName == item->text()){
                 ipdest = sessionList.at(i)->dstIP;
                 ipsour = sessionList.at(i)->srcIP;
-                // TODO ports
+                macsour = sessionList.at(i)->srcMAC;
+                macdest = sessionList.at(i)->dstMAC;
+                portdest = sessionList.at(i)->udp->dstPort;
+                portsour = sessionList.at(i)->udp->srcPort;
+                payloadtext = sessionList.at(i)->payload;
             }
         }
-        const QString tooltiptext = "Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n Destination port: " + portdest + "\n Source port: " + portsour;
+        QString tooltiptext = "Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n Destination port: " + portdest + "\n Source port: " + portsour + "\n";
+        tooltiptext = tooltiptext + " MAC Source: " + macsour + "\n MAC Destination: " + macdest + "\n Payload: " + payloadtext;
         ui->tableWidget->setToolTip(tooltiptext);
     }
     else {
@@ -169,7 +188,7 @@ void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
 
 }
 
-void TrafficWindow::on_loadButton_clicked()
+void TrafficWindow::on_loadSButton_clicked()
 {
     QString error = "";
     QString filename = QFileDialog::getOpenFileName(this, tr("Open Session"),"",tr("Session XML file (*.xml)"));
@@ -187,4 +206,8 @@ void TrafficWindow::on_loadButton_clicked()
             this->displaySessions();
         }
     }
+}
+
+void TrafficWindow::on_saveSButton_clicked()
+{
 }

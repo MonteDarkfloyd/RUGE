@@ -8,16 +8,23 @@ Session::Session (){
     payload = "";
     protocol = "";
     ipVersion = "";
-    multiply = 0;
-    rampup = 0;
-    offset = 0;
-    loopover = 0;
+    ttl = "";
+    multiply = 10;
+    rampup = 100;
+    offset = 100;
+    loopover = 1;
     loopovertimespan = 0;
+    tcp = 0;
+    udp = new UDPvalues();
+}
+
+Session::~Session(){
+    delete udp;
 }
 
 Session::Session(QString name, QString sourceIP, QString destinationIP,
                  QString sourceMAC,QString destinationMAC, QString _payload,
-                 QString _protocol, QString _ipversion,
+                 QString _protocol, QString _ipversion,TCPvalues* _tcp,UDPvalues* _udp,
                  int _multiply, int _rampup,
                  int _offset, int _loopover,
                  int _loopovertimespan )
@@ -30,6 +37,9 @@ Session::Session(QString name, QString sourceIP, QString destinationIP,
     this->payload = _payload;
     this->protocol = _protocol;
     this->ipVersion = _ipversion;
+    this->tcp = _tcp;
+    this->udp = _udp;
+    this->ttl = "";
 
     this->multiply = _multiply;
     this->rampup = _rampup;

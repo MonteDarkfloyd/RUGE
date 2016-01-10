@@ -17,26 +17,19 @@
    <string>Add a new session..</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Create a new session or choose one predefined from below.</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0" colspan="2">
     <widget class="QListWidget" name="listWidget">
      <item>
       <property name="text">
-       <string>UDP Flood Attack</string>
+       <string>TCP SYN Flood Attack</string>
       </property>
      </item>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QPushButton" name="createButton">
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>Create a new session..</string>
+      <string>Create a new session or choose one predefined from below.</string>
      </property>
     </widget>
    </item>
@@ -50,6 +43,13 @@
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QPushButton" name="createButton">
+     <property name="text">
+      <string>Create a new session..</string>
      </property>
     </widget>
    </item>

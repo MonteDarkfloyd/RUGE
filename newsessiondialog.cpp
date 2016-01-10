@@ -2,6 +2,8 @@
 #include "ui_newsessiondialog.h"
 #include "trafficwindow.h"
 #include "sessionwindow.h"
+#include "createsession.h"
+#include "predef.h"
 
 NewSessionDialog::NewSessionDialog(TrafficWindow *parent) :
     QDialog(parent),
@@ -26,16 +28,17 @@ void NewSessionDialog::on_buttonBox_accepted()
 {
     // TODO:    check selected and send data to sessionwindow
     //          Where are predefined sessions saved?
-    Window* newSess = new Window(parentPointer);
+    predef* newSess = new predef();
     newSess->show();
 }
 
 // Create a completely new session
 void NewSessionDialog::on_createButton_clicked()
 {
-    this->accept();
-    Window* newSess = new Window(parentPointer);
+
+    createsession* newSess = new createsession(this->parentWidget(), parentPointer);
     newSess->show();
+    this->accept();
 }
 
 // Item is selected from the list, enable ok button.

@@ -136,8 +136,8 @@ bool SessionLoader::readVariable(){
                        qDebug() << "No Default";
                return false;
            }
-           session_->dstMAC = xml_.attributes().value("DEFAULT").toString();
-             qDebug() << session_->dstMAC;
+           session_->srcMAC = xml_.attributes().value("DEFAULT").toString();
+             qDebug() << session_->srcMAC;
            return true;
 
 
@@ -150,16 +150,6 @@ bool SessionLoader::readVariable(){
                return false;
            }
            session_->dstMAC = xml_.attributes().value("DEFAULT").toString();
-           return true;
-        }
-
-        else if(value == "MAC_SRC"){
-            // No default aka no value?
-           if(!xml_.attributes().hasAttribute("DEFAULT")){
-               qDebug() << "No Default";
-               return false;
-           }
-           session_->srcMAC = xml_.attributes().value("DEFAULT").toString();
            return true;
         }
 
@@ -180,6 +170,42 @@ bool SessionLoader::readVariable(){
                return false;
            }
            session_->dstIP = xml_.attributes().value("DEFAULT").toString();
+           return true;
+        }
+        else if(value == "IP_TTL"){
+            // No default aka no value?
+           if(!xml_.attributes().hasAttribute("DEFAULT")){
+               qDebug() << "No Default";
+               return false;
+           }
+           session_->ttl = xml_.attributes().value("DEFAULT").toString();
+           return true;
+        }
+        else if(value == "UDP_SRC_PORT"){
+            // No default aka no value?
+           if(!xml_.attributes().hasAttribute("DEFAULT")){
+               qDebug() << "No Default";
+               return false;
+           }
+           session_->udp->srcPort = xml_.attributes().value("DEFAULT").toString();
+           return true;
+        }
+        else if(value == "UDP_DST_PORT"){
+            // No default aka no value?
+           if(!xml_.attributes().hasAttribute("DEFAULT")){
+               qDebug() << "No Default";
+               return false;
+           }
+           session_->udp->dstPort = xml_.attributes().value("DEFAULT").toString();
+           return true;
+        }
+        else if(value == "UDP_LENGTH"){
+            // No default aka no value?
+           if(!xml_.attributes().hasAttribute("DEFAULT")){
+               qDebug() << "No Default";
+               return false;
+           }
+           session_->udp->length = xml_.attributes().value("DEFAULT").toString();
            return true;
         }
         else{
@@ -333,6 +359,26 @@ bool SessionLoader::checkControlMessage(){
                             }
                             else if(xml_.attributes().value("OFFSET").toString() == "30"){
                                 if(xml_.attributes().value("VARIABLE").toString() != "IP_DST"){
+                                    return false;
+                                }
+                            }
+                            else if(xml_.attributes().value("OFFSET").toString() == "22"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "IP_TTL"){
+                                    return false;
+                                }
+                            }
+                            else if(xml_.attributes().value("OFFSET").toString() == "34"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "UDP_SRC_PORT"){
+                                    return false;
+                                }
+                            }
+                            else if(xml_.attributes().value("OFFSET").toString() == "36"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "UDP_DST_PORT"){
+                                    return false;
+                                }
+                            }
+                            else if(xml_.attributes().value("OFFSET").toString() == "38"){
+                                if(xml_.attributes().value("VARIABLE").toString() != "UDP_LENGTH"){
                                     return false;
                                 }
                             }

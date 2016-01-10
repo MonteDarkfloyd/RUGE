@@ -137,14 +137,14 @@ void Window::createSession(){
     tempLine = qobject_cast<QLineEdit*>(btemp->children().at(8));
     _dstMAC = tempLine->text();
 
-    this->newSession =  new Session(_sessName,_srcIP,
+    /*this->newSession =  new Session(_sessName,_srcIP,
                        _dstIP,
                        _srcMAC,
                        _dstMAC,
                        _payload,
                        _protocol,
                        _ipVersion);
-
+*/
 
 
 }

@@ -6,6 +6,7 @@
 #include <QTableWidgetItem>
 
 
+
 namespace Ui {
 class TrafficWindow;
 }
@@ -37,7 +38,9 @@ private slots:
 
     void on_tableWidget_itemEntered(QTableWidgetItem *item);
 
-    void on_loadButton_clicked();
+    void on_loadSButton_clicked();
+
+    void on_saveSButton_clicked();
 
 private:
     Ui::TrafficWindow *ui;
