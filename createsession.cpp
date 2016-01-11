@@ -10,6 +10,8 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     ui(new Ui::createsession)
 {
     parentPointer = Tparent;
+    editMode = false;
+    editSession = 0;
     Qt::WindowFlags flags = windowFlags();
     this->setWindowFlags(flags | Qt::Window);
     ui->setupUi(this);
@@ -120,6 +122,53 @@ createsession::~createsession()
 {
     delete ui;
 }
+
+void createsession::setEdit(Session* editedSession){
+    editMode = true;
+    editSession = editedSession;
+
+    // Set items to UI
+    ui->name_edit->setText(editSession->sessName);
+    // Only UDP supported for now.
+    ui->rb_ip4->setChecked(true);
+    ui->rb_udp->setChecked(true);
+    ui->txt_mac_dest->setText(editSession->dstMAC);
+
+    // If MAC source is set, enable checkbox and set text.
+    if(editSession->srcMAC != ""){
+        ui->mac_checkBox->setChecked(true);
+        ui->txt_mac_source->setText(editSession->srcMAC);
+    }
+    // IP addresses
+    ui->txt_ip_dest->setText(editedSession->dstIP);
+
+    if(editSession->srcIP != ""){
+        ui->overrideipsrc->setChecked(true);
+        ui->txt_ip_src->setText(editSession->srcIP);
+    }
+    // Ports
+    ui->txt_udp_dest_port->setText(editedSession->udp->dstPort);
+    if(editSession->udp->srcPort != ""){
+        ui->sourceport_checkBox->setChecked(true);
+        ui->txt_udp_src_port->setText(editSession->udp->dstPort);
+    }
+    // Time to live
+    if(editSession->ttl != ""){
+        ui->ttl_checkBox->setChecked(true);
+        ui->txt_ttl->setText(editSession->ttl);
+    }
+    //Length
+    if(editSession->udp->length != ""){
+        ui->length_checkBox->setChecked(true);
+        ui->txt_udp_len->setText(editSession->udp->length);
+    }
+    // Payload
+    if(editSession->payload != ""){
+        ui->payload_checkBox->setChecked(true);
+        ui->payloadEdit->setText(editSession->payload);
+    }
+}
+
 
 void createsession::on_rb_ip4_toggled(bool checked)
 {
@@ -237,11 +286,6 @@ void createsession::on_cancel_button_clicked()
 {
     this->close();
 }
-// Mysterious bug for now...
-void createsession::on_rb_sctp_clicked()
-{
-
-}
 
 void createsession::on_payload_checkBox_toggled(bool checked)
 {
@@ -251,7 +295,15 @@ void createsession::on_payload_checkBox_toggled(bool checked)
 
 void createsession::on_confirm_Button_clicked()
 {
-    Session* createdSession = new Session();
+    Session* createdSession = 0;
+    // Check if editing
+    if(editMode){
+        createdSession = editSession;
+    }
+    else{
+        createdSession = new Session();
+    }
+
     createdSession->sessName = ui->name_edit->text();
     createdSession->ipVersion = "IPv4";
     createdSession->protocol = "UDP";
@@ -279,9 +331,14 @@ void createsession::on_confirm_Button_clicked()
         createdSession->payload = ui->payloadEdit->text();
     }
 
+
+    if(editMode){
+       parentPointer->displaySessions();
+    }
+    else{
+       parentPointer->addSession(createdSession);
+    }
+
     this->close();
-    parentPointer->addSession(createdSession);
-
 }
-
 

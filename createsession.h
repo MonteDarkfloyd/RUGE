@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "trafficwindow.h"
+#include "session.h"
 
 namespace Ui {
 class createsession;
@@ -16,6 +17,8 @@ public:
     explicit createsession(QWidget *parent = 0, TrafficWindow* Tparent = 0);
     ~createsession();
 
+    void setEdit(Session* editedSession);
+
 private slots:
 
     void on_rb_ip4_toggled(bool checked);
@@ -27,8 +30,6 @@ private slots:
     void on_rb_udp_toggled(bool checked);
 
     void on_rb_icmp_toggled(bool checked);
-
-    void on_rb_sctp_clicked();
 
     void on_rb_sctp_toggled(bool checked);
 
@@ -59,10 +60,11 @@ private slots:
     void on_confirm_Button_clicked();
 
 
-
 private:
     Ui::createsession *ui;
     TrafficWindow* parentPointer;
+    Session* editSession;
+    bool editMode;
 
 
 

@@ -97,9 +97,9 @@ void TrafficWindow::on_editButton_clicked()
     if(lastRow >= 0){
         if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
             Session* session = this->sessionList.at(this->lastRow);
-            newsessionwindow* newSess = new newsessionwindow(this,session);
-            newSess->show();
-            newSess->displaySession();
+            createsession* editWindow = new createsession(this,this);
+            editWindow->setEdit(session);
+            editWindow->show();
         }
     }
 
