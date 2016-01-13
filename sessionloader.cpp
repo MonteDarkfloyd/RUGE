@@ -23,7 +23,7 @@ bool SessionLoader::checkSession(QString &error){
         QFile xmlFile(filename_); 
         if(!xmlFile.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            qDebug() << "Failed to open the file for reading.";
+            error = "Failed to open the file for reading.";
             return false;
         }
         QFileInfo name = xmlFile.fileName();
@@ -36,6 +36,11 @@ bool SessionLoader::checkSession(QString &error){
         // Read the DTD data from the xml
         xml_.readNext();
 
+        // The file is empty or very short?
+        if (xml_.hasError()){
+            error = "XML could not be parsed!";
+            return false;
+        }
         // Check if DTD = RUGESessionData
         if (xml_.dtdName() != "RUGESessionData"){
             return false;

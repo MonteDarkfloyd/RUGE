@@ -16,13 +16,14 @@ class NewSessionDialog : public QDialog
 public:
     explicit NewSessionDialog(TrafficWindow *parent = 0);
     ~NewSessionDialog();
+    unsigned int getPredefinedAmount();
 
 private slots:
     void on_buttonBox_accepted();
 
     void on_createButton_clicked();
 
-    void on_listWidget_itemSelectionChanged();
+    void on_predefinedList_itemSelectionChanged();
 
 private:
     Ui::NewSessionDialog *ui;

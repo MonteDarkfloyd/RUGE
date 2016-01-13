@@ -17,7 +17,8 @@ public:
     explicit createsession(QWidget *parent = 0, TrafficWindow* Tparent = 0);
     ~createsession();
 
-    void setEdit(Session* editedSession);
+    void setSession(Session* editedSession);
+    void setEditMode();
 
 private slots:
 

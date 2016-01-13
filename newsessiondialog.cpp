@@ -1,9 +1,12 @@
 #include "newsessiondialog.h"
 #include "ui_newsessiondialog.h"
 #include "trafficwindow.h"
-#include "sessionwindow.h"
 #include "createsession.h"
-#include "predef.h"
+#include "sessionloader.h"
+#include "session.h"
+#include <QDir>
+#include <QDebug>
+#include <QMessageBox>
 
 NewSessionDialog::NewSessionDialog(TrafficWindow *parent) :
     QDialog(parent),
@@ -15,6 +18,20 @@ NewSessionDialog::NewSessionDialog(TrafficWindow *parent) :
     ui->setupUi(this);
     // Disable OK button
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
+    QDir folder("predefined");
+    // Does predefined folder exist.
+    if(!folder.exists()){
+        qDebug() << "No predefined folder";
+    }
+    // Get all xml files from folder.
+    else {
+        QStringList filter;
+        filter << "*.xml";
+        QStringList xmlList = folder.entryList(filter,QDir::Files);
+        for(int i = 0; i < xmlList.size(); i++){
+          ui->predefinedList->addItem(xmlList.at(i));
+        }
+    }
 }
 
 NewSessionDialog::~NewSessionDialog()
@@ -22,14 +39,30 @@ NewSessionDialog::~NewSessionDialog()
     delete ui;
 }
 
+// Return the amount of predefined sessions found.
+unsigned int NewSessionDialog::getPredefinedAmount(){
+    return ui->predefinedList->count();
+}
+
 // One predefinned session selected, go to session window with
-// data.
+// the data.
 void NewSessionDialog::on_buttonBox_accepted()
 {
-    // TODO:    check selected and send data to sessionwindow
-    //          Where are predefined sessions saved?
-    predef* newSess = new predef();
-    newSess->show();
+    QString error = "";
+    QString filepath = "predefined/" + ui->predefinedList->currentItem()->text();
+    SessionLoader predefinedLoad(filepath);
+    if(!predefinedLoad.checkSession(error)){
+        QMessageBox messageBox;
+        messageBox.critical(0,"Error",error);
+        messageBox.setFixedSize(500,200);
+    }
+    else{
+        Session* predefinedSession = predefinedLoad.loadSession();
+        createsession* newSess = new createsession(this->parentWidget(), parentPointer);
+        newSess->setSession(predefinedSession);
+        newSess->show();
+        this->accept();
+    }
 }
 
 // Create a completely new session
@@ -42,7 +75,7 @@ void NewSessionDialog::on_createButton_clicked()
 }
 
 // Item is selected from the list, enable ok button.
-void NewSessionDialog::on_listWidget_itemSelectionChanged()
+void NewSessionDialog::on_predefinedList_itemSelectionChanged()
 {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( true );
 }

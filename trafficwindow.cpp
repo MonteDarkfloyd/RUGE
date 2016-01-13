@@ -1,12 +1,8 @@
 #include "trafficwindow.h"
 #include "ui_trafficwindow.h"
-#include "sessionwindow.h"
 #include "session.h"
 #include "newsessiondialog.h"
-#include "newsessionwindow.h"
-#include "predef.h"
 #include "createsession.h"
-#include "inter.h"
 #include "sessionloader.h"
 #include <QFileDialog>
 #include <QMessageBox>
@@ -98,7 +94,8 @@ void TrafficWindow::on_editButton_clicked()
         if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
             Session* session = this->sessionList.at(this->lastRow);
             createsession* editWindow = new createsession(this,this);
-            editWindow->setEdit(session);
+            editWindow->setSession(session);
+            editWindow->setEditMode();
             editWindow->show();
         }
     }
@@ -125,7 +122,14 @@ void TrafficWindow::on_deleteButton_clicked()
 void TrafficWindow::on_newButton_clicked()
 {
     NewSessionDialog* predefWin = new NewSessionDialog(this);
-    predefWin->exec();
+    if(predefWin->getPredefinedAmount() == 0){
+            createsession* newSess = new createsession(this, this);
+            newSess->show();
+            delete predefWin;
+        }
+    else {
+        predefWin->exec();
+    }
     //createsession* newSess = new createsession();//qobject_cast<TrafficWindow*>(this));
     //newSess->show();
 }
@@ -178,7 +182,7 @@ void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
                 payloadtext = sessionList.at(i)->payload;
             }
         }
-        QString tooltiptext = "Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n Destination port: " + portdest + "\n Source port: " + portsour + "\n";
+        QString tooltiptext = " Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n Destination port: " + portdest + "\n Source port: " + portsour + "\n";
         tooltiptext = tooltiptext + " MAC Source: " + macsour + "\n MAC Destination: " + macdest + "\n Payload: " + payloadtext;
         ui->tableWidget->setToolTip(tooltiptext);
     }
