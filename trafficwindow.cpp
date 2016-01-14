@@ -4,6 +4,7 @@
 #include "newsessiondialog.h"
 #include "createsession.h"
 #include "sessionloader.h"
+#include "sessionsaver.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
@@ -214,4 +215,11 @@ void TrafficWindow::on_loadSButton_clicked()
 
 void TrafficWindow::on_saveSButton_clicked()
 {
+    if(lastRow >= 0){
+        if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
+                 QString filename = QFileDialog::getSaveFileName(this, tr("Save Session"),sessionList.at(lastRow)->sessName,tr("Session XML file (*.xml)"));
+                 SessionSaver saver(sessionList,lastRow,filename);
+                 saver.Save_Session();
+        }
+      }
 }
