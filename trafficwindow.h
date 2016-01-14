@@ -42,7 +42,12 @@ private slots:
 
     void on_saveSButton_clicked();
 
+    void on_loadTButton_clicked();
+
 private:
+
+    void deleteSessions();
+
     Ui::TrafficWindow *ui;
     QList<Session *> sessionList;
     int lastRow;

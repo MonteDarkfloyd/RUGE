@@ -40,8 +40,6 @@ private slots:
 
     void on_ttl_checkBox_toggled(bool checked);
 
-    void on_checkBox_9_toggled(bool checked);
-
     void on_checkBox_toggled(bool checked);
 
     void on_sourceport_checkBox_toggled(bool checked);

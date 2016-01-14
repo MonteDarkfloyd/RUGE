@@ -404,22 +404,6 @@
        <string>Increment Count :</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_offset">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>300</x>
-        <y>80</y>
-        <width>51</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Offset :</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_ttl">
       <property name="enabled">
        <bool>false</bool>
@@ -532,22 +516,6 @@
        <string>64</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="txt_offset">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>340</x>
-        <y>80</y>
-        <width>71</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
      <widget class="QCheckBox" name="ttl_checkBox">
       <property name="geometry">
        <rect>
@@ -559,22 +527,6 @@
       </property>
       <property name="text">
        <string>Override TTL</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBox_9">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>430</x>
-        <y>80</y>
-        <width>101</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Override Offset</string>
       </property>
      </widget>
     </widget>
@@ -1018,6 +970,12 @@
         <width>101</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhNone</set>
+      </property>
+      <property name="inputMask">
+       <string/>
       </property>
      </widget>
      <widget class="QLabel" name="label_udp__len">

@@ -20,7 +20,11 @@ SessionLoader::~SessionLoader(){
 bool SessionLoader::checkSession(QString &error){
         qDebug() << filename_;
         session_ = new Session();
-        QFile xmlFile(filename_); 
+        QFile xmlFile(filename_);
+        if(!xmlFile.exists()){
+            error = "Xml file doesn't exist.";
+            return false;
+        }
         if(!xmlFile.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             error = "Failed to open the file for reading.";
@@ -43,6 +47,7 @@ bool SessionLoader::checkSession(QString &error){
         }
         // Check if DTD = RUGESessionData
         if (xml_.dtdName() != "RUGESessionData"){
+            error = "XML is not the right type.";
             return false;
         }
         if (xml_.readNext() && xml_.name() == "RUGE_CONFIG"){
@@ -57,27 +62,21 @@ bool SessionLoader::checkSession(QString &error){
             }
 
             xml_.readNextStartElement();
-            if(xml_.name() != "RUGE_SESSION_VARIABLE"){
-                // TODO: Create basic session
-            }
-            else{
-                qDebug() << "Start variable parsing";
-                qDebug() << xml_.name();
-                while(xml_.name() == "RUGE_SESSION_VARIABLE" && !xml_.atEnd()){
+            qDebug() << "Start variable parsing";
+            qDebug() << xml_.name();
+            while(xml_.name() == "RUGE_SESSION_VARIABLE" && !xml_.atEnd()){
 
-
-                    // check variable
-                    if(!readVariable()){
-                        error = "XML could not be parsed!\nUnknown variable.";
-                        return false;
-                    }
-
-                    xml_.readNextStartElement();
-                    if(xml_.isEndElement()){
-                       xml_.readNextStartElement();
-                    }
-                    qDebug() << xml_.name() << "  Loop1";
+                // check variable
+                if(!readVariable()){
+                    error = "XML could not be parsed!\nUnknown variable.";
+                    return false;
                 }
+
+                xml_.readNextStartElement();
+                if(xml_.isEndElement()){
+                    xml_.readNextStartElement();
+                }
+                qDebug() << xml_.name() << "  Loop1";
              }
 
              qDebug() << xml_.name() << "  Loop1 end";
@@ -132,7 +131,6 @@ bool SessionLoader::readVariable(){
         value = xml_.attributes().value("VARIABLE").toString();
         qDebug() << value;
         // TODO check if mac and IP are valid
-        // TODO add port and other data
         // Check what variable is this.
         if(value == "MAC_SRC"){
 

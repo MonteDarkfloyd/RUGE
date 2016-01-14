@@ -22,6 +22,9 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     ui->groupBox_3->setVisible(false);
     ui->groupBox_6->setVisible(false);
 
+    ui->txt_udp_src_port->setValidator(new QIntValidator(0, 65535, this) );
+    ui->txt_udp_dest_port->setValidator(new QIntValidator(0, 65535, this) );
+    ui->txt_ttl->setValidator(new QIntValidator(0, 255, this) );
 
 }
 
@@ -147,11 +150,6 @@ void createsession::on_ttl_checkBox_toggled(bool checked)
     ui->txt_ttl->setEnabled(checked);
 }
 
-void createsession::on_checkBox_9_toggled(bool checked)
-{
-    ui->label_offset->setEnabled(checked);
-    ui->txt_offset->setEnabled(checked);
-}
 
 void createsession::on_checkBox_toggled(bool checked)
 {

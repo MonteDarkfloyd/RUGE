@@ -5,6 +5,7 @@
 #include "createsession.h"
 #include "sessionloader.h"
 #include "sessionsaver.h"
+#include "trafficloader.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
@@ -28,6 +29,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
 
 TrafficWindow::~TrafficWindow()
 {
+    deleteSessions();
     delete ui;
 }
 
@@ -144,7 +146,7 @@ void TrafficWindow::on_tableWidget_itemSelectionChanged()
     if(ui->tableWidget->selectedItems().size() > 0){
         ui->deleteButton->setEnabled(true);
         ui->editButton->setEnabled(true);
-        ui->deleteButton->setEnabled(true);
+        ui->saveSButton->setEnabled(true);
         this->lastRow = ui->tableWidget->selectedItems().at(0)->row();
     }
     else{
@@ -152,7 +154,8 @@ void TrafficWindow::on_tableWidget_itemSelectionChanged()
         // Nothing is selected or selected was edited or deleted
         ui->deleteButton->setEnabled(false);
         ui->editButton->setEnabled(false);
-        ui->deleteButton->setEnabled(false);
+        ui->saveSButton->setEnabled(false);
+        ui->tableWidget->setToolTip("");
     }
 
 
@@ -223,3 +226,34 @@ void TrafficWindow::on_saveSButton_clicked()
         }
       }
 }
+
+void TrafficWindow::on_loadTButton_clicked()
+{
+    QString error = "";
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Traffic Profile"),"",tr("Traffic XML file (*.xml)"));
+    TrafficLoader loader(filename);
+    if(filename != ""){
+        if(!loader.checkTraffic(error) ){
+            QMessageBox messageBox;
+            messageBox.critical(0,"Error",error);
+            messageBox.setFixedSize(500,200);
+        }
+        else{
+            qDebug() << "Create loaded traffic";
+            deleteSessions();
+            sessionList = loader.loadTraffic();
+            this->displaySessions();
+        }
+    }
+}
+
+// Used to delete all sessions permanently.
+// Used when loading traffic profile.
+void TrafficWindow::deleteSessions(){
+    for(int i = 0; i < sessionList.size(); ++i){
+        delete sessionList.at(i);
+    }
+    sessionList.clear();
+}
+
+
