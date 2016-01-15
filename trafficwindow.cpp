@@ -6,9 +6,11 @@
 #include "sessionloader.h"
 #include "sessionsaver.h"
 #include "trafficloader.h"
+#include "trafficsaver.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
+#include <QProcess>
 
 
 
@@ -19,6 +21,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
 
     ui->setupUi(this);
     connect(ui->actionNew_Session,SIGNAL(triggered(bool)), this, SLOT(on_newButton_clicked()));
+    connect(ui->actionLoad_Traffic_Profile,SIGNAL(triggered(bool)),this,SLOT(on_loadTButton_clicked()));
     ui->tableWidget->removeRow(0);
 
     // Set table headers to be the same size.
@@ -83,7 +86,12 @@ void TrafficWindow::displaySessions(){
      row++;
 
     }
-
+    if(!sessionList.empty()){
+        ui->saveTButton->setEnabled(true);
+    }
+    else{
+        ui->saveTButton->setEnabled(false);
+    }
 
 
 }
@@ -221,7 +229,7 @@ void TrafficWindow::on_saveSButton_clicked()
     if(lastRow >= 0){
         if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
                  QString filename = QFileDialog::getSaveFileName(this, tr("Save Session"),sessionList.at(lastRow)->sessName,tr("Session XML file (*.xml)"));
-                 SessionSaver saver(sessionList,lastRow,filename);
+                 SessionSaver saver(sessionList.at(lastRow),filename);
                  saver.Save_Session();
         }
       }
@@ -257,3 +265,26 @@ void TrafficWindow::deleteSessions(){
 }
 
 
+
+void TrafficWindow::on_startButton_clicked()
+{
+    QString program = "RUGE";
+    QStringList arguments;
+    arguments << "test";
+
+
+    QProcess *myProcess = new QProcess(this);
+    myProcess->start(program, arguments);
+
+    myProcess->waitForFinished();
+    QString strOut = myProcess->readAllStandardOutput();
+
+    qDebug() << strOut;
+}
+
+void TrafficWindow::on_saveTButton_clicked()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Traffic"),"",tr("Traffic XML file (*.xml)"));
+    TrafficSaver saver(filename,sessionList);
+    saver.saveTraffic();
+}

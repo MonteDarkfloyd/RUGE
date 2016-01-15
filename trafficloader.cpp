@@ -125,7 +125,12 @@ bool TrafficLoader::addTrafficvalues(Session* session, QString &error){
          error = "Session has no rampup.";
          return false;
      }
+     else if(!xml_.attributes().hasAttribute("SESSION_START_OFFSET_IN_US")){
+         error = "Session has no offset.";
+         return false;
+     }
      else{
+         session->offset = xml_.attributes().value("SESSION_START_OFFSET_IN_US").toInt();
          session->loopover = xml_.attributes().value("SESSION_LOOP_OVER_COUNT").toInt();
          session->loopovertimespan = xml_.attributes().value("SESSION_LOOP_OVER_TIME_SPAN_IN_US").toInt();
          session->multiply = xml_.attributes().value("SESSION_COUNT").toInt();

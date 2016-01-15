@@ -219,26 +219,58 @@ void createsession::on_confirm_Button_clicked()
     createdSession->protocol = "UDP";
     createdSession->dstIP =  ui->txt_ip_dest->text();
     createdSession->dstMAC = ui->txt_mac_dest->text();
+
+    // Add mac source
     if(ui->mac_checkBox->isChecked()){
         createdSession->srcMAC = ui->txt_mac_source->text();
     }
+    else{
+        createdSession->srcMAC = "";
+    }
+
+    // Overwrite ip source
     if(ui->overrideipsrc->isChecked()){
         createdSession->srcIP = ui->txt_ip_src->text();
     }
+    else{
+        createdSession->srcIP = "";
+    }
+
+    // Time to life
     if(ui->ttl_checkBox->isChecked()){
         createdSession->ttl = ui->txt_ttl->text();
     }
+    else{
+        createdSession->ttl = "";
+    }
+
+    // Dest. port
     if(ui->txt_udp_dest_port->text() != ""){
         createdSession->udp->dstPort = ui->txt_udp_dest_port->text();
     }
+
+    // Source port
     if(ui->sourceport_checkBox->isChecked()){
         createdSession->udp->srcPort = ui->txt_udp_src_port->text();
     }
+    else{
+        createdSession->udp->srcPort = "";
+    }
+
+    // Length
     if(ui->length_checkBox->isChecked()){
         createdSession->udp->length = ui->txt_udp_len->text();
     }
+    else{
+        createdSession->udp->length = "";
+    }
+
+    // payload
     if(ui->payload_checkBox->isChecked()){
         createdSession->payload = ui->payloadEdit->text();
+    }
+    else{
+        createdSession->payload = "";
     }
 
 

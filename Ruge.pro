@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     udpvalues.cpp \
     tcpvalues.cpp \
     sessionsaver.cpp \
-    trafficloader.cpp
+    trafficloader.cpp \
+    trafficsaver.cpp
 
 HEADERS  += \
     trafficwindow.h \
@@ -32,7 +33,8 @@ HEADERS  += \
     udpvalues.h \
     tcpvalues.h \
     sessionsaver.h \
-    trafficloader.h
+    trafficloader.h \
+    trafficsaver.h
 
 FORMS    += \
     trafficwindow.ui \

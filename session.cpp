@@ -41,11 +41,10 @@ Session::Session(QString name, QString sourceIP, QString destinationIP,
     this->udp = _udp;
     this->ttl = "";
 
-    this->multiply = _multiply;
-    this->rampup = _rampup;
-    this->offset = _offset;
-    this->loopover = _loopover;
-    this->loopovertimespan = _loopovertimespan;
-
+    this->multiply = _multiply; // Max is 1000000
+    this->rampup = _rampup; // Maximum is 1000000000
+    this->offset = _offset; // Maximum is 1000000000
+    this->loopover = _loopover; // Maximum is 1000000
+    this->loopovertimespan = _loopovertimespan; // Max is 10000000000
 }
 

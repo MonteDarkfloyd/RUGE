@@ -7,12 +7,11 @@ class SessionSaver
 {
 public:
 
-    SessionSaver(QList<Session *> sessionList,int lastRow,QString filename);
+    SessionSaver(Session* session,QString filename);
     void Save_Session();
 private:
-    QList<Session *> sessionList;
-    int lastRow;
-    QString filename;
+    Session* session_;
+    QString filename_;
 };
 
 
