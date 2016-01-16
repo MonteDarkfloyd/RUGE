@@ -26,10 +26,13 @@
     <string notr="true"/>
    </property>
    <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
+    <enum>QFrame::Plain</enum>
+   </property>
+   <property name="lineWidth">
+    <number>1</number>
    </property>
    <widget class="QFrame" name="frame_2">
     <property name="geometry">
@@ -44,10 +47,13 @@
      <string notr="true">.QFrame { border: 1px solid gray; }</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
     </property>
     <widget class="QLabel" name="lbl_traffic">
      <property name="geometry">
@@ -86,10 +92,13 @@
      <string notr="true">QFrame {border: 1px solid gray};</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
     </property>
     <widget class="QRadioButton" name="rb_eth">
      <property name="enabled">
@@ -120,10 +129,13 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">.QGroupBox{border: 1px solid gray;}</string>
+      <string notr="true">.QGroupBox{border: 0px solid gray;}</string>
      </property>
      <property name="title">
-      <string>Media Acess Protocol</string>
+      <string/>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
      <widget class="QLabel" name="lbl_mac_src">
       <property name="geometry">
@@ -138,7 +150,7 @@
        <string notr="true">border: 0px;</string>
       </property>
       <property name="text">
-       <string>MAC Source</string>
+       <string>MAC Source:</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="txt_mac_source">
@@ -149,7 +161,7 @@
        <rect>
         <x>110</x>
         <y>20</y>
-        <width>281</width>
+        <width>101</width>
         <height>20</height>
        </rect>
       </property>
@@ -176,7 +188,7 @@
        <string notr="true">border: 0px;</string>
       </property>
       <property name="text">
-       <string>MAC Destination</string>
+       <string>MAC Destination:</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="txt_mac_dest">
@@ -184,7 +196,7 @@
        <rect>
         <x>110</x>
         <y>50</y>
-        <width>281</width>
+        <width>101</width>
         <height>20</height>
        </rect>
       </property>
@@ -205,9 +217,15 @@
        <string>Override MAC Source</string>
       </property>
      </widget>
+     <zorder>lbl_mac_src</zorder>
+     <zorder>txt_mac_source</zorder>
+     <zorder>lbl_mac_dest</zorder>
+     <zorder>txt_mac_dest</zorder>
+     <zorder>mac_checkBox</zorder>
+     <zorder>formLayoutWidget</zorder>
     </widget>
    </widget>
-   <widget class="QFrame" name="frame_2">
+   <widget class="QFrame" name="frame_21">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -217,50 +235,8 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">.QFrame{border: 1px solid gray;border-bottom: none}</string>
+     <string notr="true">.QFrame{border: 1px solid gray;}</string>
     </property>
-    <widget class="QGroupBox" name="groupBox_4">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>10</y>
-       <width>541</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">.QGroupBox{border: 1px solid gray;}</string>
-     </property>
-     <property name="title">
-      <string>Payload</string>
-     </property>
-     <widget class="QLabel" name="payload_label">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Payload</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="payloadEdit">
-      <property name="geometry">
-       <rect>
-        <x>80</x>
-        <y>20</y>
-        <width>271</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
     <widget class="QCheckBox" name="payload_checkBox">
      <property name="geometry">
       <rect>
@@ -271,11 +247,21 @@
       </rect>
      </property>
      <property name="text">
-      <string>Payload</string>
+      <string>Text</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="payloadEdit">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>30</y>
+       <width>271</width>
+       <height>20</height>
+      </rect>
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="frame">
+   <widget class="QFrame" name="frame1">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -288,10 +274,10 @@
      <string notr="true">.QFrame{border: 1px solid gray; border-bottom: none}</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Plain</enum>
     </property>
     <property name="lineWidth">
      <number>1</number>
@@ -338,10 +324,13 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">.QGroupBox{border: 1px solid gray;}</string>
+      <string notr="true">.QGroupBox{border: 0px solid gray;}</string>
      </property>
      <property name="title">
-      <string>IPv4</string>
+      <string/>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
      <widget class="QLabel" name="label_ipsrc">
       <property name="enabled">
@@ -356,7 +345,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>IP Source</string>
+       <string>IP Source:</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_12">
@@ -369,7 +358,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>IP Destination</string>
+       <string>IP Destination:</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_ipsrcincrement">
@@ -540,10 +529,10 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">.QGroupBox{border: 1px solid gray;}</string>
+      <string notr="true">.QGroupBox{border: 0px solid gray;}</string>
      </property>
      <property name="title">
-      <string>IPv6</string>
+      <string/>
      </property>
     </widget>
     <zorder>groupBox_5</zorder>
@@ -551,7 +540,7 @@
     <zorder>rb_ip4</zorder>
     <zorder>lb_ip6</zorder>
    </widget>
-   <widget class="QFrame" name="frame_3">
+   <widget class="QFrame" name="frame_31">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -564,7 +553,7 @@
      <string notr="true">.QFrame{border: 1px solid gray;}</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
@@ -640,10 +629,10 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">.QGroupBox{border: 1px solid gray;}</string>
+      <string notr="true">.QGroupBox{border: 0px solid gray;}</string>
      </property>
      <property name="title">
-      <string>TCP</string>
+      <string/>
      </property>
      <widget class="QLabel" name="label_tcp_src">
       <property name="enabled">
@@ -912,10 +901,13 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">.QGroupBox{border: 1px solid gray;}</string>
+      <string notr="true">.QGroupBox{border: 0px solid gray;}</string>
      </property>
      <property name="title">
-      <string>UDP</string>
+      <string/>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
      <widget class="QLabel" name="label_src_port_udp">
       <property name="enabled">
@@ -948,6 +940,9 @@
       <property name="inputMethodHints">
        <set>Qt::ImhDigitsOnly</set>
       </property>
+      <property name="text">
+       <string>80</string>
+      </property>
      </widget>
      <widget class="QLabel" name="label_udp_dst">
       <property name="geometry">
@@ -977,40 +972,11 @@
       <property name="inputMask">
        <string/>
       </property>
-     </widget>
-     <widget class="QLabel" name="label_udp__len">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>100</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
       <property name="text">
-       <string>Length:</string>
+       <string>80</string>
       </property>
-     </widget>
-     <widget class="QLineEdit" name="txt_udp_len">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>100</y>
-        <width>101</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="inputMethodHints">
-       <set>Qt::ImhDigitsOnly</set>
-      </property>
-      <property name="text">
-       <string>64000</string>
+      <property name="frame">
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QCheckBox" name="sourceport_checkBox">
@@ -1026,19 +992,6 @@
        <string>Override Source Port</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="length_checkBox">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>100</y>
-        <width>101</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Override Length</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QFrame" name="frame_4">
@@ -1051,7 +1004,10 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">.QFrame{border: 1px solid gray;}</string>
+     <string notr="true">.QFrame{border: 0px solid gray;}</string>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
     </property>
     <widget class="QPushButton" name="cancel_button">
      <property name="geometry">
@@ -1088,12 +1044,12 @@
      </property>
     </widget>
    </widget>
-   <zorder>frame</zorder>
+   <zorder>frame1</zorder>
    <zorder>frame_4</zorder>
    <zorder>frame_3</zorder>
    <zorder>frame_2</zorder>
-   <zorder>frame_3</zorder>
-   <zorder>frame_2</zorder>
+   <zorder>frame_31</zorder>
+   <zorder>frame_21</zorder>
   </widget>
  </widget>
  <resources/>

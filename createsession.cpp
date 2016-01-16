@@ -14,6 +14,7 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     editSession = 0;
     Qt::WindowFlags flags = windowFlags();
     this->setWindowFlags(flags | Qt::Window);
+    this->setWindowModality(Qt::WindowModal);
     ui->setupUi(this);
 
     // Hide most information at the beginning
@@ -21,6 +22,8 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     ui->groupBox_5->setVisible(false);
     ui->groupBox_3->setVisible(false);
     ui->groupBox_6->setVisible(false);
+
+    ui->payloadEdit->setEnabled(false);
 
     ui->txt_udp_src_port->setValidator(new QIntValidator(0, 65535, this) );
     ui->txt_udp_dest_port->setValidator(new QIntValidator(0, 65535, this) );
@@ -65,11 +68,6 @@ void createsession::setSession(Session* editedSession){
     if(editSession->ttl != ""){
         ui->ttl_checkBox->setChecked(true);
         ui->txt_ttl->setText(editSession->ttl);
-    }
-    //Length
-    if(editSession->udp->length != ""){
-        ui->length_checkBox->setChecked(true);
-        ui->txt_udp_len->setText(editSession->udp->length);
     }
     // Payload
     if(editSession->payload != ""){
@@ -163,12 +161,6 @@ void createsession::on_sourceport_checkBox_toggled(bool checked)
     ui->label_src_port_udp->setEnabled(checked);
 }
 
-void createsession::on_length_checkBox_toggled(bool checked)
-{
-    ui->label_udp__len->setEnabled(checked);
-    ui->txt_udp_len->setEnabled(checked);
-}
-
 void createsession::on_checkBox_seq_tcp_toggled(bool checked)
 {
     ui->label_seq_tcp->setEnabled(checked);
@@ -196,7 +188,7 @@ void createsession::on_cancel_button_clicked()
 
 void createsession::on_payload_checkBox_toggled(bool checked)
 {
-    ui->groupBox_4->setEnabled(checked);
+    ui->payloadEdit->setEnabled(checked);
 
 }
 
@@ -255,14 +247,6 @@ void createsession::on_confirm_Button_clicked()
     }
     else{
         createdSession->udp->srcPort = "";
-    }
-
-    // Length
-    if(ui->length_checkBox->isChecked()){
-        createdSession->udp->length = ui->txt_udp_len->text();
-    }
-    else{
-        createdSession->udp->length = "";
     }
 
     // payload

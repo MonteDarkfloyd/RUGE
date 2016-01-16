@@ -44,8 +44,6 @@ private slots:
 
     void on_sourceport_checkBox_toggled(bool checked);
 
-    void on_length_checkBox_toggled(bool checked);
-
     void on_checkBox_seq_tcp_toggled(bool checked);
 
     void on_checkBox_ack_tcp_toggled(bool checked);
