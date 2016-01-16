@@ -113,6 +113,16 @@ void TrafficWindow::on_editButton_clicked()
 
 }
 
+// Checks if given name already exist in the sessionList.
+bool TrafficWindow::checkName(QString name){
+    for(int i = 0; i < sessionList.size(); ++i){
+        if(name == sessionList.at(i)->sessName){
+            return false;
+        }
+    }
+    return true;
+}
+
 
 // Delete button
 void TrafficWindow::on_deleteButton_clicked()

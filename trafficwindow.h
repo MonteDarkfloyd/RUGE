@@ -20,6 +20,7 @@ public:
     void displaySessions();
     void addSession(Session* newSess);
     void editSession(Session *Sess);
+    bool checkName(QString name);
 
 
     ~TrafficWindow();

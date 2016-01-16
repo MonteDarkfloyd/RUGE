@@ -2,6 +2,8 @@
 #include "ui_createsession.h"
 #include "session.h"
 #include <QVBoxLayout>
+#include <QMessageBox>
+#include <QHostAddress>
 
 QVBoxLayout* v_ip4_layout;
 
@@ -206,23 +208,97 @@ void createsession::on_confirm_Button_clicked()
         createdSession = new Session();
     }
 
-    createdSession->sessName = ui->name_edit->text();
+    // Remove whitespace from the name.
+    QString name = ui->name_edit->text().trimmed();
+
+    // Check that name is not empty
+    if(name.isEmpty()){
+        QMessageBox messageBox;
+        messageBox.critical(0,"No name inserted.","Please insert session name.");
+        messageBox.setFixedSize(500,200);
+        return;
+    }
+    // Check if name is already in use and we are not in edit mode.
+    if(!parentPointer->checkName(name) && !editMode){
+        QMessageBox messageBox;
+        messageBox.critical(0,"Invalid name","Name is already in use.");
+        messageBox.setFixedSize(500,200);
+        return;
+    }
+    createdSession->sessName = name;
+
     createdSession->ipVersion = "IPv4";
     createdSession->protocol = "UDP";
-    createdSession->dstIP =  ui->txt_ip_dest->text();
-    createdSession->dstMAC = ui->txt_mac_dest->text();
+
+    // MAC destination, remove whitespace
+    QString macdest = ui->txt_mac_dest->text();
+    macdest = macdest.simplified();
+    macdest.replace( " ", "" );
+    // Check if mac dest. address is in right size
+    if(macdest.size() < 17){
+        QMessageBox messageBox;
+        messageBox.critical(0,"Invalid MAC destination","MAC destination address is not in right format.");
+        messageBox.setFixedSize(500,200);
+        return;
+    }
+
+    createdSession->dstMAC = macdest;
 
     // Add mac source
     if(ui->mac_checkBox->isChecked()){
-        createdSession->srcMAC = ui->txt_mac_source->text();
+        // MAC Source, remove whitespace
+        QString macsrc = ui->txt_mac_source->text();
+        macsrc = macsrc.simplified();
+        macsrc.replace( " ", "" );
+        // Check if mac source address is in right size
+        if(macsrc.size() < 17){
+            QMessageBox messageBox;
+            messageBox.critical(0,"Invalid MAC source","MAC source address is not in right format.");
+            messageBox.setFixedSize(500,200);
+            return;
+        }
+
+        createdSession->srcMAC = macsrc;
     }
     else{
         createdSession->srcMAC = "";
     }
 
+
+
+    // IP destination address and remove whitespace
+    QString ipdest = ui->txt_ip_dest->text();
+    ipdest = ipdest.simplified();
+    ipdest.replace( " ", "" );
+
+    QHostAddress address(ui->txt_ip_dest->text());
+    // Check if address is in IPv4 format.
+    if (QAbstractSocket::IPv4Protocol != address.protocol())
+    {
+        QMessageBox messageBox;
+        messageBox.critical(0,"Invalid IP destination","IP destination address is not in IPv4 format.");
+        messageBox.setFixedSize(500,200);
+        return;
+    }
+    createdSession->dstIP =  ipdest;
+
     // Overwrite ip source
     if(ui->overrideipsrc->isChecked()){
-        createdSession->srcIP = ui->txt_ip_src->text();
+        // IP source address and remove whitespace
+        QString ipsrc = ui->txt_ip_dest->text();
+        ipsrc = ipsrc.simplified();
+        ipsrc.replace( " ", "" );
+
+        QHostAddress address(ui->txt_ip_src->text());
+        // Check if address is in IPv4 format.
+        if (QAbstractSocket::IPv4Protocol != address.protocol())
+        {
+            QMessageBox messageBox;
+            messageBox.critical(0,"Invalid IP source","IP source address is not in IPv4 format.");
+            messageBox.setFixedSize(500,200);
+            return;
+        }
+        createdSession->srcIP = ipsrc;
     }
     else{
         createdSession->srcIP = "";
