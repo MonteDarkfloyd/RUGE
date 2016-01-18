@@ -138,10 +138,9 @@ void createsession::on_mac_checkBox_toggled(bool checked)
 
 void createsession::on_overrideipsrc_toggled(bool checked)
 {
-    ui->txt_ipincrement->setEnabled(checked);
     ui->txt_ip_src->setEnabled(checked);
     ui->label_ipsrc->setEnabled(checked);
-    ui->label_ipsrcincrement->setEnabled(checked);
+    ui->ipSourceComboBox->setEnabled(checked);
 }
 
 void createsession::on_ttl_checkBox_toggled(bool checked)
@@ -344,3 +343,30 @@ void createsession::on_confirm_Button_clicked()
     this->close();
 }
 
+// When range is selected in ip source, enable increment editing.
+void createsession::on_ipSourceComboBox_activated(int index)
+{
+    if(index != 0){
+
+        ui->txt_ipsrcinc->setEnabled(true);
+        ui->label_ipsrcinc->setEnabled(true);
+    }
+    else{
+        ui->txt_ipsrcinc->setEnabled(false);
+        ui->label_ipsrcinc->setEnabled(false);
+    }
+}
+
+// When range is selected in ip destination, enable increment editing.
+void createsession::on_ipDestComboBox_activated(int index)
+{
+    if(index != 0){
+
+        ui->txt_ipdstinc->setEnabled(true);
+        ui->label_ipdstinc->setEnabled(true);
+    }
+    else{
+        ui->txt_ipdstinc->setEnabled(false);
+        ui->label_ipdstinc->setEnabled(false);
+    }
+}

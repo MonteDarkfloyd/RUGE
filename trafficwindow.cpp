@@ -22,6 +22,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->actionNew_Session,SIGNAL(triggered(bool)), this, SLOT(on_newButton_clicked()));
     connect(ui->actionLoad_Traffic_Profile,SIGNAL(triggered(bool)),this,SLOT(on_loadTButton_clicked()));
+    connect(ui->actionSoft_Reset,SIGNAL(triggered(bool)),this,SLOT(on_resetButton_clicked()));
     ui->tableWidget->removeRow(0);
 
     // Set table headers to be the same size.
@@ -297,4 +298,39 @@ void TrafficWindow::on_saveTButton_clicked()
     QString filename = QFileDialog::getSaveFileName(this, tr("Save Traffic"),"",tr("Traffic XML file (*.xml)"));
     TrafficSaver saver(filename,sessionList);
     saver.saveTraffic();
+}
+
+
+// Reset
+void TrafficWindow::on_resetButton_clicked()
+{
+    QString program = "RUGE";
+    QStringList arguments;
+    arguments << "-r soft";
+
+
+    QProcess *myProcess = new QProcess(this);
+    myProcess->start(program, arguments);
+
+    myProcess->waitForFinished();
+    QString strOut = myProcess->readAllStandardOutput();
+
+    qDebug() << strOut;
+}
+
+// Hard reset
+void TrafficWindow::on_actionHard_Reset_triggered()
+{
+    QString program = "RUGE";
+    QStringList arguments;
+    arguments << "-r hard";
+
+
+    QProcess *myProcess = new QProcess(this);
+    myProcess->start(program, arguments);
+
+    myProcess->waitForFinished();
+    QString strOut = myProcess->readAllStandardOutput();
+
+    qDebug() << strOut;
 }

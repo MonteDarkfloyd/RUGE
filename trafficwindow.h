@@ -49,6 +49,10 @@ private slots:
 
     void on_saveTButton_clicked();
 
+    void on_resetButton_clicked();
+
+    void on_actionHard_Reset_triggered();
+
 private:
 
     void deleteSessions();

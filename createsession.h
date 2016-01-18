@@ -57,6 +57,10 @@ private slots:
     void on_confirm_Button_clicked();
 
 
+    void on_ipSourceComboBox_activated(int index);
+
+    void on_ipDestComboBox_activated(int index);
+
 private:
     Ui::createsession *ui;
     TrafficWindow* parentPointer;
