@@ -29,7 +29,6 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
 
     ui->txt_udp_src_port->setValidator(new QIntValidator(0, 65535, this) );
     ui->txt_udp_dest_port->setValidator(new QIntValidator(0, 65535, this) );
-    ui->txt_ttl->setValidator(new QIntValidator(0, 255, this) );
 
 }
 
@@ -65,11 +64,6 @@ void createsession::setSession(Session* editedSession){
     if(editSession->udp->srcPort != ""){
         ui->sourceport_checkBox->setChecked(true);
         ui->txt_udp_src_port->setText(editSession->udp->dstPort);
-    }
-    // Time to live
-    if(editSession->ttl != ""){
-        ui->ttl_checkBox->setChecked(true);
-        ui->txt_ttl->setText(editSession->ttl);
     }
     // Payload
     if(editSession->payload != ""){
@@ -143,11 +137,6 @@ void createsession::on_overrideipsrc_toggled(bool checked)
     ui->ipSourceComboBox->setEnabled(checked);
 }
 
-void createsession::on_ttl_checkBox_toggled(bool checked)
-{
-    ui->label_ttl->setEnabled(checked);
-    ui->txt_ttl->setEnabled(checked);
-}
 
 
 void createsession::on_checkBox_toggled(bool checked)
@@ -217,6 +206,8 @@ void createsession::on_confirm_Button_clicked()
         messageBox.setFixedSize(500,200);
         return;
     }
+
+
     // Check if name is already in use and we are not in edit mode.
     if(!parentPointer->checkName(name) && !editMode){
         QMessageBox messageBox;
@@ -303,13 +294,6 @@ void createsession::on_confirm_Button_clicked()
         createdSession->srcIP = "";
     }
 
-    // Time to life
-    if(ui->ttl_checkBox->isChecked()){
-        createdSession->ttl = ui->txt_ttl->text();
-    }
-    else{
-        createdSession->ttl = "";
-    }
 
     // Dest. port
     if(ui->txt_udp_dest_port->text() != ""){

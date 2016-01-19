@@ -1,5 +1,6 @@
 #include "trafficsaver.h"
 #include "sessionsaver.h"
+#include "extra.h"
 #include <QFile>
 #include <QtXml>
 #include <QDomDocument>
@@ -37,7 +38,7 @@ void TrafficSaver::saveTraffic(){
         ui.setAttribute("SESSION_NAME", sessionList_.at(i)->sessName );
         ui.setAttribute("SESSION_RAMPUP_INTERVAL_IN_US", sessionList_.at(i)->rampup );
         sess_var_node.appendChild(ui);
-        // TODO: add xml to name if it doesn't have one
+        addXML(sessionList_.at(i)->sessName);
         // Check if overwriting happens.
         SessionSaver saver(sessionList_.at(i),sessionList_.at(i)->sessName);
         saver.Save_Session();

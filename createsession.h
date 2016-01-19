@@ -38,8 +38,6 @@ private slots:
 
     void on_overrideipsrc_toggled(bool checked);
 
-    void on_ttl_checkBox_toggled(bool checked);
-
     void on_checkBox_toggled(bool checked);
 
     void on_sourceport_checkBox_toggled(bool checked);
