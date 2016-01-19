@@ -39,9 +39,26 @@ void TrafficSaver::saveTraffic(){
         ui.setAttribute("SESSION_RAMPUP_INTERVAL_IN_US", sessionList_.at(i)->rampup );
         sess_var_node.appendChild(ui);
         addXML(sessionList_.at(i)->sessName);
-        // Check if overwriting happens.
-        SessionSaver saver(sessionList_.at(i),sessionList_.at(i)->sessName);
-        saver.Save_Session();
+
+        QFile overwrite(sessionList_.at(i)->sessName);
+        if(xmlFile.exists()){
+            // Create a messagebox that asks overwriting
+            QMessageBox::StandardButton overw;
+            QString overwriteText = "File " + sessionList_.at(i)->sessName + " already exists.\nOverwrite?";
+            overw = QMessageBox::warning(0, "Overwrite?", overwriteText,
+                                          QMessageBox::Yes|QMessageBox::No);
+            if (overw == QMessageBox::Yes) {
+                SessionSaver saver(sessionList_.at(i),sessionList_.at(i)->sessName);
+                saver.Save_Session();
+            }
+            else {
+              qDebug() << "Skipped a file";
+            }
+          }
+        else{
+            SessionSaver saver(sessionList_.at(i),sessionList_.at(i)->sessName);
+            saver.Save_Session();
+        }
     }
 
     // Save to file
