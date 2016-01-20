@@ -37,6 +37,7 @@ createsession::~createsession()
     delete ui;
 }
 
+// Sets session when editing or loading a predefined session.
 void createsession::setSession(Session* editedSession){
     editSession = editedSession;
 
@@ -55,9 +56,22 @@ void createsession::setSession(Session* editedSession){
     // IP addresses
     ui->txt_ip_dest->setText(editedSession->dstIP);
 
+    if(editedSession->dstIPmax != ""){
+        ui->ipDestComboBox->setCurrentIndex(1);
+        ui->txt_ipdstmax->setEnabled(true);
+        ui->label_ipdstinc->setEnabled(true);
+        ui->txt_ipdstmax->setText(editedSession->dstIPmax);
+    }
+
     if(editSession->srcIP != ""){
         ui->overrideipsrc->setChecked(true);
         ui->txt_ip_src->setText(editSession->srcIP);
+        if(editedSession->srcIPmax != ""){
+            ui->ipSourceComboBox->setCurrentIndex(1);
+            ui->txt_ipsrcmax->setEnabled(true);
+            ui->label_ipsrcinc->setEnabled(true);
+            ui->txt_ipsrcmax->setText(editedSession->srcIPmax);
+        }
     }
     // Ports
     ui->txt_udp_dest_port->setText(editedSession->udp->dstPort);
@@ -261,7 +275,7 @@ void createsession::on_confirm_Button_clicked()
     ipdest = ipdest.simplified();
     ipdest.replace( " ", "" );
 
-    QHostAddress address(ui->txt_ip_dest->text());
+    QHostAddress address(ipdest);
     // Check if address is in IPv4 format.
     if (QAbstractSocket::IPv4Protocol != address.protocol())
     {
@@ -275,11 +289,11 @@ void createsession::on_confirm_Button_clicked()
     // Overwrite ip source
     if(ui->overrideipsrc->isChecked()){
         // IP source address and remove whitespace
-        QString ipsrc = ui->txt_ip_dest->text();
+        QString ipsrc = ui->txt_ip_src->text();
         ipsrc = ipsrc.simplified();
         ipsrc.replace( " ", "" );
 
-        QHostAddress address(ui->txt_ip_src->text());
+        QHostAddress address(ipsrc);
         // Check if address is in IPv4 format.
         if (QAbstractSocket::IPv4Protocol != address.protocol())
         {
@@ -289,9 +303,55 @@ void createsession::on_confirm_Button_clicked()
             return;
         }
         createdSession->srcIP = ipsrc;
+
+        // Save ip source max if combo box is in "range".
+        // IP source max and remove whitespace
+        if(ui->ipSourceComboBox->currentIndex() == 1){
+            QString ipsrcmax = ui->txt_ipsrcmax->text();
+            ipsrcmax = ipsrcmax.simplified();
+            ipsrcmax.replace( " ", "" );
+
+            QHostAddress address(ipsrcmax);
+            // Check if address is in IPv4 format.
+            if (QAbstractSocket::IPv4Protocol != address.protocol())
+            {
+                QMessageBox messageBox;
+                messageBox.critical(0,"Invalid IP destination","IP destination address is not in IPv4 format.");
+                messageBox.setFixedSize(500,200);
+                return;
+            }
+            createdSession->srcIPmax =  ipsrcmax;
+        }
+
+
+
     }
+
+    // Overwrite source IP is not on.
     else{
+
         createdSession->srcIP = "";
+
+
+    }
+
+    // Save ip destination max if combo box is in "range".
+    // IP destination max and remove whitespace
+    if(ui->ipDestComboBox->currentIndex() == 1){
+        QString ipdestmax = ui->txt_ipdstmax->text();
+        ipdestmax = ipdestmax.simplified();
+        ipdestmax.replace( " ", "" );
+
+        QHostAddress address(ui->txt_ip_dest->text());
+        // Check if address is in IPv4 format.
+        if (QAbstractSocket::IPv4Protocol != address.protocol())
+        {
+            QMessageBox messageBox;
+            messageBox.critical(0,"Invalid IP destination","IP destination address is not in IPv4 format.");
+            messageBox.setFixedSize(500,200);
+            return;
+        }
+        createdSession->dstIPmax =  ipdestmax;
     }
 
 
@@ -332,11 +392,12 @@ void createsession::on_ipSourceComboBox_activated(int index)
 {
     if(index != 0){
 
-        ui->txt_ipsrcinc->setEnabled(true);
+        ui->txt_ipsrcmax->setEnabled(true);
         ui->label_ipsrcinc->setEnabled(true);
+        ui->txt_ipsrcmax->setText(ui->txt_ip_src->text());
     }
     else{
-        ui->txt_ipsrcinc->setEnabled(false);
+        ui->txt_ipsrcmax->setEnabled(false);
         ui->label_ipsrcinc->setEnabled(false);
     }
 }
@@ -346,11 +407,12 @@ void createsession::on_ipDestComboBox_activated(int index)
 {
     if(index != 0){
 
-        ui->txt_ipdstinc->setEnabled(true);
+        ui->txt_ipdstmax->setEnabled(true);
         ui->label_ipdstinc->setEnabled(true);
+        ui->txt_ipdstmax->setText(ui->txt_ip_dest->text());
     }
     else{
-        ui->txt_ipdstinc->setEnabled(false);
+        ui->txt_ipdstmax->setEnabled(false);
         ui->label_ipdstinc->setEnabled(false);
     }
 }

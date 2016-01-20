@@ -53,6 +53,8 @@ private slots:
 
     void on_actionHard_Reset_triggered();
 
+    void on_tableWidget_itemChanged(QTableWidgetItem *item);
+
 private:
 
     void deleteSessions();

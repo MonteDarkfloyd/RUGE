@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     sessionsaver.cpp \
     trafficloader.cpp \
     trafficsaver.cpp \
-    extra.cpp
+    extra.cpp \
+    tabledelegate.cpp
 
 HEADERS  += \
     trafficwindow.h \
@@ -36,7 +37,8 @@ HEADERS  += \
     sessionsaver.h \
     trafficloader.h \
     trafficsaver.h \
-    extra.h
+    extra.h \
+    tabledelegate.h
 
 FORMS    += \
     trafficwindow.ui \

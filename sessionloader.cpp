@@ -139,7 +139,7 @@ bool SessionLoader::readVariable(){
                        qDebug() << "No Default";
                return false;
            }
-           session_->srcMAC = xml_.attributes().value("DEFAULT").toString();
+           session_->srcMAC = xml_.attributes().value("DEFAULT").toString();           
              qDebug() << session_->srcMAC;
            return true;
 
@@ -163,6 +163,11 @@ bool SessionLoader::readVariable(){
                return false;
            }
            session_->srcIP = xml_.attributes().value("DEFAULT").toString();
+
+           if(xml_.attributes().value("MAX").toString() != "" && xml_.attributes().value("INCREMENT").toString() == "1"){
+                       session_->dstIPmax = xml_.attributes().value("MAX").toString();
+           }
+
            return true;
         }
 
@@ -172,7 +177,12 @@ bool SessionLoader::readVariable(){
                qDebug() << "No Default";
                return false;
            }
+
            session_->dstIP = xml_.attributes().value("DEFAULT").toString();
+           if(xml_.attributes().value("MAX").toString() != "" && xml_.attributes().value("INCREMENT").toString() == "1"){
+                       session_->srcIPmax = xml_.attributes().value("MAX").toString();
+           }
+
            return true;
         }
         else if(value == "IP_TTL"){

@@ -130,11 +130,11 @@ bool TrafficLoader::addTrafficvalues(Session* session, QString &error){
          return false;
      }
      else{
-         session->offset = xml_.attributes().value("SESSION_START_OFFSET_IN_US").toInt();
-         session->loopover = xml_.attributes().value("SESSION_LOOP_OVER_COUNT").toInt();
-         session->loopovertimespan = xml_.attributes().value("SESSION_LOOP_OVER_TIME_SPAN_IN_US").toInt();
-         session->multiply = xml_.attributes().value("SESSION_COUNT").toInt();
-         session->rampup = xml_.attributes().value("SESSION_RAMPUP_INTERVAL_IN_US").toInt();
+         session->offset = xml_.attributes().value("SESSION_START_OFFSET_IN_US").toString();
+         session->loopover = xml_.attributes().value("SESSION_LOOP_OVER_COUNT").toString();
+         session->loopovertimespan = xml_.attributes().value("SESSION_LOOP_OVER_TIME_SPAN_IN_US").toString();
+         session->multiply = xml_.attributes().value("SESSION_COUNT").toString();
+         session->rampup = xml_.attributes().value("SESSION_RAMPUP_INTERVAL_IN_US").toString();
          return true;
      }
      return false;

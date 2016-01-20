@@ -14,10 +14,10 @@ public:
     ~Session();
     Session(QString name, QString sourceIP, QString destinationIP,
             QString sourceMAC, QString destinationMAC, QString _payload,
-            QString _protocol, QString _ipversion,TCPvalues* _tcp,UDPvalues* _udp,
-            int multiply = 10, int rampup = 100,
-            int offset = 100, int loopover = 1,
-            int loopovertimespan = 0);
+            QString _protocol, QString _ipversion, TCPvalues* _tcp, UDPvalues* _udp,
+            QString _multiply, QString _rampup,
+            QString _offset, QString _loopover,
+            QString _loopovertimespan, QString _srcIPmax, QString _dstIPmax);
 
     QString sessName;
     QString srcIP;
@@ -31,11 +31,14 @@ public:
     TCPvalues *tcp;
     UDPvalues *udp;
 
-    int multiply;
-    int rampup;
-    int offset;
-    int loopover;
-    int loopovertimespan;
+    QString srcIPmax;
+    QString dstIPmax;
+
+    QString multiply;
+    QString rampup;
+    QString offset;
+    QString loopover;
+    QString loopovertimespan;
 
 signals:
 

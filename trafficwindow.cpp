@@ -7,6 +7,7 @@
 #include "sessionsaver.h"
 #include "trafficloader.h"
 #include "trafficsaver.h"
+#include "tabledelegate.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
@@ -27,6 +28,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
 
     // Set table headers to be the same size.
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget->setItemDelegate(new TableDelegate);
 
 }
 
@@ -79,11 +81,11 @@ void TrafficWindow::displaySessions(){
      // Disable name editing
      ui->tableWidget->item(row,0)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-     ui->tableWidget->setItem(row,1, new QTableWidgetItem(QString::number(temp->multiply)));
-     ui->tableWidget->setItem(row,2, new QTableWidgetItem(QString::number(temp->rampup)));
-     ui->tableWidget->setItem(row,3, new QTableWidgetItem(QString::number(temp->offset)));
-     ui->tableWidget->setItem(row,4, new QTableWidgetItem(QString::number(temp->loopover)));
-     ui->tableWidget->setItem(row,5, new QTableWidgetItem(QString::number(temp->loopovertimespan)));
+     ui->tableWidget->setItem(row,1, new QTableWidgetItem(temp->multiply));
+     ui->tableWidget->setItem(row,2, new QTableWidgetItem(temp->rampup));
+     ui->tableWidget->setItem(row,3, new QTableWidgetItem(temp->offset));
+     ui->tableWidget->setItem(row,4, new QTableWidgetItem(temp->loopover));
+     ui->tableWidget->setItem(row,5, new QTableWidgetItem(temp->loopovertimespan));
      row++;
 
     }
@@ -281,7 +283,7 @@ void TrafficWindow::on_startButton_clicked()
 {
     QString program = "RUGE";
     QStringList arguments;
-    arguments << "test";
+    arguments << "UDP_Traffic_Profile2.xml";
 
 
     QProcess *myProcess = new QProcess(this);
@@ -290,7 +292,9 @@ void TrafficWindow::on_startButton_clicked()
     myProcess->waitForFinished();
     QString strOut = myProcess->readAllStandardOutput();
 
-    qDebug() << strOut;
+    QMessageBox messageBox;
+    messageBox.setText(strOut);
+    messageBox.exec();
 }
 
 void TrafficWindow::on_saveTButton_clicked()
@@ -306,7 +310,8 @@ void TrafficWindow::on_resetButton_clicked()
 {
     QString program = "RUGE";
     QStringList arguments;
-    arguments << "-r soft";
+    arguments << "-r";
+    arguments << "soft";
 
 
     QProcess *myProcess = new QProcess(this);
@@ -315,7 +320,9 @@ void TrafficWindow::on_resetButton_clicked()
     myProcess->waitForFinished();
     QString strOut = myProcess->readAllStandardOutput();
 
-    qDebug() << strOut;
+    QMessageBox messageBox;
+    messageBox.setText(strOut);
+    messageBox.exec();
 }
 
 // Hard reset
@@ -323,7 +330,8 @@ void TrafficWindow::on_actionHard_Reset_triggered()
 {
     QString program = "RUGE";
     QStringList arguments;
-    arguments << "-r hard";
+    arguments << "-r";
+    arguments << "hard";
 
 
     QProcess *myProcess = new QProcess(this);
@@ -332,5 +340,45 @@ void TrafficWindow::on_actionHard_Reset_triggered()
     myProcess->waitForFinished();
     QString strOut = myProcess->readAllStandardOutput();
 
-    qDebug() << strOut;
+    QMessageBox messageBox;
+    messageBox.setText(strOut);
+    messageBox.exec();
+}
+
+void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
+{
+
+    // Multiply
+    if(item->column() == 1){
+        if(item->text().toLongLong() > 1000000){
+            item->setText("1000000");
+        }
+        sessionList.at(item->row())->multiply = item->text();
+    }
+    // rampup
+    else if(item->column() == 2){
+        if(item->text().toLongLong() > 1000000000){
+            item->setText("1000000000");
+        }
+        sessionList.at(item->row())->rampup = item->text();
+    }
+    // offset
+    else if(item->column() == 3){
+        if(item->text().toLongLong() > 1000000000){
+            item->setText("1000000000");
+        }
+        sessionList.at(item->row())->offset = item->text();
+    }
+    // loopover
+    else if(item->column() == 4){
+        if(item->text().toLongLong() > 1000000){
+            item->setText("1000000");
+        }
+        sessionList.at(item->row())->loopover = item->text();
+    }
+    // loopovertimespan
+    else if(item->column() == 5){
+        sessionList.at(item->row())->loopovertimespan = item->text();
+    }
+
 }

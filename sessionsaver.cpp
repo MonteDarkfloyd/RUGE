@@ -69,12 +69,20 @@ void SessionSaver::Save_Session()
     if(session_->srcIP!="")
     {
         QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
-        ui.setAttribute("MAX", "");
-        ui.setAttribute("MIN", "0");
+        // Set Range for the variable: Source IP
+        if(session_->srcIPmax != ""){
+            ui.setAttribute("MAX", session_->srcIPmax);
+            ui.setAttribute("MIN", session_->srcIP);
+            ui.setAttribute("INCREMENT","1");
+        }
+        else{
+            ui.setAttribute("MAX", "");
+            ui.setAttribute("MIN", "0");
+            ui.setAttribute("INCREMENT","0");
+        }
         ui.setAttribute("TYPE","Binary");
         ui.setAttribute("LOOP_INCREMENT","0");
-        ui.setAttribute("DEFAULT",session_->srcIP);
-        ui.setAttribute("INCREMENT","0");
+        ui.setAttribute("DEFAULT",session_->srcIP);     
         ui.setAttribute("SIZE",4);
         ui.setAttribute("VARIABLE","IP_SRC");
         sess_var_node.appendChild(ui);
@@ -83,12 +91,21 @@ void SessionSaver::Save_Session()
     if(session_->dstIP!="")
     {
         QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
-        ui.setAttribute("MAX", "");
-        ui.setAttribute("MIN", "0");
+
+        if(session_->dstIPmax != ""){
+            ui.setAttribute("MAX", session_->dstIPmax);
+            ui.setAttribute("MIN", session_->dstIP);
+            ui.setAttribute("INCREMENT","1");
+        }
+        else{
+            ui.setAttribute("MAX", "");
+            ui.setAttribute("MIN", "0");
+            ui.setAttribute("INCREMENT","0");
+        }
+
         ui.setAttribute("TYPE","Binary");
         ui.setAttribute("LOOP_INCREMENT","0");
         ui.setAttribute("DEFAULT",session_->dstIP);
-        ui.setAttribute("INCREMENT","0");
         ui.setAttribute("SIZE",4);
         ui.setAttribute("VARIABLE","IP_DST");
         sess_var_node.appendChild(ui);
