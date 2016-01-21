@@ -7,7 +7,7 @@ class TrafficSaver
 {
 public:
     TrafficSaver(QString trafficfile, QList<Session *> sessionList);
-    void saveTraffic();
+    void saveTraffic(bool askOverwrite = true);
 private:
     QString filename_;
     QList<Session*> sessionList_;

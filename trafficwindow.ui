@@ -79,6 +79,9 @@
     </item>
     <item row="3" column="5">
      <widget class="QPushButton" name="startButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>

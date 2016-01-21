@@ -62,6 +62,9 @@ private:
     Ui::TrafficWindow *ui;
     QList<Session *> sessionList;
     int lastRow;
+    QString currentTraffic;
+    bool edited;
+    bool saveCancel;
 
 };
 

@@ -30,6 +30,10 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableWidget->setItemDelegate(new TableDelegate);
 
+    currentTraffic = "";
+    edited = false;
+    saveCancel = false;
+
 }
 
 
@@ -94,8 +98,9 @@ void TrafficWindow::displaySessions(){
     }
     else{
         ui->saveTButton->setEnabled(false);
+        ui->startButton->setEnabled(false);
     }
-
+    edited = true;
 
 }
 
@@ -168,7 +173,7 @@ void TrafficWindow::on_tableWidget_itemSelectionChanged()
         ui->deleteButton->setEnabled(true);
         ui->editButton->setEnabled(true);
         ui->saveSButton->setEnabled(true);
-        this->lastRow = ui->tableWidget->selectedItems().at(0)->row();
+        lastRow = ui->tableWidget->selectedItems().at(0)->row();
     }
     else{
 
@@ -260,10 +265,16 @@ void TrafficWindow::on_loadTButton_clicked()
             messageBox.setFixedSize(500,200);
         }
         else{
-            qDebug() << "Create loaded traffic";
+            qDebug() << "Create loaded traffic" << filename;
             deleteSessions();
             sessionList = loader.loadTraffic();
             this->displaySessions();
+            // Set edited to false. The function above sets it true.
+            // But here we haven't edited anything yet.
+            edited = false;
+            currentTraffic = filename;
+            qDebug() << currentTraffic;
+            ui->startButton->setEnabled(true);
         }
     }
 }
@@ -278,12 +289,47 @@ void TrafficWindow::deleteSessions(){
 }
 
 
-
+// Start generation button.
 void TrafficWindow::on_startButton_clicked()
 {
+
+    if(edited){
+        // Create a messagebox that asks overwriting
+        QString overwriteText = "Traffic profile and/or sessions has been edited. \nSave and continue?";
+        QMessageBox overw(QMessageBox::Question,"Overwrite",overwriteText,QMessageBox::Yes|QMessageBox::SaveAll|QMessageBox::No);
+        overw.setButtonText(QMessageBox::SaveAll,"Overwrite all");
+        int answer = overw.exec();
+        TrafficSaver saver(currentTraffic,sessionList);
+        switch (answer) {
+        case QMessageBox::Yes:
+            on_saveTButton_clicked();
+            break;
+        case QMessageBox::No:
+            return;
+            break;
+        case QMessageBox::SaveAll:
+
+            // Save and don't ask overwriting.
+            saver.saveTraffic(false);
+            edited = false;
+            break;
+        default:
+            break;
+        }
+    }
+
+    // Saving was cancelled when asked above in the yes answer.
+    if(saveCancel){
+        return;
+    }
+
+
+    QFileInfo name(currentTraffic);
+    QString trafficFile = name.fileName();
+
     QString program = "RUGE";
     QStringList arguments;
-    arguments << "UDP_Traffic_Profile2.xml";
+    arguments << trafficFile;
 
 
     QProcess *myProcess = new QProcess(this);
@@ -297,11 +343,22 @@ void TrafficWindow::on_startButton_clicked()
     messageBox.exec();
 }
 
+// Save traffic button.
 void TrafficWindow::on_saveTButton_clicked()
 {
     QString filename = QFileDialog::getSaveFileName(this, tr("Save Traffic"),"",tr("Traffic XML file (*.xml)"));
-    TrafficSaver saver(filename,sessionList);
-    saver.saveTraffic();
+    if(filename != ""){
+        TrafficSaver saver(filename,sessionList);
+        saver.saveTraffic();
+        saveCancel = false;
+        edited = false;
+        currentTraffic =filename;
+        qDebug() << currentTraffic;
+        ui->startButton->setEnabled(true);
+    }
+    saveCancel = true;
+
+
 }
 
 
@@ -345,6 +402,8 @@ void TrafficWindow::on_actionHard_Reset_triggered()
     messageBox.exec();
 }
 
+// When table is edited, set the values to maximum value if necessary.
+// And save the value to session.
 void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
 {
 
@@ -353,6 +412,7 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
         if(item->text().toLongLong() > 1000000){
             item->setText("1000000");
         }
+        edited = true;
         sessionList.at(item->row())->multiply = item->text();
     }
     // rampup
@@ -360,6 +420,7 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
         if(item->text().toLongLong() > 1000000000){
             item->setText("1000000000");
         }
+        edited = true;
         sessionList.at(item->row())->rampup = item->text();
     }
     // offset
@@ -367,6 +428,7 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
         if(item->text().toLongLong() > 1000000000){
             item->setText("1000000000");
         }
+        edited = true;
         sessionList.at(item->row())->offset = item->text();
     }
     // loopover
@@ -374,10 +436,12 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
         if(item->text().toLongLong() > 1000000){
             item->setText("1000000");
         }
+        edited = true;
         sessionList.at(item->row())->loopover = item->text();
     }
     // loopovertimespan
     else if(item->column() == 5){
+        edited = true;
         sessionList.at(item->row())->loopovertimespan = item->text();
     }
 

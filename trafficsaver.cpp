@@ -14,7 +14,7 @@ TrafficSaver::TrafficSaver(QString trafficfile, QList<Session*> sessionList)
     sessionList_ = sessionList;
 }
 
-void TrafficSaver::saveTraffic(){
+void TrafficSaver::saveTraffic(bool askOverwrite){
     QFile xmlFile2(filename_);
 
     QFile xmlFile("empty_UDP_traffic template.xml");
@@ -41,7 +41,7 @@ void TrafficSaver::saveTraffic(){
         addXML(sessionList_.at(i)->sessName);
 
         QFile overwrite(sessionList_.at(i)->sessName);
-        if(xmlFile.exists()){
+        if(xmlFile.exists() && askOverwrite){
             // Create a messagebox that asks overwriting
             QMessageBox::StandardButton overw;
             QString overwriteText = "File " + sessionList_.at(i)->sessName + " already exists.\nOverwrite?";
