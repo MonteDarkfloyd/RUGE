@@ -836,8 +836,8 @@
       <string>Cancel</string>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>1448916123_plus_16.png</normaloff>1448916123_plus_16.png</iconset>
+      <iconset resource="images.qrc">
+       <normaloff>:/images/button_cancel.png</normaloff>:/images/button_cancel.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="confirm_Button">
@@ -853,8 +853,8 @@
       <string>Confirm</string>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>1448918292_tick_16.png</normaloff>1448918292_tick_16.png</iconset>
+      <iconset resource="images.qrc">
+       <normaloff>:/images/confirm_btn.png</normaloff>:/images/confirm_btn.png</iconset>
      </property>
     </widget>
    </widget>
@@ -866,6 +866,8 @@
    <zorder>frame_21</zorder>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections/>
 </ui>

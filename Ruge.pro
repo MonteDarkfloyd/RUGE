@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Ruge
 TEMPLATE = app
-
+RC_ICONS  = rugeicon.ico
 
 SOURCES += main.cpp\
     trafficwindow.cpp \
@@ -44,3 +44,6 @@ FORMS    += \
     trafficwindow.ui \
     newsessiondialog.ui \
     createsession.ui
+
+RESOURCES += \
+    images.qrc

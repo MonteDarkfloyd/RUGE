@@ -28,12 +28,9 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
 
     // Set table headers to be the same size.
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tableWidget->setItemDelegate(new TableDelegate);
-
-    currentTraffic = "";
-    edited = false;
-    saveCancel = false;
-
+    ui->startButton->setStyleSheet("height: 70px;width:190px;font-size:15px;");
+    //border-image:url(:/images/start_btn.png);
+    ui->tableWidget->horizontalHeader()->setStyleSheet("::section{background: #e4f2f1}");
 }
 
 
