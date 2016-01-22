@@ -60,9 +60,14 @@ private slots:
     void on_ipDestComboBox_activated(int index);
 
 private:
+
+    bool makeSession();
+
+
     Ui::createsession *ui;
     TrafficWindow* parentPointer;
-    Session* editSession;
+    Session* createdSession_;
+    Session* editSession_;
     bool editMode;
 
 

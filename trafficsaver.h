@@ -11,6 +11,7 @@ public:
 private:
     QString filename_;
     QList<Session*> sessionList_;
+    void addXML(QString &name);
 };
 
 #endif // TRAFFICSAVER_H

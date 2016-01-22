@@ -1,16 +1,6 @@
 #include "sessionsaver.h"
-
-#include "trafficwindow.h"
-#include "ui_trafficwindow.h"
-
 #include "session.h"
-#include "newsessiondialog.h"
 
-
-#include "createsession.h"
-
-#include "sessionloader.h"
-#include "sessionsaver.h"
 #include <QtXml>
 #include <QDomDocument>
 #include <QFileDialog>
@@ -37,8 +27,22 @@ void SessionSaver::Save_Session()
 
     QDomElement root = doc.documentElement();
     QDomElement sess_var_node = root.firstChildElement("RUGE_SESSION_VARIABLES");
+    QList<rugeVariable>* sessionVariables = session_->getVariables();
 
-    if(session_->srcMAC!="")
+    for(int i = 0; i < sessionVariables->size(); i++){
+       QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
+       ui.setAttribute("MAX", sessionVariables->at(i).max);
+       ui.setAttribute("MIN", sessionVariables->at(i).min);
+       ui.setAttribute("TYPE",sessionVariables->at(i).type);
+       ui.setAttribute("LOOP_INCREMENT",sessionVariables->at(i).loopIncrement);
+       ui.setAttribute("DEFAULT",sessionVariables->at(i).value);
+       ui.setAttribute("INCREMENT",sessionVariables->at(i).increment);
+       ui.setAttribute("SIZE",sessionVariables->at(i).size);
+       ui.setAttribute("VARIABLE",sessionVariables->at(i).name);
+       sess_var_node.appendChild(ui);
+    }
+
+   /* if(session_->srcMAC!="")
     {
         QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
         ui.setAttribute("MAX", "");
@@ -109,7 +113,7 @@ void SessionSaver::Save_Session()
         ui.setAttribute("SIZE",4);
         ui.setAttribute("VARIABLE","IP_DST");
         sess_var_node.appendChild(ui);
-    }
+    }*/
 
 
     QDomElement sess_cont_msgs = root.firstChildElement("RUGE_SESSION_CONTROL_MESSAGES");
@@ -119,10 +123,17 @@ void SessionSaver::Save_Session()
    // sess_cont_mes.setAttribute("NAME",session_->sessName);
 
     QDomElement sess_cont_mesg_head_stk = sess_cont_mes.firstChildElement("RUGE_SESSION_CONTROL_MESSAGE_HEADERS_STACK");
-    sess_cont_mesg_head_stk.setAttribute("Protocol_1",session_->ipVersion);
-    sess_cont_mesg_head_stk.setAttribute("Protocol_2",session_->protocol);
+    sess_cont_mesg_head_stk.setAttribute("Protocol_1",session_->getipVersion());
+    sess_cont_mesg_head_stk.setAttribute("Protocol_2",session_->getProtocol());
 
-    if(session_->srcMAC!="")
+    for(int i = 0; i < sessionVariables->size(); i++){
+        QDomElement ui = doc.createElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES");
+        ui.setAttribute("OFFSET", sessionVariables->at(i).offset);
+        ui.setAttribute("VARIABLE", sessionVariables->at(i).name);
+        sess_cont_mes.appendChild(ui);
+    }
+
+  /*  if(session_->srcMAC!="")
     {
         QDomElement ui = doc.createElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES");
         ui.setAttribute("OFFSET", "6");
@@ -152,11 +163,11 @@ void SessionSaver::Save_Session()
         ui.setAttribute("OFFSET", "30");
         ui.setAttribute("VARIABLE", "IP_DST");
         sess_cont_mes.appendChild(ui);
-    }
+    }*/
 
     QDomElement ref_data = sess_cont_mes.firstChildElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_REFERENCE_DATA");
     QString s=ref_data.attribute("VALUE");
-    QString value = s + QString::fromLatin1(session_->payload.toLatin1().toHex());
+    QString value = s + QString::fromLatin1(session_->getPayload().toLatin1().toHex());
     ref_data.setAttribute("LENGTH",value.length());
     ref_data.setAttribute("VALUE",  value);
 
@@ -169,7 +180,7 @@ void SessionSaver::Save_Session()
         }
     }*/
 
-    QDomElement elt = sess_cont_mes.firstChildElement("RUGE_SESSION_DECODE_INFO_LEVEL1");
+   /* QDomElement elt = sess_cont_mes.firstChildElement("RUGE_SESSION_DECODE_INFO_LEVEL1");
        for (; !elt.isNull(); elt = elt.nextSiblingElement("RUGE_SESSION_DECODE_INFO_LEVEL1")) {
            if(elt.attribute("FIELD_NAME")=="ip.ttl")
                 elt.setAttribute("FIELD_NAME","IP_TTL");
@@ -179,7 +190,7 @@ void SessionSaver::Save_Session()
                 elt.setAttribute("FIELD_NAME","UDP_DST_PORT");
            else if(elt.attribute("FIELD_NAME")=="udp.length")
                 elt.setAttribute("FIELD_NAME","UDP_LENGTH");
-       }
+       }*/
 
        QDomElement sess_interfaces = root.firstChildElement("RUGE_SESSION_INTERFACES");
           QDomElement sess_interface = sess_interfaces.firstChildElement("RUGE_SESSION_INTERFACE");
@@ -189,7 +200,7 @@ void SessionSaver::Save_Session()
                  QDomElement sess_flow_item = sess_flow.firstChildElement("RUGE_SESSION_FLOW_ITEM");
                  for (; !sess_flow_item.isNull(); sess_flow_item = sess_flow_item.nextSiblingElement("RUGE_SESSION_FLOW_ITEM")) {
                      if(sess_flow_item.attribute("TYPE")=="MESSAGE")
-                         sess_flow_item.attribute("ITEM")=session_->sessName;
+                         sess_flow_item.attribute("ITEM") = session_->getName();
                  }
               }
           }

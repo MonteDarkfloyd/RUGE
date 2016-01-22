@@ -32,6 +32,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     ui->editButton->setStyleSheet("width:190px;");
     //border-image:url(:/images/start_btn.png);
     ui->tableWidget->horizontalHeader()->setStyleSheet("::section{background: #e4f2f1}");
+    ui->startButton->setEnabled(false);
 }
 
 
@@ -78,16 +79,16 @@ void TrafficWindow::displaySessions(){
         Session* temp = i.next();
 
      ui->tableWidget->insertRow(row);
-     ui->tableWidget->setItem(row,0, new QTableWidgetItem(temp->sessName));
+     ui->tableWidget->setItem(row,0, new QTableWidgetItem(temp->getName()));
 
      // Disable name editing
      ui->tableWidget->item(row,0)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-     ui->tableWidget->setItem(row,1, new QTableWidgetItem(temp->multiply));
-     ui->tableWidget->setItem(row,2, new QTableWidgetItem(temp->rampup));
-     ui->tableWidget->setItem(row,3, new QTableWidgetItem(temp->offset));
-     ui->tableWidget->setItem(row,4, new QTableWidgetItem(temp->loopover));
-     ui->tableWidget->setItem(row,5, new QTableWidgetItem(temp->loopovertimespan));
+     ui->tableWidget->setItem(row,1, new QTableWidgetItem(temp->getMultiply()));
+     ui->tableWidget->setItem(row,2, new QTableWidgetItem(temp->getRampup()));
+     ui->tableWidget->setItem(row,3, new QTableWidgetItem(temp->getOffset()));
+     ui->tableWidget->setItem(row,4, new QTableWidgetItem(temp->getLoopover()));
+     ui->tableWidget->setItem(row,5, new QTableWidgetItem(temp->getLoopoverTimespan()));
      row++;
 
     }
@@ -122,7 +123,7 @@ void TrafficWindow::on_editButton_clicked()
 // Checks if given name already exist in the sessionList.
 bool TrafficWindow::checkName(QString name){
     for(int i = 0; i < sessionList.size(); ++i){
-        if(name == sessionList.at(i)->sessName){
+        if(name == sessionList.at(i)->getName()){
             return false;
         }
     }
@@ -200,17 +201,15 @@ void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
 
         // Search the right session from list
         for(int i = 0; i < sessionList.size(); ++i){
-            if(sessionList.at(i)->sessName == item->text()){
-                ipdest = sessionList.at(i)->dstIP;
-                ipsour = sessionList.at(i)->srcIP;
-                macsour = sessionList.at(i)->srcMAC;
-                macdest = sessionList.at(i)->dstMAC;
-                portdest = sessionList.at(i)->udp->dstPort;
-                portsour = sessionList.at(i)->udp->srcPort;
-                payloadtext = sessionList.at(i)->payload;
+            if(sessionList.at(i)->getName() == item->text()){
+                ipdest = sessionList.at(i)->getDstIP().value;
+                ipsour = sessionList.at(i)->getSrcIP().value;
+                macsour = sessionList.at(i)->getSrcMAC();
+                macdest = sessionList.at(i)->getDstMAC();
+                payloadtext = sessionList.at(i)->getPayload();
             }
         }
-        QString tooltiptext = " Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n Destination port: " + portdest + "\n Source port: " + portsour + "\n";
+        QString tooltiptext = " Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n";
         tooltiptext = tooltiptext + " MAC Source: " + macsour + "\n MAC Destination: " + macdest + "\n Payload: " + payloadtext;
         ui->tableWidget->setToolTip(tooltiptext);
     }
@@ -244,7 +243,7 @@ void TrafficWindow::on_saveSButton_clicked()
 {
     if(lastRow >= 0){
         if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
-                 QString filename = QFileDialog::getSaveFileName(this, tr("Save Session"),sessionList.at(lastRow)->sessName,tr("Session XML file (*.xml)"));
+                 QString filename = QFileDialog::getSaveFileName(this, tr("Save Session"),sessionList.at(lastRow)->getName(),tr("Session XML file (*.xml)"));
                  SessionSaver saver(sessionList.at(lastRow),filename);
                  saver.Save_Session();
         }
@@ -411,7 +410,7 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
             item->setText("1000000");
         }
         edited = true;
-        sessionList.at(item->row())->multiply = item->text();
+        sessionList.at(item->row())->setMultiply(item->text());
     }
     // rampup
     else if(item->column() == 2){
@@ -419,7 +418,7 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
             item->setText("1000000000");
         }
         edited = true;
-        sessionList.at(item->row())->rampup = item->text();
+        sessionList.at(item->row())->setRampup(item->text());
     }
     // offset
     else if(item->column() == 3){
@@ -427,7 +426,7 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
             item->setText("1000000000");
         }
         edited = true;
-        sessionList.at(item->row())->offset = item->text();
+        sessionList.at(item->row())->setOffset(item->text());
     }
     // loopover
     else if(item->column() == 4){
@@ -435,12 +434,12 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
             item->setText("1000000");
         }
         edited = true;
-        sessionList.at(item->row())->loopover = item->text();
+        sessionList.at(item->row())->setLoopover(item->text());
     }
     // loopovertimespan
     else if(item->column() == 5){
         edited = true;
-        sessionList.at(item->row())->loopovertimespan = item->text();
+        sessionList.at(item->row())->setLoopoverTimespan(item->text());
     }
 
 }

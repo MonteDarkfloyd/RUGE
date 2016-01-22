@@ -1,4 +1,5 @@
 #include "sessionloader.h"
+#include "variabledata.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QDebug>
@@ -31,7 +32,7 @@ bool SessionLoader::checkSession(QString &error){
             return false;
         }
         QFileInfo name = xmlFile.fileName();
-        session_->sessName =name.fileName();
+        session_->setName(name.fileName());
         xml_.setDevice(&xmlFile);
 
         // Read start of the document.
@@ -127,7 +128,29 @@ bool SessionLoader::readVariable(){
     }
     else{
         qDebug() << "Variable found";
-        QString value = "";
+
+        // Load the information from the found variable. Offset is not found here
+        // so it is set to 0
+        //  name, value, min, max, type, loopIncrement, increment, size, offset
+        rugeVariable loadVar = {xml_.attributes().value("VARIABLE").toString(),
+                               xml_.attributes().value("DEFAULT").toString(),
+                               xml_.attributes().value("MIN").toString(),
+                               xml_.attributes().value("MAX").toString(),
+                               xml_.attributes().value("TYPE").toString(),
+                               xml_.attributes().value("LOOP_INCREMENT").toInt(),
+                               xml_.attributes().value("INCREMENT").toInt(),
+                               xml_.attributes().value("SIZE").toInt(),
+                               0};
+        VariableData checker;
+        // Check if the variable is legal and add offset if it was.
+        if(!checker.checkVariable(loadVar)){
+            return false;
+        }
+
+        session_->addVariable(loadVar);
+        return true;
+    }
+ /*
         value = xml_.attributes().value("VARIABLE").toString();
         qDebug() << value;
         // TODO check if mac and IP are valid
@@ -227,7 +250,7 @@ bool SessionLoader::readVariable(){
 
 
     }
-    return false;
+    return false;*/
 }
 // Search xml_ for RUGE_SESSION_STATES and checks if they are legal.
 // Return value: bool, was legal states found, false if not.
@@ -310,7 +333,7 @@ bool SessionLoader::checkControlMessage(){
                         }
                         // Internet protocol, now only IPv4
                         if(xml_.attributes().value("Protocol_1").toString() == "IPv4"){
-                            session_->ipVersion = "IPv4";
+                            session_->setipVersion("IPv4");
                         }
                         else{
                             return false;
@@ -318,7 +341,7 @@ bool SessionLoader::checkControlMessage(){
                         // Internet suite protocol
                         // Add more if necessary, now UDP only
                         if(xml_.attributes().value("Protocol_2").toString() == "UDP"){
-                            session_->protocol = "UDP";
+                            session_->setProtocol("UDP");
                         }
                         else {
                             return false;
@@ -447,7 +470,7 @@ bool SessionLoader::buildPayload(){
                     QByteArray payload = QByteArray::fromHex(payloadraw.toUtf8());
                     payloadraw = payload.data();
                     qDebug() << payloadraw;
-                    session_->payload = payloadraw;
+                    session_->setPayload(payloadraw);
                     return true;
                 }
             }

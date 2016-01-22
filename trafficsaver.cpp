@@ -1,6 +1,5 @@
 #include "trafficsaver.h"
 #include "sessionsaver.h"
-#include "extra.h"
 #include <QFile>
 #include <QtXml>
 #include <QDomDocument>
@@ -30,25 +29,29 @@ void TrafficSaver::saveTraffic(bool askOverwrite){
     for(int i = 0; i < sessionList_.size(); i++){
 
         QDomElement ui = doc.createElement("SESSION");
-        ui.setAttribute("SESSION_START_OFFSET_IN_US", sessionList_.at(i)->offset );
+        ui.setAttribute("SESSION_START_OFFSET_IN_US", sessionList_.at(i)->getOffset() );
         ui.setAttribute("CHECKSTATE", "Checked" );
-        ui.setAttribute("SESSION_LOOP_OVER_COUNT", sessionList_.at(i)->loopover );
-        ui.setAttribute("SESSION_COUNT", sessionList_.at(i)->multiply );
-        ui.setAttribute("SESSION_LOOP_OVER_TIME_SPAN_IN_US", sessionList_.at(i)->loopovertimespan );
-        ui.setAttribute("SESSION_NAME", sessionList_.at(i)->sessName );
-        ui.setAttribute("SESSION_RAMPUP_INTERVAL_IN_US", sessionList_.at(i)->rampup );
+        ui.setAttribute("SESSION_LOOP_OVER_COUNT", sessionList_.at(i)->getLoopover() );
+        ui.setAttribute("SESSION_COUNT", sessionList_.at(i)->getMultiply() );
+        ui.setAttribute("SESSION_LOOP_OVER_TIME_SPAN_IN_US", sessionList_.at(i)->getLoopoverTimespan() );
+        ui.setAttribute("SESSION_NAME", sessionList_.at(i)->getName() );
+        ui.setAttribute("SESSION_RAMPUP_INTERVAL_IN_US", sessionList_.at(i)->getRampup() );
         sess_var_node.appendChild(ui);
-        addXML(sessionList_.at(i)->sessName);
 
-        QFile overwrite(sessionList_.at(i)->sessName);
+        // Add .xml to name of necessary
+        QString rawName = sessionList_.at(i)->getName();
+        addXML(rawName);
+
+        sessionList_.at(i)->setName(rawName);
+
         if(xmlFile.exists() && askOverwrite){
             // Create a messagebox that asks overwriting
             QMessageBox::StandardButton overw;
-            QString overwriteText = "File " + sessionList_.at(i)->sessName + " already exists.\nOverwrite?";
+            QString overwriteText = "File " + sessionList_.at(i)->getName() + " already exists.\nOverwrite?";
             overw = QMessageBox::warning(0, "Overwrite?", overwriteText,
                                           QMessageBox::Yes|QMessageBox::No);
             if (overw == QMessageBox::Yes) {
-                SessionSaver saver(sessionList_.at(i),sessionList_.at(i)->sessName);
+                SessionSaver saver(sessionList_.at(i),sessionList_.at(i)->getName());
                 saver.Save_Session();
             }
             else {
@@ -56,7 +59,7 @@ void TrafficSaver::saveTraffic(bool askOverwrite){
             }
           }
         else{
-            SessionSaver saver(sessionList_.at(i),sessionList_.at(i)->sessName);
+            SessionSaver saver(sessionList_.at(i),sessionList_.at(i)->getName());
             saver.Save_Session();
         }
     }
@@ -70,4 +73,14 @@ void TrafficSaver::saveTraffic(bool askOverwrite){
 
    xmlFile2.close();
 
+}
+
+void TrafficSaver::addXML(QString &name){
+    if(name.endsWith(".xml",Qt::CaseSensitive)){
+        return;
+    }
+    else{
+        name.append(".xml");
+    }
+return;
 }
