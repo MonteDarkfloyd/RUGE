@@ -138,14 +138,19 @@ void TrafficWindow::on_deleteButton_clicked()
 {
     if(lastRow >= 0){
     if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
-        this->sessionList.removeAt(lastRow);
-
+        delete sessionList.at(lastRow);
+        sessionList.removeAt(lastRow);
     }
 
 }
-    this->displaySessions();
+    displaySessions();
+    lastRow--;
 
-    lastRow = -1;
+    // Select previous session.
+    if(lastRow >= 0){
+        ui->tableWidget->setCurrentItem(ui->tableWidget->item(lastRow,0));
+   }
+
 }
 
 // New session button
@@ -252,6 +257,7 @@ void TrafficWindow::on_saveSButton_clicked()
       }
 }
 
+// Load traffic button pressed.
 void TrafficWindow::on_loadTButton_clicked()
 {
     QString error = "";
@@ -459,4 +465,10 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
         sessionList.at(item->row())->setLoopoverTimespan(item->text());
     }
 
+}
+
+void TrafficWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem *item)
+{
+    item->setSelected(true);
+    on_editButton_clicked();
 }

@@ -55,6 +55,8 @@ private slots:
 
     void on_tableWidget_itemChanged(QTableWidgetItem *item);
 
+    void on_tableWidget_itemDoubleClicked(QTableWidgetItem *item);
+
 private:
 
     void deleteSessions();

@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QHostAddress>
+#include <QKeyEvent>
 
 QVBoxLayout* v_ip4_layout;
 
@@ -460,4 +461,19 @@ bool createsession::makeSession(){
        parentPointer->addSession(createdSession_);
     }
     return true;
+}
+
+// Escape key close
+void createsession::keyPressEvent(QKeyEvent* event){
+    if(event->key() == Qt::Key_Escape){
+        this->close();
+    }
+    if(event->key() == Qt::Key_Return){
+        if(ui->confirm_Button->hasFocus()){
+            on_confirm_Button_clicked();
+        }
+        else {
+         ui->confirm_Button->setFocus();
+        }
+    }
 }
