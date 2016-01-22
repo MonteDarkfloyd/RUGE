@@ -25,6 +25,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     connect(ui->actionLoad_Traffic_Profile,SIGNAL(triggered(bool)),this,SLOT(on_loadTButton_clicked()));
     connect(ui->actionSoft_Reset,SIGNAL(triggered(bool)),this,SLOT(on_resetButton_clicked()));
     ui->tableWidget->removeRow(0);
+    saveCancel = false;
 
     // Set table headers to be the same size.
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -94,6 +95,7 @@ void TrafficWindow::displaySessions(){
     }
     if(!sessionList.empty()){
         ui->saveTButton->setEnabled(true);
+        ui->startButton->setEnabled(true);
     }
     else{
         ui->saveTButton->setEnabled(false);
@@ -289,7 +291,21 @@ void TrafficWindow::deleteSessions(){
 // Start generation button.
 void TrafficWindow::on_startButton_clicked()
 {
+    if(currentTraffic == ""){
+        QMessageBox messageBox;
+        QMessageBox::StandardButton saveAnswer;
+        saveAnswer = messageBox.information(0,"Save traffic file",
+                               "Traffic Profile needs to be saved before starting packet generation. Do you want to save it?"
+                               ,QMessageBox::Yes|QMessageBox::No);
+        if(saveAnswer == QMessageBox::No){
+            return;
+        }
+        else{
+            on_saveTButton_clicked();
+        }
 
+    }
+    qDebug() << "Start Generation";
     if(edited){
         // Create a messagebox that asks overwriting
         QString overwriteText = "Traffic profile and/or sessions has been edited. \nSave and continue?";
@@ -352,6 +368,7 @@ void TrafficWindow::on_saveTButton_clicked()
         currentTraffic =filename;
         qDebug() << currentTraffic;
         ui->startButton->setEnabled(true);
+        return;
     }
     saveCancel = true;
 

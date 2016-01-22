@@ -43,8 +43,9 @@ void TrafficSaver::saveTraffic(bool askOverwrite){
         addXML(rawName);
 
         sessionList_.at(i)->setName(rawName);
+        QFile xmlFile2(rawName);
 
-        if(xmlFile.exists() && askOverwrite){
+        if(xmlFile2.exists() && askOverwrite){
             // Create a messagebox that asks overwriting
             QMessageBox::StandardButton overw;
             QString overwriteText = "File " + sessionList_.at(i)->getName() + " already exists.\nOverwrite?";
