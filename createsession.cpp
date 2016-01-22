@@ -463,7 +463,8 @@ bool createsession::makeSession(){
     return true;
 }
 
-// Escape key close
+// Key pressed. Escape = close. Enter = set focus to confirm button
+// or press confirm button if it already has focus
 void createsession::keyPressEvent(QKeyEvent* event){
     if(event->key() == Qt::Key_Escape){
         this->close();
