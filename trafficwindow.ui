@@ -24,8 +24,30 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="3" column="3">
-     <widget class="QPushButton" name="loadTButton">
+    <item row="3" column="1">
+     <widget class="QPushButton" name="loadSButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Load Session</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QPushButton" name="saveTButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="sizePolicy">
        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -39,7 +61,39 @@
        </size>
       </property>
       <property name="text">
-       <string>Load Traffic Profile</string>
+       <string>Save Traffic Profile</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="saveSButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Save Session</string>
+      </property>
+      <property name="icon">
+       <iconset resource="images.qrc">
+        <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>16</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -104,104 +158,6 @@
       </property>
       <property name="checkable">
        <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="2">
-     <widget class="QPushButton" name="saveTButton">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>100</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Save Traffic Profile</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="5">
-     <widget class="QPushButton" name="editButton">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>100</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="sizeIncrement">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="baseSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Edit session</string>
-      </property>
-      <property name="icon">
-       <iconset resource="images.qrc">
-        <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="saveSButton">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>100</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Save Session</string>
-      </property>
-      <property name="icon">
-       <iconset resource="images.qrc">
-        <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>20</width>
-        <height>16</height>
-       </size>
       </property>
      </widget>
     </item>
@@ -362,6 +318,72 @@
       </property>
      </widget>
     </item>
+    <item row="3" column="3">
+     <widget class="QPushButton" name="loadTButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Load Traffic Profile</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QPushButton" name="editButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>142</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Edit session</string>
+      </property>
+      <property name="icon">
+       <iconset resource="images.qrc">
+        <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
+    </item>
     <item row="3" column="5">
      <widget class="QPushButton" name="startButton">
       <property name="minimumSize">
@@ -382,25 +404,6 @@
         <width>50</width>
         <height>50</height>
        </size>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QPushButton" name="loadSButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>100</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Load Session</string>
       </property>
      </widget>
     </item>
