@@ -9,5 +9,8 @@
         <file>save.png</file>
         <file>removel.png</file>
         <file>add.png</file>
+        <file>remove2.png</file>
+        <file>load.png</file>
+        <file>load3.png</file>
     </qresource>
 </RCC>

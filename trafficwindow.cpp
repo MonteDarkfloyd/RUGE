@@ -36,7 +36,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     ui->tableWidget->horizontalHeader()->setStyleSheet("::section{background: #e4f2f1}");
     ui->tableWidget->setItemDelegate(new TableDelegate);
     ui->startButton->setEnabled(false);
-
+ui->menuBar->setStyleSheet("font-size:12px;font-family: sans-serif");
 }
 
 
