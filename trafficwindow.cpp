@@ -26,6 +26,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     connect(ui->actionSoft_Reset,SIGNAL(triggered(bool)),this,SLOT(on_resetButton_clicked()));
     ui->tableWidget->removeRow(0);
     saveCancel = false;
+    edited = false;
 
     // Set table headers to be the same size.
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
