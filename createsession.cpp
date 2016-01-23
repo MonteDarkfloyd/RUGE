@@ -33,6 +33,7 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     ui->txt_udp_src_port->setValidator(new QIntValidator(0, 65535, this) );
     ui->txt_udp_dest_port->setValidator(new QIntValidator(0, 65535, this) );
 
+    ui->lbl_mac_src->move(20,18);
 }
 
 createsession::~createsession()
@@ -265,6 +266,8 @@ bool createsession::makeSession(){
     // Check that name is not empty
     if(name.isEmpty()){
         QMessageBox messageBox;
+
+        messageBox.
         messageBox.critical(0,"No name inserted.","Please insert session name.");
         messageBox.setFixedSize(500,200);
         return false;

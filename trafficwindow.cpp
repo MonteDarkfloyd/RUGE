@@ -29,11 +29,12 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
 
     // Set table headers to be the same size.
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->startButton->setStyleSheet("height: 70px;font-size:15px;");
-    ui->editButton->setStyleSheet("width:190px;");
+    ui->startButton->setStyleSheet("height: 70px;");
+    //ui->editButton->setStyleSheet("width:190px;");
     //border-image:url(:/images/start_btn.png);
     ui->tableWidget->horizontalHeader()->setStyleSheet("::section{background: #e4f2f1}");
     ui->startButton->setEnabled(false);
+
 }
 
 

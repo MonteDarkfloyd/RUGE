@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>686</width>
+    <width>800</width>
     <height>599</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>686</width>
+    <width>800</width>
     <height>599</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>686</width>
+    <width>800</width>
     <height>599</height>
    </size>
   </property>
@@ -36,7 +36,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>671</width>
+     <width>771</width>
      <height>581</height>
     </rect>
    </property>
@@ -57,7 +57,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>641</width>
+      <width>751</width>
       <height>51</height>
      </rect>
     </property>
@@ -102,7 +102,7 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>641</width>
+      <width>751</width>
       <height>101</height>
      </rect>
     </property>
@@ -142,7 +142,7 @@
       <rect>
        <x>110</x>
        <y>10</y>
-       <width>521</width>
+       <width>631</width>
        <height>66</height>
       </rect>
      </property>
@@ -156,34 +156,17 @@
       <bool>true</bool>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_mac_src">
-        <property name="styleSheet">
-         <string notr="true">border: 0px;</string>
-        </property>
-        <property name="text">
-         <string>MAC Source:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="txt_mac_source">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="inputMethodHints">
-         <set>Qt::ImhPreferNumbers</set>
-        </property>
-        <property name="inputMask">
-         <string>HH:HH:HH:HH:HH:HH</string>
-        </property>
-        <property name="text">
-         <string>00:0a:95:9d:68:16</string>
-        </property>
-       </widget>
-      </item>
+      <property name="leftMargin">
+       <number>9</number>
+      </property>
       <item row="0" column="2">
        <widget class="QCheckBox" name="mac_checkBox">
+        <property name="maximumSize">
+         <size>
+          <width>125</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Override MAC Source</string>
         </property>
@@ -201,6 +184,18 @@
       </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="txt_mac_dest">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="inputMask">
          <string>HH:HH:HH:HH:HH:HH</string>
         </property>
@@ -209,16 +204,66 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_mac_src">
+        <property name="maximumSize">
+         <size>
+          <width>70</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 0px;</string>
+        </property>
+        <property name="text">
+         <string>MAC Source:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="txt_mac_source">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhPreferNumbers</set>
+        </property>
+        <property name="inputMask">
+         <string>HH:HH:HH:HH:HH:HH</string>
+        </property>
+        <property name="text">
+         <string>00:0a:95:9d:68:16</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
+    <zorder>rb_eth</zorder>
+    <zorder>groupBox</zorder>
+    <zorder>lbl_mac_src</zorder>
    </widget>
    <widget class="QFrame" name="frame_21">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>420</y>
-      <width>641</width>
-      <height>81</height>
+      <y>440</y>
+      <width>751</width>
+      <height>71</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -233,7 +278,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="payloadEdit"/>
+      <widget class="QLineEdit" name="payloadEdit">
+       <property name="maximumSize">
+        <size>
+         <width>520</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -242,8 +297,8 @@
      <rect>
       <x>10</x>
       <y>160</y>
-      <width>641</width>
-      <height>130</height>
+      <width>751</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -279,7 +334,7 @@
       <rect>
        <x>111</x>
        <y>10</y>
-       <width>521</width>
+       <width>631</width>
        <height>90</height>
       </rect>
      </property>
@@ -317,6 +372,12 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_12">
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>IP Destination:</string>
         </property>
@@ -348,7 +409,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>95</width>
           <height>16777215</height>
          </size>
         </property>
@@ -365,6 +426,12 @@
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>IP Source:</string>
         </property>
@@ -377,7 +444,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>95</width>
           <height>16777215</height>
          </size>
         </property>
@@ -442,20 +509,32 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="5">
-       <widget class="QCheckBox" name="overrideipsrc">
-        <property name="text">
-         <string>Override IP Source</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
        <widget class="QLabel" name="label_ipsrcinc">
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>To IP Address:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QCheckBox" name="overrideipsrc">
+        <property name="maximumSize">
+         <size>
+          <width>110</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Override IP Source</string>
         </property>
        </widget>
       </item>
@@ -503,8 +582,8 @@
      <rect>
       <x>10</x>
       <y>269</y>
-      <width>641</width>
-      <height>151</height>
+      <width>751</width>
+      <height>171</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -536,7 +615,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>64</y>
        <width>82</width>
        <height>17</height>
       </rect>
@@ -552,7 +631,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>70</y>
+       <y>98</y>
        <width>82</width>
        <height>17</height>
       </rect>
@@ -568,7 +647,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>132</y>
        <width>82</width>
        <height>17</height>
       </rect>
@@ -582,8 +661,8 @@
       <rect>
        <x>108</x>
        <y>10</y>
-       <width>521</width>
-       <height>118</height>
+       <width>631</width>
+       <height>151</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -741,8 +820,8 @@
       <rect>
        <x>110</x>
        <y>10</y>
-       <width>521</width>
-       <height>121</height>
+       <width>631</width>
+       <height>151</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -759,6 +838,12 @@
        <widget class="QLineEdit" name="txt_udp_src_port">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
         </property>
         <property name="inputMethodHints">
          <set>Qt::ImhDigitsOnly</set>
@@ -777,6 +862,12 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_udp_dst">
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Destination Port:</string>
         </property>
@@ -784,6 +875,12 @@
       </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="txt_udp_dest_port">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="inputMethodHints">
          <set>Qt::ImhNone</set>
         </property>
@@ -803,6 +900,12 @@
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Source Port:</string>
         </property>
@@ -816,7 +919,7 @@
      <rect>
       <x>10</x>
       <y>510</y>
-      <width>641</width>
+      <width>648</width>
       <height>61</height>
      </rect>
     </property>
@@ -829,11 +932,20 @@
     <widget class="QPushButton" name="cancel_button">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>0</x>
        <y>10</y>
-       <width>141</width>
+       <width>140</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>151</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">min-width:135px;</string>
      </property>
      <property name="text">
       <string>Cancel</string>
@@ -843,23 +955,44 @@
        <normaloff>:/images/button_cancel.png</normaloff>:/images/button_cancel.png</iconset>
      </property>
     </widget>
-    <widget class="QPushButton" name="confirm_Button">
-     <property name="geometry">
-      <rect>
-       <x>480</x>
-       <y>10</y>
-       <width>151</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Confirm</string>
-     </property>
-     <property name="icon">
-      <iconset resource="images.qrc">
-       <normaloff>:/images/confirm_btn.png</normaloff>:/images/confirm_btn.png</iconset>
-     </property>
-    </widget>
+   </widget>
+   <widget class="QPushButton" name="confirm_Button">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>520</y>
+      <width>140</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>137</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">min-width:135px;</string>
+    </property>
+    <property name="text">
+     <string>Confirm</string>
+    </property>
+    <property name="icon">
+     <iconset resource="images.qrc">
+      <normaloff>:/images/confirm_btn.png</normaloff>:/images/confirm_btn.png</iconset>
+    </property>
    </widget>
    <zorder>frame1</zorder>
    <zorder>frame_4</zorder>
@@ -867,7 +1000,10 @@
    <zorder>frame_2</zorder>
    <zorder>frame_31</zorder>
    <zorder>frame_21</zorder>
+   <zorder>confirm_Button</zorder>
   </widget>
+  <zorder>frame</zorder>
+  <zorder>frame_3</zorder>
  </widget>
  <resources>
   <include location="images.qrc"/>
