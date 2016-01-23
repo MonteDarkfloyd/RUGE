@@ -99,6 +99,9 @@ void createsession::on_rb_ip4_toggled(bool checked)
     if(checked){
       ui->groupBox_2->setVisible(true);
       ui->groupBox_5->setVisible(false);
+      if(ui->rb_udp->isChecked()){
+         ui->confirm_Button->setEnabled(true);
+      }
     }
 }
 
@@ -123,6 +126,9 @@ void createsession::on_rb_udp_toggled(bool checked)
     if(checked){
         ui->groupBox_3->setVisible(false);
         ui->groupBox_6->setVisible(true);
+    }
+    if(ui->rb_ip4->isChecked()){
+       ui->confirm_Button->setEnabled(true);
     }
 }
 
