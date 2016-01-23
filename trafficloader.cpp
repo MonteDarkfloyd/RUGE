@@ -69,7 +69,7 @@ bool TrafficLoader::checkTraffic(QString &error){
             }
             else{
                 QString sessionName = xml_.attributes().value("SESSION_NAME").toString();
-                SessionLoader loader(sessionName);
+                SessionLoader loader("session_profiles/" + sessionName);
 
                 if(!loader.checkSession(error)){
                     error = "Session included in this traffic profile couldn't not be parsed.";

@@ -23,6 +23,18 @@ void Session::setName(QString sessionName){
     name_ = sessionName;
 }
 
+// Adds .xml to the session name if it doesn't have one.
+// If name is empty. does nothing.
+void Session::addXMLextension(){
+    if(name_.endsWith(".xml",Qt::CaseSensitive) || name_ == ""){
+        return;
+    }
+    else{
+        name_.append(".xml");
+    }
+return;
+}
+
 QList<rugeVariable>* Session::getVariables(){
     return &data_;
 }

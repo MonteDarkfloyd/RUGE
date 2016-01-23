@@ -59,6 +59,8 @@ private slots:
 
     void on_ipDestComboBox_activated(int index);
 
+    void on_predefined_Button_clicked();
+
 protected:
     void keyPressEvent(QKeyEvent *);
 private:

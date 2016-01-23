@@ -39,11 +39,9 @@ void TrafficSaver::saveTraffic(bool askOverwrite){
         sess_var_node.appendChild(ui);
 
         // Add .xml to name of necessary
-        QString rawName = sessionList_.at(i)->getName();
-        addXML(rawName);
+        sessionList_.at(i)->addXMLextension();
 
-        sessionList_.at(i)->setName(rawName);
-        QFile xmlFile2(rawName);
+        QFile xmlFile2(sessionList_.at(i)->getName());
 
         if(xmlFile2.exists() && askOverwrite){
             // Create a messagebox that asks overwriting
@@ -74,14 +72,4 @@ void TrafficSaver::saveTraffic(bool askOverwrite){
 
    xmlFile2.close();
 
-}
-
-void TrafficSaver::addXML(QString &name){
-    if(name.endsWith(".xml",Qt::CaseSensitive)){
-        return;
-    }
-    else{
-        name.append(".xml");
-    }
-return;
 }

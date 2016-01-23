@@ -227,10 +227,11 @@ void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
 
 }
 
+// Load session button
 void TrafficWindow::on_loadSButton_clicked()
 {
     QString error = "";
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Session"),"",tr("Session XML file (*.xml)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Session"),"session_profiles/",tr("Session XML file (*.xml)"));
     qDebug() << filename;
     SessionLoader loader(filename);
     if(filename != ""){
@@ -251,7 +252,7 @@ void TrafficWindow::on_saveSButton_clicked()
 {
     if(lastRow >= 0){
         if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
-                 QString filename = QFileDialog::getSaveFileName(this, tr("Save Session"),sessionList.at(lastRow)->getName(),tr("Session XML file (*.xml)"));
+                 QString filename = QFileDialog::getSaveFileName(this, tr("Save Session"),"session_profiles/" + sessionList.at(lastRow)->getName(),tr("Session XML file (*.xml)"));
                  SessionSaver saver(sessionList.at(lastRow),filename);
                  saver.Save_Session();
         }
@@ -262,7 +263,7 @@ void TrafficWindow::on_saveSButton_clicked()
 void TrafficWindow::on_loadTButton_clicked()
 {
     QString error = "";
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Traffic Profile"),"",tr("Traffic XML file (*.xml)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Traffic Profile"),"traffic_profiles/",tr("Traffic XML file (*.xml)"));
     TrafficLoader loader(filename);
     if(filename != ""){
         if(!loader.checkTraffic(error) ){
@@ -366,7 +367,7 @@ void TrafficWindow::on_startButton_clicked()
 // Save traffic button.
 void TrafficWindow::on_saveTButton_clicked()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Traffic"),"",tr("Traffic XML file (*.xml)"));
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Traffic"),"traffic_profiles/",tr("Traffic XML file (*.xml)"));
     if(filename != ""){
         TrafficSaver saver(filename,sessionList);
         saver.saveTraffic();

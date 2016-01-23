@@ -2,6 +2,7 @@
 #include "ui_createsession.h"
 #include "session.h"
 #include "variabledata.h"
+#include "sessionsaver.h"
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QHostAddress>
@@ -206,6 +207,12 @@ void createsession::on_payload_checkBox_toggled(bool checked)
 void createsession::on_confirm_Button_clicked()
 {
     if(makeSession()){
+        if(editMode){
+           parentPointer->displaySessions();
+        }
+        else{
+           parentPointer->addSession(createdSession_);
+        }
       this->close();
     }
     // Session was not created. Delete it if
@@ -245,6 +252,34 @@ void createsession::on_ipDestComboBox_activated(int index)
     }
 }
 
+// Save as Predefined button pressed.
+void createsession::on_predefined_Button_clicked()
+{
+  makeSession();
+  createdSession_->addXMLextension();
+  QFile check("predefined/" + createdSession_->getName());
+    if(check.exists()){
+        // Create a messagebox that asks overwriting
+        QMessageBox::StandardButton overw;
+        QString overwriteText = "Predefined session " + createdSession_->getName() + " already exists.\nOverwrite?";
+        overw = QMessageBox::warning(0, "Overwrite?", overwriteText,
+                                      QMessageBox::Yes|QMessageBox::No);
+        if (overw == QMessageBox::Yes) {
+            SessionSaver predefSaver(createdSession_,"predefined/" + createdSession_->getName());
+            predefSaver.Save_Session();
+        }
+        else {
+          qDebug() << "Skipped a file";
+        }
+      }
+  SessionSaver predefSaver(createdSession_,"predefined/" + createdSession_->getName());
+  predefSaver.Save_Session();
+  QMessageBox saveBox;
+  saveBox.setText("Save was successful.");
+  saveBox.exec();
+}
+
+
 // Create a session from the given data
 // if possible. Return value false if failed.
 bool createsession::makeSession(){
@@ -267,7 +302,6 @@ bool createsession::makeSession(){
     if(name.isEmpty()){
         QMessageBox messageBox;
 
-        messageBox.
         messageBox.critical(0,"No name inserted.","Please insert session name.");
         messageBox.setFixedSize(500,200);
         return false;
@@ -455,14 +489,6 @@ bool createsession::makeSession(){
     else{
         createdSession_->setPayload("");
     }
-
-
-    if(editMode){
-       parentPointer->displaySessions();
-    }
-    else{
-       parentPointer->addSession(createdSession_);
-    }
     return true;
 }
 
@@ -481,3 +507,5 @@ void createsession::keyPressEvent(QKeyEvent* event){
         }
     }
 }
+
+

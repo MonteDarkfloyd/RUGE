@@ -18,6 +18,7 @@ public:
     // Get and set session name.
     QString getName();
     void setName(QString sessionName);
+    void addXMLextension();
 
     QList<rugeVariable> *getVariables();
     void addVariable(rugeVariable added);
