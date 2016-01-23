@@ -33,7 +33,6 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
 
     ui->txt_udp_src_port->setValidator(new QIntValidator(0, 65535, this) );
     ui->txt_udp_dest_port->setValidator(new QIntValidator(0, 65535, this) );
-
     ui->lbl_mac_src->move(20,18);
 }
 
@@ -270,6 +269,7 @@ void createsession::on_predefined_Button_clicked()
         }
         else {
           qDebug() << "Skipped a file";
+          return;
         }
       }
   SessionSaver predefSaver(createdSession_,"predefined/" + createdSession_->getName());
@@ -303,6 +303,15 @@ bool createsession::makeSession(){
         QMessageBox messageBox;
 
         messageBox.critical(0,"No name inserted.","Please insert session name.");
+        messageBox.setFixedSize(500,200);
+        return false;
+    }
+
+    // Check if name is over 200 characters.
+    if(name.size() > 200){
+        QMessageBox messageBox;
+
+        messageBox.critical(0,"Too long name.","Please insert shorter session name.");
         messageBox.setFixedSize(500,200);
         return false;
     }
@@ -467,15 +476,19 @@ bool createsession::makeSession(){
 
     // Dest. port
     if(ui->txt_udp_dest_port->text() != ""){
+        QString dstPort = ui->txt_udp_dest_port->text();
+        dstPort.remove( QRegExp("^[0]*") );
         rugeVariable UDPdstPORT = vdata.getData("UDP_DST_PORT");
-        UDPdstPORT.value = ui->txt_udp_dest_port->text();
+        UDPdstPORT.value = dstPort;
         createdSession_->addVariable(UDPdstPORT);
     }
 
     // Source port
     if(ui->sourceport_checkBox->isChecked() && ui->txt_udp_src_port->text() != ""){
+        QString srcPort = ui->txt_udp_src_port->text();
+        srcPort.remove( QRegExp("^[0]*") );
         rugeVariable UDPsrcPORT = vdata.getData("UDP_SRC_PORT");
-        UDPsrcPORT.value = ui->txt_udp_src_port->text();
+        UDPsrcPORT.value = srcPort;
         createdSession_->addVariable(UDPsrcPORT);
     }
     else{

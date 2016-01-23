@@ -19,7 +19,6 @@ public:
     explicit TrafficWindow(QWidget *parent = 0);
     void displaySessions();
     void addSession(Session* newSess);
-    void editSession(Session *Sess);
     bool checkName(QString name);
 
 

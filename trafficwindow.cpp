@@ -36,7 +36,8 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     ui->tableWidget->horizontalHeader()->setStyleSheet("::section{background: #e4f2f1}");
     ui->tableWidget->setItemDelegate(new TableDelegate);
     ui->startButton->setEnabled(false);
-ui->menuBar->setStyleSheet("font-size:12px;font-family: sans-serif");
+    ui->menuBar->setStyleSheet("font-size:12px;font-family: sans-serif");
+
 }
 
 
@@ -58,16 +59,6 @@ void TrafficWindow::addSession(Session *newSess){
     this->displaySessions();
 
 }
-
-void TrafficWindow::editSession(Session *Sess){
-
-    this->sessionList.removeAt(lastRow);
-    this->sessionList.insert(lastRow,Sess);
-    this->displaySessions();
-
-}
-
-
 
 void TrafficWindow::displaySessions(){
 
@@ -106,6 +97,11 @@ void TrafficWindow::displaySessions(){
     }
     edited = true;
 
+    // Select previous selection.
+   if(lastRow >= 0){
+        ui->tableWidget->setCurrentItem(ui->tableWidget->item(lastRow,0));
+   }
+
 }
 
 
@@ -115,7 +111,7 @@ void TrafficWindow::on_editButton_clicked()
 
     if(lastRow >= 0){
         if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
-            Session* session = this->sessionList.at(this->lastRow);
+            Session* session = this->sessionList.at(lastRow);
             createsession* editWindow = new createsession(this,this);
             editWindow->setSession(session);
             editWindow->setEditMode();
@@ -139,20 +135,16 @@ bool TrafficWindow::checkName(QString name){
 // Delete button
 void TrafficWindow::on_deleteButton_clicked()
 {
-    if(lastRow >= 0){
     if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
         delete sessionList.at(lastRow);
         sessionList.removeAt(lastRow);
     }
-
-}
-    displaySessions();
     lastRow--;
+    if(sessionList.size() > 0 && lastRow < 0){
+        lastRow++;
+    }
+    displaySessions();
 
-    // Select previous session.
-    if(lastRow >= 0){
-        ui->tableWidget->setCurrentItem(ui->tableWidget->item(lastRow,0));
-   }
 
 }
 

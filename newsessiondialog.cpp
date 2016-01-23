@@ -16,6 +16,7 @@ NewSessionDialog::NewSessionDialog(TrafficWindow *parent) :
     // Get rid of the help button from top right.
     this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     ui->setupUi(this);
+    connect(ui->predefinedList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(on_buttonBox_accepted()));
     // Disable OK button
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
     QDir folder("predefined");
