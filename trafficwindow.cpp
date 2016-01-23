@@ -33,6 +33,7 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     //ui->editButton->setStyleSheet("width:190px;");
     //border-image:url(:/images/start_btn.png);
     ui->tableWidget->horizontalHeader()->setStyleSheet("::section{background: #e4f2f1}");
+    ui->tableWidget->setItemDelegate(new TableDelegate);
     ui->startButton->setEnabled(false);
 
 }
@@ -215,16 +216,13 @@ void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
                 macsour = sessionList.at(i)->getSrcMAC();
                 macdest = sessionList.at(i)->getDstMAC();
                 payloadtext = sessionList.at(i)->getPayload();
+                QString tooltiptext = " Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n";
+                tooltiptext = tooltiptext + " MAC Source: " + macsour + "\n MAC Destination: " + macdest + "\n Payload: " + payloadtext;
+                ui->tableWidget->item(i,0)->setToolTip(tooltiptext);
             }
         }
-        QString tooltiptext = " Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n";
-        tooltiptext = tooltiptext + " MAC Source: " + macsour + "\n MAC Destination: " + macdest + "\n Payload: " + payloadtext;
-        ui->tableWidget->setToolTip(tooltiptext);
-    }
-    else {
-       ui->tableWidget->setToolTip("");
-    }
 
+    }
 }
 
 // Load session button
@@ -471,6 +469,12 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
 
 void TrafficWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem *item)
 {
-    item->setSelected(true);
-    on_editButton_clicked();
+    if(item->column() == 0){
+        item->setSelected(true);
+        on_editButton_clicked();
+    }
+    else{
+        item->setSelected(true);
+    }
+
 }
