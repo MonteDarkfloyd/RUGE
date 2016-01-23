@@ -26,7 +26,6 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     // Hide most information at the beginning
     ui->groupBox_2->setVisible(false);
     ui->groupBox_5->setVisible(false);
-    ui->groupBox_3->setVisible(false);
     ui->groupBox_6->setVisible(false);
 
     ui->payloadEdit->setEnabled(false);
@@ -116,7 +115,6 @@ void createsession::on_lb_ip6_toggled(bool checked)
 void createsession::on_rb_tcp_toggled(bool checked)
 {
     if(checked){
-        ui->groupBox_3->setVisible(true);
         ui->groupBox_6->setVisible(false);
     }
 }
@@ -124,7 +122,6 @@ void createsession::on_rb_tcp_toggled(bool checked)
 void createsession::on_rb_udp_toggled(bool checked)
 {
     if(checked){
-        ui->groupBox_3->setVisible(false);
         ui->groupBox_6->setVisible(true);
     }
     if(ui->rb_ip4->isChecked()){
@@ -135,7 +132,6 @@ void createsession::on_rb_udp_toggled(bool checked)
 void createsession::on_rb_icmp_toggled(bool checked)
 {
     if(checked){
-        ui->groupBox_3->setVisible(false);
         ui->groupBox_6->setVisible(false);
     }
 }
@@ -144,7 +140,6 @@ void createsession::on_rb_icmp_toggled(bool checked)
 void createsession::on_rb_sctp_toggled(bool checked)
 {
     if(checked){
-        ui->groupBox_3->setVisible(false);
         ui->groupBox_6->setVisible(false);
     }
 }
@@ -162,38 +157,12 @@ void createsession::on_overrideipsrc_toggled(bool checked)
 }
 
 
-
-void createsession::on_checkBox_toggled(bool checked)
-{
-    ui->txt_urgent->setEnabled(checked);
-    ui->label_urgent->setEnabled(checked);
-}
-
 void createsession::on_sourceport_checkBox_toggled(bool checked)
 {
     ui->txt_udp_src_port->setEnabled(checked);
     ui->label_src_port_udp->setEnabled(checked);
 }
 
-void createsession::on_checkBox_seq_tcp_toggled(bool checked)
-{
-    ui->label_seq_tcp->setEnabled(checked);
-    ui->txt_seq_tcp->setEnabled(checked);
-}
-
-void createsession::on_checkBox_ack_tcp_toggled(bool checked)
-{
-   ui->txt_tcp_ack_no->setEnabled(checked);
-   ui->label_tcp_ack->setEnabled(checked);
-
-}
-
-void createsession::on_checkBox_src_porttcp_toggled(bool checked)
-{
-    ui->label_tcp_src->setEnabled(checked);
-
-    ui->txt_tcp_src_port->setEnabled(checked);
-}
 
 void createsession::on_cancel_button_clicked()
 {
@@ -260,7 +229,11 @@ void createsession::on_ipDestComboBox_activated(int index)
 // Save as Predefined button pressed.
 void createsession::on_predefined_Button_clicked()
 {
-  makeSession();
+  // Try to create session from the information.
+  if(!makeSession()){
+      return;
+  }
+
   createdSession_->addXMLextension();
   QFile check("predefined/" + createdSession_->getName());
     if(check.exists()){
