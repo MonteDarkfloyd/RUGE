@@ -1,0 +1,39 @@
+QPushButton {
+	color: white;
+	border-radius: 6px;
+	background: #deebea; 
+	height: 25px;
+	padding: 2px; 
+	color: black;
+	border-color: gray;
+	border-width: 2px;
+	border-style: outset;  
+	min-width: 140px;
+	font: 9pt "arial";
+}
+
+QPushButton:!enabled {
+	background: white;
+	color: gray;
+	opacity: 0.2;
+}
+
+ QPushButton#startButton {
+	color: white;
+	border-radius: 6px;
+	background: #deebea; 
+	height: 50px;
+	padding: 2px; 
+	color: black;
+	border-color: gray;
+	border-width: 2px;
+	border-style: outset;  
+	min-width: 140px;
+	font: 9pt "arial";
+}
+
+
+QGroupBox { 
+	border: 1px solid LightGray; 
+	border-radius: 8px ; 
+} 
