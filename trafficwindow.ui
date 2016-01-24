@@ -16,6 +16,11 @@
     <height>623</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>MS Shell Dlg 2</family>
+   </font>
+  </property>
   <property name="mouseTracking">
    <bool>false</bool>
   </property>
@@ -42,7 +47,7 @@
        <string>Add session..</string>
       </property>
       <property name="icon">
-       <iconset resource="images.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
       </property>
       <property name="iconSize">
@@ -74,7 +79,7 @@
        <string>Remove session</string>
       </property>
       <property name="icon">
-       <iconset resource="images.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/images/remove2.png</normaloff>:/images/remove2.png</iconset>
       </property>
       <property name="iconSize">
@@ -90,6 +95,12 @@
     </item>
     <item row="2" column="0" colspan="6">
      <widget class="QTableWidget" name="tableWidget">
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
       <property name="mouseTracking">
        <bool>true</bool>
       </property>
@@ -231,10 +242,10 @@
        </size>
       </property>
       <property name="text">
-       <string>Reset Ruge Engine</string>
+       <string>Reset Engine</string>
       </property>
       <property name="icon">
-       <iconset resource="images.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/images/reset.png</normaloff>:/images/reset.png</iconset>
       </property>
       <property name="iconSize">
@@ -284,7 +295,7 @@
        <string>Edit session</string>
       </property>
       <property name="icon">
-       <iconset resource="images.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
       </property>
       <property name="iconSize">
@@ -303,11 +314,14 @@
         <height>46</height>
        </size>
       </property>
+      <property name="accessibleName">
+       <string/>
+      </property>
       <property name="text">
        <string>Start Generation</string>
       </property>
       <property name="icon">
-       <iconset resource="images.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/images/start.ico</normaloff>:/images/start.ico</iconset>
       </property>
       <property name="iconSize">
@@ -339,7 +353,7 @@
        <string>Save Session</string>
       </property>
       <property name="icon">
-       <iconset resource="images.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
       </property>
       <property name="iconSize">
@@ -428,7 +442,7 @@
      <x>0</x>
      <y>0</y>
      <width>993</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">
@@ -467,6 +481,11 @@
    <property name="text">
     <string>New Session</string>
    </property>
+   <property name="font">
+    <font>
+     <kerning>true</kerning>
+    </font>
+   </property>
   </action>
   <action name="actionLoad_Traffic_Profile">
    <property name="text">
@@ -487,6 +506,11 @@
    <property name="text">
     <string>Hard Reset</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+    </font>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="text">
@@ -496,7 +520,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="images.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

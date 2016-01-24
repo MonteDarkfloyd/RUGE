@@ -57,7 +57,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>751</width>
+      <width>761</width>
       <height>51</height>
      </rect>
     </property>
@@ -102,7 +102,7 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>751</width>
+      <width>761</width>
       <height>101</height>
      </rect>
     </property>
@@ -295,7 +295,7 @@
      <rect>
       <x>10</x>
       <y>430</y>
-      <width>751</width>
+      <width>761</width>
       <height>81</height>
      </rect>
     </property>
@@ -336,9 +336,15 @@
      </item>
      <item>
       <widget class="QLineEdit" name="payloadEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
-         <width>626</width>
+         <width>638</width>
          <height>25</height>
         </size>
        </property>
@@ -360,7 +366,7 @@
      <rect>
       <x>10</x>
       <y>160</y>
-      <width>751</width>
+      <width>761</width>
       <height>101</height>
      </rect>
     </property>
@@ -487,13 +493,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>120</width>
           <height>25</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>95</width>
+          <width>120</width>
           <height>16777215</height>
          </size>
         </property>
@@ -534,13 +540,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>120</width>
           <height>25</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>95</width>
+          <width>120</width>
           <height>16777215</height>
          </size>
         </property>
@@ -708,7 +714,7 @@
      <rect>
       <x>10</x>
       <y>259</y>
-      <width>751</width>
+      <width>761</width>
       <height>171</height>
      </rect>
     </property>
@@ -795,28 +801,44 @@
       <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="txt_udp_src_port">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_udp_dst">
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>85</width>
           <height>25</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>85</width>
           <height>16777215</height>
          </size>
         </property>
-        <property name="inputMethodHints">
-         <set>Qt::ImhDigitsOnly</set>
+        <property name="text">
+         <string>Destination Port:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_src_port_udp">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>85</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>85</width>
+          <height>25</height>
+         </size>
         </property>
         <property name="text">
-         <string>0</string>
+         <string>Source Port:</string>
         </property>
        </widget>
       </item>
@@ -839,22 +861,28 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_udp_dst">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="txt_udp_src_port">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>85</width>
+          <width>60</width>
           <height>25</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>85</width>
+          <width>100</width>
           <height>16777215</height>
          </size>
         </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhDigitsOnly</set>
+        </property>
         <property name="text">
-         <string>Destination Port:</string>
+         <string>0</string>
         </property>
        </widget>
       </item>
@@ -886,30 +914,14 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_src_port_udp">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>85</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>85</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Source Port:</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
+    <zorder>rb_tcp</zorder>
+    <zorder>rb_udp</zorder>
+    <zorder>rb_icmp</zorder>
+    <zorder>rb_sctp</zorder>
+    <zorder>groupBox_6</zorder>
+    <zorder>txt_udp_dest_port</zorder>
    </widget>
    <widget class="QFrame" name="frame_4">
     <property name="geometry">
@@ -993,7 +1005,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>628</x>
       <y>520</y>
       <width>140</width>
       <height>41</height>

@@ -17,6 +17,13 @@
    <string>Add a new session..</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0">
+    <widget class="QPushButton" name="createButton">
+     <property name="text">
+      <string>Create a new session..</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" colspan="2">
     <widget class="QListWidget" name="predefinedList"/>
    </item>
@@ -37,13 +44,6 @@
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QPushButton" name="createButton">
-     <property name="text">
-      <string>Create a new session..</string>
      </property>
     </widget>
    </item>

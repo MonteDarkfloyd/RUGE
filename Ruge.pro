@@ -46,4 +46,4 @@ FORMS    += \
     createsession.ui
 
 RESOURCES += \
-    images.qrc
+    resources.qrc
