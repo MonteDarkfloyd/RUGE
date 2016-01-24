@@ -5,7 +5,6 @@
 #include <QDomDocument>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QDebug>
 
 SessionSaver::SessionSaver(Session *session, QString filename)
 {
@@ -18,10 +17,12 @@ void SessionSaver::Save_Session()
 
     QFile xmlFile2(filename_);
 
+    // We use template file to create the final xml.
     QFile xmlFile("empty_UDP_session template.xml");
     xmlFile.open(QIODevice::ReadWrite);
-    QByteArray xmlData(xmlFile.readAll());
 
+    // Make dom document from the template
+    QByteArray xmlData(xmlFile.readAll());
     QDomDocument doc;
     doc.setContent(xmlData);
 
@@ -29,6 +30,7 @@ void SessionSaver::Save_Session()
     QDomElement sess_var_node = root.firstChildElement("RUGE_SESSION_VARIABLES");
     QList<rugeVariable>* sessionVariables = session_->getVariables();
 
+    // Add the session variables to the RUGE_SESSION_VARIABLES
     for(int i = 0; i < sessionVariables->size(); i++){
        QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
        ui.setAttribute("MAX", sessionVariables->at(i).max);
@@ -42,90 +44,15 @@ void SessionSaver::Save_Session()
        sess_var_node.appendChild(ui);
     }
 
-   /* if(session_->srcMAC!="")
-    {
-        QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
-        ui.setAttribute("MAX", "");
-        ui.setAttribute("MIN", "0");
-        ui.setAttribute("TYPE","Binary");
-        ui.setAttribute("LOOP_INCREMENT","0");
-        ui.setAttribute("DEFAULT",session_->srcMAC);
-        ui.setAttribute("INCREMENT","0");
-        ui.setAttribute("SIZE",6);
-        ui.setAttribute("VARIABLE","MAC_SRC");
-        sess_var_node.appendChild(ui);
-    }
-
-    if(session_->dstMAC!="")
-    {
-        QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
-        ui.setAttribute("MAX", "");
-        ui.setAttribute("MIN", "0");
-        ui.setAttribute("TYPE","Binary");
-        ui.setAttribute("LOOP_INCREMENT","0");
-        ui.setAttribute("DEFAULT",session_->dstMAC);
-        ui.setAttribute("INCREMENT","0");
-        ui.setAttribute("SIZE",6);
-        ui.setAttribute("VARIABLE","MAC_DST");
-        sess_var_node.appendChild(ui);
-    }
-
-    if(session_->srcIP!="")
-    {
-        QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
-        // Set Range for the variable: Source IP
-        if(session_->srcIPmax != ""){
-            ui.setAttribute("MAX", session_->srcIPmax);
-            ui.setAttribute("MIN", session_->srcIP);
-            ui.setAttribute("INCREMENT","1");
-        }
-        else{
-            ui.setAttribute("MAX", "");
-            ui.setAttribute("MIN", "0");
-            ui.setAttribute("INCREMENT","0");
-        }
-        ui.setAttribute("TYPE","Binary");
-        ui.setAttribute("LOOP_INCREMENT","0");
-        ui.setAttribute("DEFAULT",session_->srcIP);     
-        ui.setAttribute("SIZE",4);
-        ui.setAttribute("VARIABLE","IP_SRC");
-        sess_var_node.appendChild(ui);
-    }
-
-    if(session_->dstIP!="")
-    {
-        QDomElement ui = doc.createElement("RUGE_SESSION_VARIABLE ");
-
-        if(session_->dstIPmax != ""){
-            ui.setAttribute("MAX", session_->dstIPmax);
-            ui.setAttribute("MIN", session_->dstIP);
-            ui.setAttribute("INCREMENT","1");
-        }
-        else{
-            ui.setAttribute("MAX", "");
-            ui.setAttribute("MIN", "0");
-            ui.setAttribute("INCREMENT","0");
-        }
-
-        ui.setAttribute("TYPE","Binary");
-        ui.setAttribute("LOOP_INCREMENT","0");
-        ui.setAttribute("DEFAULT",session_->dstIP);
-        ui.setAttribute("SIZE",4);
-        ui.setAttribute("VARIABLE","IP_DST");
-        sess_var_node.appendChild(ui);
-    }*/
-
-
     QDomElement sess_cont_msgs = root.firstChildElement("RUGE_SESSION_CONTROL_MESSAGES");
-
-
     QDomElement sess_cont_mes = sess_cont_msgs.firstChildElement("RUGE_SESSION_CONTROL_MESSAGE");
-   // sess_cont_mes.setAttribute("NAME",session_->sessName);
 
+    // Save the ip version and protocol
     QDomElement sess_cont_mesg_head_stk = sess_cont_mes.firstChildElement("RUGE_SESSION_CONTROL_MESSAGE_HEADERS_STACK");
     sess_cont_mesg_head_stk.setAttribute("Protocol_1",session_->getipVersion());
     sess_cont_mesg_head_stk.setAttribute("Protocol_2",session_->getProtocol());
 
+    // Save the RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES
     for(int i = 0; i < sessionVariables->size(); i++){
         QDomElement ui = doc.createElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES");
         ui.setAttribute("OFFSET", sessionVariables->at(i).offset);
@@ -133,85 +60,24 @@ void SessionSaver::Save_Session()
         sess_cont_mes.appendChild(ui);
     }
 
-  /*  if(session_->srcMAC!="")
-    {
-        QDomElement ui = doc.createElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES");
-        ui.setAttribute("OFFSET", "6");
-        ui.setAttribute("VARIABLE", "MAC_SRC");
-        sess_cont_mes.appendChild(ui);
-    }
 
-    if(session_->dstMAC!="")
-    {
-        QDomElement ui = doc.createElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES");
-        ui.setAttribute("OFFSET", "0");
-        ui.setAttribute("VARIABLE", "MAC_DST");
-        sess_cont_mes.appendChild(ui);
-    }
-
-    if(session_->srcIP!="")
-    {
-        QDomElement ui = doc.createElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES");
-        ui.setAttribute("OFFSET", "26");
-        ui.setAttribute("VARIABLE", "IP_SRC");
-        sess_cont_mes.appendChild(ui);
-    }
-
-    if(session_->dstIP!="")
-    {
-        QDomElement ui = doc.createElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_VARIABLES");
-        ui.setAttribute("OFFSET", "30");
-        ui.setAttribute("VARIABLE", "IP_DST");
-        sess_cont_mes.appendChild(ui);
-    }*/
-
+    // Save the payload.
     QDomElement ref_data = sess_cont_mes.firstChildElement("RUGE_SESSION_CONTROL_MESSAGE_HEADER_REFERENCE_DATA");
     QString s=ref_data.attribute("VALUE");
     QString value = s + QString::fromLatin1(session_->getPayload().toLatin1().toHex());
     ref_data.setAttribute("LENGTH",value.length());
     ref_data.setAttribute("VALUE",  value);
 
+    QDomElement sess_interfaces = root.firstChildElement("RUGE_SESSION_INTERFACES");
+    QDomElement sess_interface = sess_interfaces.firstChildElement("RUGE_SESSION_INTERFACE");
 
-
-   /* QDomElement elt = sess_cont_mes.firstChildElement("RUGE_SESSION_DECODE_INFO_LEVEL1");
-    for (; !elt.isNull(); elt = elt.nextSiblingElement("RUGE_SESSION_DECODE_INFO_LEVEL1")) {
-        if(elt.attribute("FIELD_NAME")=="udp.checksum"){
-
-        }
-    }*/
-
-   /* QDomElement elt = sess_cont_mes.firstChildElement("RUGE_SESSION_DECODE_INFO_LEVEL1");
-       for (; !elt.isNull(); elt = elt.nextSiblingElement("RUGE_SESSION_DECODE_INFO_LEVEL1")) {
-           if(elt.attribute("FIELD_NAME")=="ip.ttl")
-                elt.setAttribute("FIELD_NAME","IP_TTL");
-           else if(elt.attribute("FIELD_NAME")=="udp.srcport")
-                elt.setAttribute("FIELD_NAME","UDP_SRC_PORT");
-           else if(elt.attribute("FIELD_NAME")=="udp.dstport")
-                elt.setAttribute("FIELD_NAME","UDP_DST_PORT");
-           else if(elt.attribute("FIELD_NAME")=="udp.length")
-                elt.setAttribute("FIELD_NAME","UDP_LENGTH");
-       }*/
-
-       QDomElement sess_interfaces = root.firstChildElement("RUGE_SESSION_INTERFACES");
-          QDomElement sess_interface = sess_interfaces.firstChildElement("RUGE_SESSION_INTERFACE");
-          for (; !sess_interface.isNull(); sess_interface = sess_interface.nextSiblingElement("RUGE_SESSION_INTERFACE")) {
-              if(sess_interface.attribute("NAME")=="Procedure 1"){
-                 QDomElement sess_flow = sess_interface.firstChildElement("RUGE_SESSION_FLOW");
-                 QDomElement sess_flow_item = sess_flow.firstChildElement("RUGE_SESSION_FLOW_ITEM");
-                 for (; !sess_flow_item.isNull(); sess_flow_item = sess_flow_item.nextSiblingElement("RUGE_SESSION_FLOW_ITEM")) {
-                     if(sess_flow_item.attribute("TYPE")=="MESSAGE")
-                         sess_flow_item.attribute("ITEM") = session_->getName();
-                 }
-              }
-          }
-
-    // save changes
-     xmlFile2.open(QIODevice::ReadWrite);
+    // Save this file to the filename.
+    xmlFile2.open(QIODevice::ReadWrite);
     xmlFile2.resize(0);
     QTextStream stream;
     stream.setDevice(&xmlFile2);
     doc.save(stream, 4);
-
+    xmlFile.close();
     xmlFile2.close();
 }
 

@@ -1,7 +1,6 @@
 #include "trafficloader.h"
 #include "sessionloader.h"
 #include <QFile>
-#include <QDebug>
 
 TrafficLoader::TrafficLoader(QString trafficfile):filename_(trafficfile), loaded_(false), error_("")
 {
@@ -10,6 +9,8 @@ TrafficLoader::TrafficLoader(QString trafficfile):filename_(trafficfile), loaded
 
 TrafficLoader::~TrafficLoader(){
 
+    // If the session in this traffic file were never loaded
+    // then delete all of them.
     if(!loaded_){
         for(int i = 0; i < loadedList_.size(); ++i){
             delete loadedList_.at(i);
@@ -50,7 +51,6 @@ bool TrafficLoader::checkTraffic(QString &error){
     }
 
     if (xml_.readNext() && xml_.name() == "TRAFFIC_PROFILE"){
-        qDebug() << xml_.name();
 
         // Checking sessions starts here
         xml_.readNextStartElement();
@@ -60,7 +60,6 @@ bool TrafficLoader::checkTraffic(QString &error){
             return false;
         }
         xml_.readNextStartElement();
-        qDebug() << "Loop start " << xml_.name();
 
         while(xml_.name() == "SESSION" && !xml_.atEnd()){
             if(!xml_.attributes().hasAttribute("SESSION_NAME")){
@@ -68,6 +67,8 @@ bool TrafficLoader::checkTraffic(QString &error){
                 return false;
             }
             else{
+
+                // Try to load the session file from session_profiles folder.
                 QString sessionName = xml_.attributes().value("SESSION_NAME").toString();
                 SessionLoader loader("session_profiles/" + sessionName);
 
@@ -77,13 +78,11 @@ bool TrafficLoader::checkTraffic(QString &error){
                 }
 
                 else{
-                    qDebug() << "session found";
                     Session* sess = loader.loadSession();
 
                     if(!addTrafficvalues(sess,error)){
                         return false;
                     }
-                    qDebug() << "session saved";
                     loadedList_.push_back(sess);
                 }
             }
@@ -92,22 +91,27 @@ bool TrafficLoader::checkTraffic(QString &error){
             if(xml_.isEndElement()){
                 xml_.readNextStartElement();
             }
-
-            qDebug() << xml_.name() << "  Loop1";
          }
 
     }
     return true;
 }
 
+// Return loaded sessions and set the loaded_ to true so
+// that when this is destructed the sessions aren't deleted.
 QList<Session*> TrafficLoader::loadTraffic(){
-    qDebug() << loadedList_.size();
     loaded_ = true;
     return loadedList_;
 }
 
+// Adds the values that are found in the traffic profile xml
+// to the session class.
+// Return value boolean false if failure and true if success.
+// Parameters: session, the session where the values are saved.
+// error, error message is saved here.
 bool TrafficLoader::addTrafficvalues(Session* session, QString &error){
 
+    // First check that the attributes are found.
      if(!xml_.attributes().hasAttribute("SESSION_LOOP_OVER_COUNT")){
          error = "Session has no loop over count.";
          return false;
@@ -130,6 +134,7 @@ bool TrafficLoader::addTrafficvalues(Session* session, QString &error){
          return false;
      }
      else{
+         // Set the values to the session.
          session->setOffset(xml_.attributes().value("SESSION_START_OFFSET_IN_US").toString());
          session->setLoopover(xml_.attributes().value("SESSION_LOOP_OVER_COUNT").toString());
          session->setLoopoverTimespan(xml_.attributes().value("SESSION_LOOP_OVER_TIME_SPAN_IN_US").toString());

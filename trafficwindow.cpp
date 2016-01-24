@@ -10,7 +10,6 @@
 #include "tabledelegate.h"
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QDebug>
 #include <QProcess>
 
 
@@ -24,9 +23,11 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
     connect(ui->actionNew_Session,SIGNAL(triggered(bool)), this, SLOT(on_newButton_clicked()));
     connect(ui->actionLoad_Traffic_Profile,SIGNAL(triggered(bool)),this,SLOT(on_loadTButton_clicked()));
     connect(ui->actionSoft_Reset,SIGNAL(triggered(bool)),this,SLOT(on_resetButton_clicked()));
+
+    // Remove the empty row from table.
     ui->tableWidget->removeRow(0);
-    saveCancel = false;
-    edited = false;
+    saveCancel_ = false;
+    edited_ = false;
 
     // Set table headers to be the same size.
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -49,47 +50,40 @@ TrafficWindow::~TrafficWindow()
     delete ui;
 }
 
-// Top menu quit
-void TrafficWindow::on_actionQuit_triggered()
-{
-  QApplication::quit();
-}
-
-
-void TrafficWindow::addSession(Session *newSess){
-    this->sessionList.append(newSess);
-    this->displaySessions();
-
-}
-
+// Used to update the table in the view
+// that shows the sessions.
 void TrafficWindow::displaySessions(){
 
-    QListIterator<Session *> i(this->sessionList);
+    QListIterator<Session *> i(this->sessionList_);
     int row = 0;
 
-    // Clear table
+    // Clear the table
     ui->tableWidget->clearSelection();
     ui->tableWidget->setRowCount(0);
 
+    // Go throught the sessionList_ and add the name
+    // and other info to table.
     while (i.hasNext())
     {
         Session* temp = i.next();
 
-     ui->tableWidget->insertRow(row);
-     ui->tableWidget->setItem(row,0, new QTableWidgetItem(temp->getName()));
+        ui->tableWidget->insertRow(row);
+        ui->tableWidget->setItem(row,0, new QTableWidgetItem(temp->getName()));
 
-     // Disable name editing
-     ui->tableWidget->item(row,0)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        // Disable name editing
+        ui->tableWidget->item(row,0)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-     ui->tableWidget->setItem(row,1, new QTableWidgetItem(temp->getMultiply()));
-     ui->tableWidget->setItem(row,2, new QTableWidgetItem(temp->getRampup()));
-     ui->tableWidget->setItem(row,3, new QTableWidgetItem(temp->getOffset()));
-     ui->tableWidget->setItem(row,4, new QTableWidgetItem(temp->getLoopover()));
-     ui->tableWidget->setItem(row,5, new QTableWidgetItem(temp->getLoopoverTimespan()));
-     row++;
+        ui->tableWidget->setItem(row,1, new QTableWidgetItem(temp->getMultiply()));
+        ui->tableWidget->setItem(row,2, new QTableWidgetItem(temp->getRampup()));
+        ui->tableWidget->setItem(row,3, new QTableWidgetItem(temp->getOffset()));
+        ui->tableWidget->setItem(row,4, new QTableWidgetItem(temp->getLoopover()));
+        ui->tableWidget->setItem(row,5, new QTableWidgetItem(temp->getLoopoverTimespan()));
+        row++;
 
     }
-    if(!sessionList.empty()){
+
+    // If we have sessions enable save Traffic and start button.
+    if(!sessionList_.empty()){
         ui->saveTButton->setEnabled(true);
         ui->startButton->setEnabled(true);
     }
@@ -97,23 +91,53 @@ void TrafficWindow::displaySessions(){
         ui->saveTButton->setEnabled(false);
         ui->startButton->setEnabled(false);
     }
-    edited = true;
+
+    // When this function is called, it is very likely that something was
+    // edited_.
+    edited_ = true;
 
     // Select previous selection.
-   if(lastRow >= 0){
-        ui->tableWidget->setCurrentItem(ui->tableWidget->item(lastRow,0));
+   if(selectedRow_ >= 0){
+        ui->tableWidget->setCurrentItem(ui->tableWidget->item(selectedRow_,0));
    }
 
 }
 
+// Add new session to the sessionList_.
+// Will also do displaySessions when used.
+void TrafficWindow::addSession(Session *newSess){
+    this->sessionList_.append(newSess);
+    this->displaySessions();
 
-// Edit button clicked
+}
+
+// Checks if given name already exist in the sessionList_.
+bool TrafficWindow::checkName(QString name){
+    for(int i = 0; i < sessionList_.size(); ++i){
+        // Name is in use, return true.
+        if(name == sessionList_.at(i)->getName()){
+            return false;
+        }
+    }
+    return true;
+}
+
+// Quit is selected from top menu
+// Quit the program
+void TrafficWindow::on_actionQuit_triggered()
+{
+  QApplication::quit();
+}
+
+
+// Edit button is clicked. Send the selected sessions
+// data to the createsession view so user can edit it.
 void TrafficWindow::on_editButton_clicked()
 {
-
-    if(lastRow >= 0){
-        if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
-            Session* session = this->sessionList.at(lastRow);
+// Should not happen, but check that there really is session to edit.
+    if(selectedRow_ >= 0){
+        if( (this->sessionList_.size() > 0 )&& (this->sessionList_.at(selectedRow_) != 0 ) ){
+            Session* session = this->sessionList_.at(selectedRow_);
             createsession* editWindow = new createsession(this,this);
             editWindow->setSession(session);
             editWindow->setEditMode();
@@ -123,37 +147,31 @@ void TrafficWindow::on_editButton_clicked()
 
 }
 
-// Checks if given name already exist in the sessionList.
-bool TrafficWindow::checkName(QString name){
-    for(int i = 0; i < sessionList.size(); ++i){
-        if(name == sessionList.at(i)->getName()){
-            return false;
-        }
-    }
-    return true;
-}
-
-
-// Delete button
+// Delete the selected session when delete is clicked.
 void TrafficWindow::on_deleteButton_clicked()
 {
-    if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
-        delete sessionList.at(lastRow);
-        sessionList.removeAt(lastRow);
+    if( (this->sessionList_.size() > 0 )&& (this->sessionList_.at(selectedRow_) != 0 ) ){
+        delete sessionList_.at(selectedRow_);
+        sessionList_.removeAt(selectedRow_);
     }
-    lastRow--;
-    if(sessionList.size() > 0 && lastRow < 0){
-        lastRow++;
+    selectedRow_--;
+    // We deleted the first session, put selectedRow_ forward by one.
+    if(sessionList_.size() > 0 && selectedRow_ < 0){
+        selectedRow_++;
     }
     displaySessions();
 
 
 }
 
-// New session button
+// Add new session by opening newsessiondialog or if
+// there is no predefined sessions then move to createsession view.
 void TrafficWindow::on_newButton_clicked()
 {
     NewSessionDialog* predefWin = new NewSessionDialog(this);
+
+    // If there is no predefined sessions, go straight to create session
+    // view.
     if(predefWin->getPredefinedAmount() == 0){
             createsession* newSess = new createsession(this, this);
             newSess->show();
@@ -162,13 +180,11 @@ void TrafficWindow::on_newButton_clicked()
     else {
         predefWin->exec();
     }
-    //createsession* newSess = new createsession();//qobject_cast<TrafficWindow*>(this));
-    //newSess->show();
 }
 
 
 // Item selection is changed either by clicking or using keyboard
-// Enable delete and edit buttons and change the lastrow variable
+// Enable delete and edit buttons and change the selectedRow_ variable
 // which tells the selected row.
 void TrafficWindow::on_tableWidget_itemSelectionChanged()
 {
@@ -176,11 +192,12 @@ void TrafficWindow::on_tableWidget_itemSelectionChanged()
         ui->deleteButton->setEnabled(true);
         ui->editButton->setEnabled(true);
         ui->saveSButton->setEnabled(true);
-        lastRow = ui->tableWidget->selectedItems().at(0)->row();
+        // Single selection is on, so only one item should be selected.
+        selectedRow_ = ui->tableWidget->selectedItems().at(0)->row();
     }
     else{
 
-        // Nothing is selected or selected was edited or deleted
+        // Nothing is selected or selected was edited_ or deleted
         ui->deleteButton->setEnabled(false);
         ui->editButton->setEnabled(false);
         ui->saveSButton->setEnabled(false);
@@ -190,27 +207,32 @@ void TrafficWindow::on_tableWidget_itemSelectionChanged()
 
 }
 
-// Mouse is over the Name colunm, show tool tip.
+// Mouse is over an item in the table. If the item is the session name
+// set a new tooltip.
 void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
 {
 
-    QString ipdest = "Default";
-    QString ipsour = "Default";
-    QString macsour = "Default";
-    QString macdest = "Default";
-    QString portdest = "Default";
-    QString portsour = "Default";
-    QString payloadtext = "No Payload";
+    QString ipdest;
+    QString ipsour;
+    QString macsour;
+    QString macdest;
+    QString portdest;
+    QString portsour;
+    QString payloadtext;
+
+    // Item is the session name.
     if(item->column() == 0){
 
         // Search the right session from list
-        for(int i = 0; i < sessionList.size(); ++i){
-            if(sessionList.at(i)->getName() == item->text()){
-                ipdest = sessionList.at(i)->getDstIP().value;
-                ipsour = sessionList.at(i)->getSrcIP().value;
-                macsour = sessionList.at(i)->getSrcMAC();
-                macdest = sessionList.at(i)->getDstMAC();
-                payloadtext = sessionList.at(i)->getPayload();
+        for(int i = 0; i < sessionList_.size(); ++i){
+            if(sessionList_.at(i)->getName() == item->text()){
+
+                // Set the tooltip text.
+                ipdest = sessionList_.at(i)->getDstIP().value;
+                ipsour = sessionList_.at(i)->getSrcIP().value;
+                macsour = sessionList_.at(i)->getSrcMAC();
+                macdest = sessionList_.at(i)->getDstMAC();
+                payloadtext = sessionList_.at(i)->getPayload();
                 QString tooltiptext = " Destination IP: " + ipdest + "\n Source IP: " + ipsour + "\n";
                 tooltiptext = tooltiptext + " MAC Source: " + macsour + "\n MAC Destination: " + macdest + "\n Payload: " + payloadtext;
                 ui->tableWidget->item(i,0)->setToolTip(tooltiptext);
@@ -220,79 +242,102 @@ void TrafficWindow::on_tableWidget_itemEntered(QTableWidgetItem *item)
     }
 }
 
-// Load session button
+// Load session button, open file dialog and then try to open
+// the xml user chose.
 void TrafficWindow::on_loadSButton_clicked()
 {
     QString error = "";
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Session"),"session_profiles/",tr("Session XML file (*.xml)"));
-    qDebug() << filename;
-    SessionLoader loader(filename);
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Session"),"session_profiles/",tr("Session XML file (*.xml)"));  
     if(filename != ""){
+        SessionLoader loader(filename);
+        // Check if the session is valid.
         if(!loader.checkSession(error) ){
             QMessageBox messageBox;
             messageBox.critical(0,"Error",error);
             messageBox.setFixedSize(500,200);
         }
+        // Add session to sessionList_ and update table.
         else{
-            qDebug() << "Create loaded session";
-            this->sessionList.append(loader.loadSession());
+            this->sessionList_.append(loader.loadSession());
             this->displaySessions();
         }
     }
 }
 
+// Save session button, open file dialog and then try to save
+// the session profile file.
 void TrafficWindow::on_saveSButton_clicked()
 {
-    if(lastRow >= 0){
-        if( (this->sessionList.size() > 0 )&& (this->sessionList.at(lastRow) != 0 ) ){
-                 QString filename = QFileDialog::getSaveFileName(this, tr("Save Session"),"session_profiles/" + sessionList.at(lastRow)->getName(),tr("Session XML file (*.xml)"));
-                 SessionSaver saver(sessionList.at(lastRow),filename);
-                 saver.Save_Session();
+    // Should not happen, but check that there really is session to save.
+    if(selectedRow_ >= 0){
+        if( (this->sessionList_.size() > 0 )&& (this->sessionList_.at(selectedRow_) != 0 ) ){
+                 QString filename = QFileDialog::getSaveFileName(this, tr("Save Session"),"session_profiles/" + sessionList_.at(selectedRow_)->getName(),tr("Session XML file (*.xml)"));
+                 if(filename != ""){
+                     SessionSaver saver(sessionList_.at(selectedRow_),filename);
+                     saver.Save_Session();
+                 }
         }
-      }
+    }
 }
 
-// Load traffic button pressed.
+// Load traffic button, open file dialog and then try to open
+// the xml user chose.
 void TrafficWindow::on_loadTButton_clicked()
 {
+    // Make filedialog
     QString error = "";
     QString filename = QFileDialog::getOpenFileName(this, tr("Open Traffic Profile"),"traffic_profiles/",tr("Traffic XML file (*.xml)"));
     TrafficLoader loader(filename);
+
+    // File dialog not cancelled
     if(filename != ""){
+        // Try to load the traffic profile.
         if(!loader.checkTraffic(error) ){
             QMessageBox messageBox;
             messageBox.critical(0,"Error",error);
             messageBox.setFixedSize(500,200);
         }
+
         else{
-            qDebug() << "Create loaded traffic" << filename;
+            // Delete all old sessions.
             deleteSessions();
-            sessionList = loader.loadTraffic();
+            sessionList_ = loader.loadTraffic();
             this->displaySessions();
-            // Set edited to false. The function above sets it true.
-            // But here we haven't edited anything yet.
-            edited = false;
-            currentTraffic = filename;
-            qDebug() << currentTraffic;
+
+            // Set edited_ to false. The function above sets it true.
+            // But here we haven't edited_ anything yet.
+            edited_ = false;
+            currentTraffic_ = filename;
             ui->startButton->setEnabled(true);
         }
     }
 }
 
-// Used to delete all sessions permanently.
-// Used when loading traffic profile.
-void TrafficWindow::deleteSessions(){
-    for(int i = 0; i < sessionList.size(); ++i){
-        delete sessionList.at(i);
+
+// Save traffic button, open file dialog and then try to save
+// the traffic profile file and all sessions.
+void TrafficWindow::on_saveTButton_clicked()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Traffic"),"traffic_profiles/",tr("Traffic XML file (*.xml)"));
+    if(filename != ""){
+        TrafficSaver saver(filename,sessionList_);
+        saver.saveTraffic();
+        saveCancel_ = false;
+        edited_ = false;
+        currentTraffic_ =filename;
+        ui->startButton->setEnabled(true);
+        return;
     }
-    sessionList.clear();
+    // Save was cancelled.
+    saveCancel_ = true;
+
 }
 
-
-// Start generation button.
+// Start generation button. First, if edited_, ask user to save the traffic profile.
+// Then use command line to sent the traffic file for the RUGE program.
 void TrafficWindow::on_startButton_clicked()
 {
-    if(currentTraffic == ""){
+    if(currentTraffic_ == ""){
         QMessageBox messageBox;
         QMessageBox::StandardButton saveAnswer;
         saveAnswer = messageBox.information(0,"Save traffic file",
@@ -306,14 +351,14 @@ void TrafficWindow::on_startButton_clicked()
         }
 
     }
-    qDebug() << "Start Generation";
-    if(edited){
+
+    if(edited_){
         // Create a messagebox that asks overwriting
-        QString overwriteText = "Traffic profile and/or sessions has been edited. \nSave and continue?";
+        QString overwriteText = "Traffic profile and/or sessions has been edited_. \nSave and continue?";
         QMessageBox overw(QMessageBox::Question,"Overwrite",overwriteText,QMessageBox::Yes|QMessageBox::SaveAll|QMessageBox::No);
         overw.setButtonText(QMessageBox::SaveAll,"Overwrite all");
         int answer = overw.exec();
-        TrafficSaver saver(currentTraffic,sessionList);
+        TrafficSaver saver(currentTraffic_,sessionList_);
         switch (answer) {
         case QMessageBox::Yes:
             on_saveTButton_clicked();
@@ -325,7 +370,7 @@ void TrafficWindow::on_startButton_clicked()
 
             // Save and don't ask overwriting.
             saver.saveTraffic(false);
-            edited = false;
+            edited_ = false;
             break;
         default:
             break;
@@ -333,91 +378,79 @@ void TrafficWindow::on_startButton_clicked()
     }
 
     // Saving was cancelled when asked above in the yes answer.
-    if(saveCancel){
+    if(saveCancel_){
         return;
     }
 
 
-    QFileInfo name(currentTraffic);
+    // Make the command line command.
+    QFileInfo name(currentTraffic_);
     QString trafficFile = name.fileName();
 
     QString program = "RUGE";
     QStringList arguments;
     arguments << trafficFile;
 
-
+    // Start the RUGE program
     QProcess *myProcess = new QProcess(this);
     myProcess->start(program, arguments);
 
     myProcess->waitForFinished();
     QString strOut = myProcess->readAllStandardOutput();
 
+    // Make messagebox for the RUGE result
     QMessageBox messageBox;
     messageBox.setText(strOut);
     messageBox.exec();
 }
 
-// Save traffic button.
-void TrafficWindow::on_saveTButton_clicked()
-{
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Traffic"),"traffic_profiles/",tr("Traffic XML file (*.xml)"));
-    if(filename != ""){
-        TrafficSaver saver(filename,sessionList);
-        saver.saveTraffic();
-        saveCancel = false;
-        edited = false;
-        currentTraffic =filename;
-        qDebug() << currentTraffic;
-        ui->startButton->setEnabled(true);
-        return;
-    }
-    saveCancel = true;
-
-
-}
-
-
-// Reset
+// Reset button pressed. Use command line to send
+// a command to the RUGE program to soft reset the engine
 void TrafficWindow::on_resetButton_clicked()
 {
+    // Build the command line command
     QString program = "RUGE";
     QStringList arguments;
     arguments << "-r";
     arguments << "soft";
 
-
+    // Start the RUGE program
     QProcess *myProcess = new QProcess(this);
     myProcess->start(program, arguments);
 
     myProcess->waitForFinished();
     QString strOut = myProcess->readAllStandardOutput();
 
+    // Make messagebox for the reset result.
     QMessageBox messageBox;
     messageBox.setText(strOut);
     messageBox.exec();
 }
 
-// Hard reset
+// Hard reset chosed from top menu. Use command line to send
+// a command to the RUGE program to hard reset the engine
 void TrafficWindow::on_actionHard_Reset_triggered()
 {
+    // Build the command line command
     QString program = "RUGE";
     QStringList arguments;
     arguments << "-r";
     arguments << "hard";
 
-
+    // Start the RUGE program
     QProcess *myProcess = new QProcess(this);
     myProcess->start(program, arguments);
 
     myProcess->waitForFinished();
     QString strOut = myProcess->readAllStandardOutput();
 
+    // Make messagebox for the reset result.
     QMessageBox messageBox;
     messageBox.setText(strOut);
     messageBox.exec();
 }
 
-// When table is edited, set the values to maximum value if necessary.
+// When table is edited_, set the values to maximum value if necessary.
 // And save the value to session.
 void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
 {
@@ -427,43 +460,46 @@ void TrafficWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
         if(item->text().toLongLong() > 1000000){
             item->setText("1000000");
         }
-        edited = true;
-        sessionList.at(item->row())->setMultiply(item->text());
+        edited_ = true;
+        sessionList_.at(item->row())->setMultiply(item->text());
     }
     // rampup
     else if(item->column() == 2){
         if(item->text().toLongLong() > 1000000000){
             item->setText("1000000000");
         }
-        edited = true;
-        sessionList.at(item->row())->setRampup(item->text());
+        edited_ = true;
+        sessionList_.at(item->row())->setRampup(item->text());
     }
     // offset
     else if(item->column() == 3){
         if(item->text().toLongLong() > 1000000000){
             item->setText("1000000000");
         }
-        edited = true;
-        sessionList.at(item->row())->setOffset(item->text());
+        edited_ = true;
+        sessionList_.at(item->row())->setOffset(item->text());
     }
     // loopover
     else if(item->column() == 4){
         if(item->text().toLongLong() > 1000000){
             item->setText("1000000");
         }
-        edited = true;
-        sessionList.at(item->row())->setLoopover(item->text());
+        edited_ = true;
+        sessionList_.at(item->row())->setLoopover(item->text());
     }
     // loopovertimespan
     else if(item->column() == 5){
-        edited = true;
-        sessionList.at(item->row())->setLoopoverTimespan(item->text());
+        edited_ = true;
+        sessionList_.at(item->row())->setLoopoverTimespan(item->text());
     }
 
 }
 
+// Item was double clicked. If item was session name, move to the edit
+// otherwise enter editing the value in the table.
 void TrafficWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem *item)
 {
+    // Name is doubleclicked
     if(item->column() == 0){
         item->setSelected(true);
         on_editButton_clicked();
@@ -472,4 +508,13 @@ void TrafficWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem *item)
         item->setSelected(true);
     }
 
+}
+
+// Used to delete all sessions permanently.
+// Used when loading traffic profile.
+void TrafficWindow::deleteSessions(){
+    for(int i = 0; i < sessionList_.size(); ++i){
+        delete sessionList_.at(i);
+    }
+    sessionList_.clear();
 }

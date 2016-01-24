@@ -7,8 +7,13 @@ class SessionSaver
 {
 public:
 
+    // Constructor. Parameters: session that is saved and
+    // filename where it is saved.
     SessionSaver(Session* session,QString filename);
+
+    // Save the session to the file.
     void Save_Session();
+
 private:
     Session* session_;
     QString filename_;

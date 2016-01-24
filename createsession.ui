@@ -169,7 +169,10 @@
        <number>6</number>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="lbl_mac_src">
+       <widget class="QLabel" name="label_mac_src">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -242,7 +245,7 @@
          <string>HH:HH:HH:HH:HH:HH</string>
         </property>
         <property name="text">
-         <string>00:0a:95:9d:68:16</string>
+         <string>00:00:00:00:00:00</string>
         </property>
        </widget>
       </item>
@@ -916,12 +919,6 @@
       </item>
      </layout>
     </widget>
-    <zorder>rb_tcp</zorder>
-    <zorder>rb_udp</zorder>
-    <zorder>rb_icmp</zorder>
-    <zorder>rb_sctp</zorder>
-    <zorder>groupBox_6</zorder>
-    <zorder>txt_udp_dest_port</zorder>
    </widget>
    <widget class="QFrame" name="frame_4">
     <property name="geometry">
@@ -960,7 +957,7 @@
       <string>Cancel</string>
      </property>
      <property name="icon">
-      <iconset resource="images.qrc">
+      <iconset resource="resources.qrc">
        <normaloff>:/images/button_cancel.png</normaloff>:/images/button_cancel.png</iconset>
      </property>
     </widget>
@@ -1036,7 +1033,7 @@
      <string>Confirm</string>
     </property>
     <property name="icon">
-     <iconset resource="images.qrc">
+     <iconset resource="resources.qrc">
       <normaloff>:/images/confirm_btn.png</normaloff>:/images/confirm_btn.png</iconset>
     </property>
    </widget>
@@ -1050,7 +1047,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="images.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

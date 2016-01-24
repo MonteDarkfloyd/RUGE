@@ -18,8 +18,6 @@ SOURCES += main.cpp\
     newsessiondialog.cpp \
     createsession.cpp \
     sessionloader.cpp \
-    udpvalues.cpp \
-    tcpvalues.cpp \
     sessionsaver.cpp \
     trafficloader.cpp \
     trafficsaver.cpp \
@@ -32,8 +30,6 @@ HEADERS  += \
     newsessiondialog.h \
     createsession.h \
     sessionloader.h \
-    udpvalues.h \
-    tcpvalues.h \
     sessionsaver.h \
     trafficloader.h \
     trafficsaver.h \

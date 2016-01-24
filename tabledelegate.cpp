@@ -2,6 +2,8 @@
 #include <QWidget>
 #include <QLineEdit>
 
+// Delegate to the table in trafficwindow so user can enter numbers from
+// 0-10000000000
 QWidget* TableDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option,
                                      const QModelIndex & index) const
                    {
