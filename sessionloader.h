@@ -8,10 +8,21 @@
 class SessionLoader
 {
 public:
+
+    // Give the session's file name to the
+    // constructor.
     SessionLoader(QString sessionfile);
     ~SessionLoader();
 
+    // Checks if session is valid.
+    // Return value boolean: false if failed
+    // true otherwise.
+    // Parameter: error, error text is saved here
     bool checkSession(QString &error);
+
+    // After the session is loaded properly
+    // this will return pointer to it.
+    // Use this after checkSession has returned true.
     Session* loadSession();
 
 
@@ -23,11 +34,22 @@ private:
     QString message_;
 
 
+    // Read and check the variable part of xml.
     bool readVariable();
+
+    // Read and check the states part of xml.
     bool checkStates();
+
+    // Read and check the controlmessages part of xml.
     bool checkControlMessage();
+
+    // Read and create the payload from xml.
     bool buildPayload();
+
+    // Read and check the timeout part of xml.
     bool checkTimeout();
+
+    // Read and check the sessionflow part of xml.
     bool checkSessionflow();
 };
 

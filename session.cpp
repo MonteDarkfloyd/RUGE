@@ -24,7 +24,7 @@ void Session::setName(QString sessionName){
 }
 
 // Adds .xml to the session name if it doesn't have one.
-// If name is empty. does nothing.
+// If name is empty, does nothing.
 void Session::addXMLextension(){
     if(name_.endsWith(".xml",Qt::CaseSensitive) || name_ == ""){
         return;
@@ -35,6 +35,7 @@ void Session::addXMLextension(){
 return;
 }
 
+// Returns all rugeVariables that the session has.
 QList<rugeVariable>* Session::getVariables(){
     return &data_;
 }
@@ -62,7 +63,7 @@ void Session::removeVariable(QString varName){
 }
 
 // Returns the rugeVariable with the name of varName.
-// If doesn't exist, return empty rugeVariable.
+// If variable doesn't exist, return empty rugeVariable.
 rugeVariable Session::getVariable(QString varName){
     for(int i = 0; i < data_.size(); i++){
         if(data_.at(i).name == varName){
@@ -75,7 +76,7 @@ rugeVariable Session::getVariable(QString varName){
 
 
 // Returns source IP data. If there is not one
-// return empty data.
+// return empty rugeVariable.
 rugeVariable Session::getSrcIP(){
     for(int i = 0; i < data_.size(); i++){
         if(data_.at(i).name == "IP_SRC"){
@@ -87,7 +88,7 @@ rugeVariable Session::getSrcIP(){
 }
 
 // Returns destination IP data. If there is not one
-// return empty data.
+// return empty rugeVariable.
 rugeVariable Session::getDstIP(){
     for(int i = 0; i < data_.size(); i++){
         if(data_.at(i).name == "IP_DST"){
@@ -98,7 +99,7 @@ rugeVariable Session::getDstIP(){
     return empty;
 }
 
-// Get the MAC values as string
+// Get the MAC source as string
 QString Session::getSrcMAC(){
     for(int i = 0; i < data_.size(); i++){
         if(data_.at(i).name == "MAC_SRC"){
@@ -108,6 +109,7 @@ QString Session::getSrcMAC(){
     return "";
 }
 
+// Get the MAC destination as string
 QString Session::getDstMAC(){
     for(int i = 0; i < data_.size(); i++){
         if(data_.at(i).name == "MAC_DST"){
@@ -117,7 +119,7 @@ QString Session::getDstMAC(){
     return "";
 }
 
-// Get port values
+// Get source port as string
 QString Session::getSrcPort(){
     for(int i = 0; i < data_.size(); i++){
         if(data_.at(i).name == "UDP_SRC_PORT"){
@@ -127,6 +129,7 @@ QString Session::getSrcPort(){
     return "";
 }
 
+// Get destination port as string
 QString Session::getDstPort(){
     for(int i = 0; i < data_.size(); i++){
         if(data_.at(i).name == "UDP_DST_PORT"){
@@ -136,30 +139,32 @@ QString Session::getDstPort(){
     return "";
 }
 
-// Get and set payload
+// Get payload
 QString Session::getPayload(){
     return payload_;
 }
 
+// Set the payload text
 void Session::setPayload(QString payload){
     payload_ = payload;
 }
 
-// Get and set protocol
+// Get protocol
 QString Session::getProtocol(){
     return protocol_;
 }
 
-
+// Set protocol
 void Session::setProtocol(QString protocol){
     protocol_ = protocol;
 }
 
-// Get and set ipVersion
+// Get ipVersion
 QString Session::getipVersion(){
     return ipVersion_;
 }
 
+// Set ipVersion
 void Session::setipVersion(QString ipVersion){
     ipVersion_ = ipVersion;
 }

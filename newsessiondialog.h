@@ -16,6 +16,8 @@ class NewSessionDialog : public QDialog
 public:
     explicit NewSessionDialog(TrafficWindow *parent = 0);
     ~NewSessionDialog();
+
+    // Used to get amount of xml files found in the predefined folder.
     unsigned int getPredefinedAmount();
 
 private slots:

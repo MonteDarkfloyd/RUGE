@@ -19,6 +19,8 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     createdSession_ = 0;
     editSession_ = 0;
     Qt::WindowFlags flags = windowFlags();
+
+    // Set window to windowmodal
     this->setWindowFlags(flags | Qt::Window);
     this->setWindowModality(Qt::WindowModal);
     ui->setupUi(this);
@@ -30,9 +32,10 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
 
     ui->payloadEdit->setEnabled(false);
 
+    // Set validator to the ports
     ui->txt_udp_src_port->setValidator(new QIntValidator(0, 65535, this) );
     ui->txt_udp_dest_port->setValidator(new QIntValidator(0, 65535, this) );
-    ui->lbl_mac_src->move(20,18);
+    ui->label_mac_src->move(20,18);
 }
 
 createsession::~createsession()
@@ -59,6 +62,7 @@ void createsession::setSession(Session* editedSession){
     // IP addresses
     ui->txt_ip_dest->setText(editedSession->getDstIP().value);
 
+    // IP destination has max value so enable range.
     if(editedSession->getDstIP().max != ""){
         ui->ipDestComboBox->setCurrentIndex(1);
         ui->txt_ipdstmax->setEnabled(true);
@@ -66,44 +70,55 @@ void createsession::setSession(Session* editedSession){
         ui->txt_ipdstmax->setText(editedSession->getDstIP().max);
     }
 
+    // Check if session has source IP. Also check if it has range.
     if(editSession_->getSrcIP().value != ""){
         ui->overrideipsrc->setChecked(true);
         ui->txt_ip_src->setText(editSession_->getSrcIP().value);
+
+        // Range check.
         if(editedSession->getSrcIP().max != ""){
             ui->ipSourceComboBox->setCurrentIndex(1);
             ui->txt_ipsrcmax->setEnabled(true);
             ui->label_ipsrcinc->setEnabled(true);
             ui->txt_ipsrcmax->setText(editedSession->getSrcIP().max);
         }
+
     }
-    // Ports
+    // Set ports
     ui->txt_udp_dest_port->setText(editedSession->getVariable("UDP_DST_PORT").value);
     if(editedSession->getVariable("UDP_SRC_PORT").value != ""){
         ui->sourceport_checkBox->setChecked(true);
         ui->txt_udp_src_port->setText(editedSession->getVariable("UDP_SRC_PORT").value);
     }
-    // Payload
+    // Set payload
     if(editSession_->getPayload() != ""){
         ui->payload_checkBox->setChecked(true);
         ui->payloadEdit->setText(editSession_->getPayload());
     }
 }
 
+// When called sets edit mode to true.
+// This will used when editing existing session.
 void createsession::setEditMode(){
     editMode = true;
 }
 
+// Radio button IP4 toggled, show proper information.
 void createsession::on_rb_ip4_toggled(bool checked)
 {
     if(checked){
       ui->groupBox_2->setVisible(true);
       ui->groupBox_5->setVisible(false);
+
+      // If udp is also toggled, enable confirm button
       if(ui->rb_udp->isChecked()){
          ui->confirm_Button->setEnabled(true);
       }
     }
 }
 
+// Radio button IP6 toggled, show proper information.
+// This is disabled for now.
 void createsession::on_lb_ip6_toggled(bool checked)
 {
     if(checked){
@@ -112,6 +127,8 @@ void createsession::on_lb_ip6_toggled(bool checked)
     }
 }
 
+// Radio button TCP toggled, show proper information.
+// This is disabled for now.
 void createsession::on_rb_tcp_toggled(bool checked)
 {
     if(checked){
@@ -119,16 +136,20 @@ void createsession::on_rb_tcp_toggled(bool checked)
     }
 }
 
+// Radio button UDP toggled, show proper information.
 void createsession::on_rb_udp_toggled(bool checked)
 {
     if(checked){
         ui->groupBox_6->setVisible(true);
     }
+    // If IP4 is also toggled, enable confirm button
     if(ui->rb_ip4->isChecked()){
        ui->confirm_Button->setEnabled(true);
     }
 }
 
+// Radio button ICMP toggled, show proper information.
+// This is disabled for now.
 void createsession::on_rb_icmp_toggled(bool checked)
 {
     if(checked){
@@ -136,7 +157,8 @@ void createsession::on_rb_icmp_toggled(bool checked)
     }
 }
 
-
+// Radio button SCTP toggled, show proper information.
+// This is disabled for now.
 void createsession::on_rb_sctp_toggled(bool checked)
 {
     if(checked){
@@ -144,11 +166,14 @@ void createsession::on_rb_sctp_toggled(bool checked)
     }
 }
 
+// Checkbox about MAC source toggled, enable/disable editing.
 void createsession::on_mac_checkBox_toggled(bool checked)
 {
+    ui->label_mac_src->setEnabled(checked);
     ui->txt_mac_source->setEnabled(checked);
 }
 
+// Checkbox about IP source toggled, enable/disable editing.
 void createsession::on_overrideipsrc_toggled(bool checked)
 {
     ui->txt_ip_src->setEnabled(checked);
@@ -156,34 +181,77 @@ void createsession::on_overrideipsrc_toggled(bool checked)
     ui->ipSourceComboBox->setEnabled(checked);
 }
 
-
+// Checkbox about source port toggled, enable/disable editing.
 void createsession::on_sourceport_checkBox_toggled(bool checked)
 {
     ui->txt_udp_src_port->setEnabled(checked);
     ui->label_src_port_udp->setEnabled(checked);
 }
 
-
-void createsession::on_cancel_button_clicked()
-{
-    this->close();
-}
-
+// Checkbox about payload toggled, enable/disable editing.
 void createsession::on_payload_checkBox_toggled(bool checked)
 {
     ui->payloadEdit->setEnabled(checked);
 
 }
 
+
+// When range is selected in ip source, enable increment editing.
+void createsession::on_ipSourceComboBox_activated(int index)
+{
+    // Enable
+    if(index != 0){
+
+        ui->txt_ipsrcmax->setEnabled(true);
+        ui->label_ipsrcinc->setEnabled(true);
+        // Set the max range same as the beginning range.
+        ui->txt_ipsrcmax->setText(ui->txt_ip_src->text());
+    }
+    else{
+        ui->txt_ipsrcmax->setEnabled(false);
+        ui->label_ipsrcinc->setEnabled(false);
+    }
+}
+
+// When range is selected in ip destination, enable increment editing.
+void createsession::on_ipDestComboBox_activated(int index)
+{
+    // Enable
+    if(index != 0){
+
+        ui->txt_ipdstmax->setEnabled(true);
+        ui->label_ipdstinc->setEnabled(true);
+        // Set the max range same as the beginning range.
+        ui->txt_ipdstmax->setText(ui->txt_ip_dest->text());
+    }
+    else{
+        ui->txt_ipdstmax->setEnabled(false);
+        ui->label_ipdstinc->setEnabled(false);
+    }
+}
+
+// Cancel button pressed. Close view.
+void createsession::on_cancel_button_clicked()
+{
+    this->close();
+}
+
+
+
 // Add new session to the trafficwindow table or just edit
-// the existing session depending on the value of bool editMode.
+// the existing session depending on the value of boolean editMode.
 // Close the window when done.
 void createsession::on_confirm_Button_clicked()
 {
+    // Check if we can make session.
     if(makeSession()){
+        // If editmode then just order trafficwindow to update
+        // its table.
         if(editMode){
            parentPointer->displaySessions();
         }
+
+        // Edit mode false. Order trafficwindow to add new session.
         else{
            parentPointer->addSession(createdSession_);
         }
@@ -196,35 +264,6 @@ void createsession::on_confirm_Button_clicked()
     }
 }
 
-// When range is selected in ip source, enable increment editing.
-void createsession::on_ipSourceComboBox_activated(int index)
-{
-    if(index != 0){
-
-        ui->txt_ipsrcmax->setEnabled(true);
-        ui->label_ipsrcinc->setEnabled(true);
-        ui->txt_ipsrcmax->setText(ui->txt_ip_src->text());
-    }
-    else{
-        ui->txt_ipsrcmax->setEnabled(false);
-        ui->label_ipsrcinc->setEnabled(false);
-    }
-}
-
-// When range is selected in ip destination, enable increment editing.
-void createsession::on_ipDestComboBox_activated(int index)
-{
-    if(index != 0){
-
-        ui->txt_ipdstmax->setEnabled(true);
-        ui->label_ipdstinc->setEnabled(true);
-        ui->txt_ipdstmax->setText(ui->txt_ip_dest->text());
-    }
-    else{
-        ui->txt_ipdstmax->setEnabled(false);
-        ui->label_ipdstinc->setEnabled(false);
-    }
-}
 
 // Save as Predefined button pressed.
 void createsession::on_predefined_Button_clicked()
@@ -234,23 +273,30 @@ void createsession::on_predefined_Button_clicked()
       return;
   }
 
+  // Add .xml to the session name if there is not one.
   createdSession_->addXMLextension();
+
   QFile check("predefined/" + createdSession_->getName());
+
+  // If the file exists in predefined folder, ask overwriting.
     if(check.exists()){
         // Create a messagebox that asks overwriting
         QMessageBox::StandardButton overw;
         QString overwriteText = "Predefined session " + createdSession_->getName() + " already exists.\nOverwrite?";
         overw = QMessageBox::warning(0, "Overwrite?", overwriteText,
                                       QMessageBox::Yes|QMessageBox::No);
+        // Overwrite the file
         if (overw == QMessageBox::Yes) {
             SessionSaver predefSaver(createdSession_,"predefined/" + createdSession_->getName());
             predefSaver.Save_Session();
         }
+        // or else do nothing.
         else {
-          qDebug() << "Skipped a file";
           return;
         }
       }
+
+  // File did not exist, so save it.
   SessionSaver predefSaver(createdSession_,"predefined/" + createdSession_->getName());
   predefSaver.Save_Session();
   QMessageBox saveBox;
@@ -261,6 +307,7 @@ void createsession::on_predefined_Button_clicked()
 
 // Create a session from the given data
 // if possible. Return value false if failed.
+// True if successful. Session is in createdSession_.
 bool createsession::makeSession(){
 
     VariableData vdata;
@@ -348,7 +395,8 @@ bool createsession::makeSession(){
         createdSession_->addVariable(macSrcData);
     }
     else{
-
+        // Remove the MAC source from session. It might exist
+        // if editing existing session.
         createdSession_->removeVariable("MAC_SRC");
     }
 
@@ -445,13 +493,12 @@ bool createsession::makeSession(){
 
     // Overwrite source IP is not on.
     else{
-
+        // Remove the IP source from session. It might exist
+        // if editing existing session.
         createdSession_->removeVariable("IP_SRC");
 
 
     }
-
-
 
     // Dest. port
     if(ui->txt_udp_dest_port->text() != ""){
@@ -471,10 +518,11 @@ bool createsession::makeSession(){
         createdSession_->addVariable(UDPsrcPORT);
     }
     else{
+        // Remove source port.
         createdSession_->removeVariable("UDP_SRC_PORT");
     }
 
-    // payload
+    // Payload
     if(ui->payload_checkBox->isChecked()){
         createdSession_->setPayload(ui->payloadEdit->text());
     }

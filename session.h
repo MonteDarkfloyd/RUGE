@@ -15,14 +15,31 @@ public:
     ~Session();
 
 
-    // Get and set session name.
+    // Get session name.
     QString getName();
+
+    // Set sessionName as sessions name
     void setName(QString sessionName);
+
+    // Adds .xml to the session names end
+    // if it doesn't end to .xml already.
     void addXMLextension();
 
+    // Return pointer to sessions variables
     QList<rugeVariable> *getVariables();
+
+    // Adds variable to the Session. Doesn't check if variable is
+    // valid. If variable with the same name exist, then the old one
+    // is deleted and the new one added.
     void addVariable(rugeVariable added);
+
+    // Deletes variable with name varName.
+    // If it does not exist this does nothing.
     void removeVariable(QString varName);
+
+
+    // Returns the rugeVariable with the name of varName.
+    // If variable doesn't exist, return empty rugeVariable.
     rugeVariable getVariable(QString varName);
 
     // Get the ip value. Used for getting the
@@ -34,7 +51,7 @@ public:
     QString getSrcMAC();
     QString getDstMAC();
 
-    // Get port values
+    // Get port values as strings
     QString getSrcPort();
     QString getDstPort();
 
@@ -66,9 +83,6 @@ public:
     void setLoopover(QString newLoopover);
     void setLoopoverTimespan(QString newLoopoverTimespan);
 
-signals:
-
-public slots:
 private:
 
     QString name_;
