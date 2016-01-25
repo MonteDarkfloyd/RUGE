@@ -978,7 +978,7 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>137</width>
+       <width>139</width>
        <height>0</height>
       </size>
      </property>
@@ -998,7 +998,7 @@
    </widget>
    <widget class="QPushButton" name="confirm_Button">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -1016,7 +1016,7 @@
     </property>
     <property name="minimumSize">
      <size>
-      <width>137</width>
+      <width>139</width>
       <height>0</height>
      </size>
     </property>
@@ -1037,6 +1037,48 @@
       <normaloff>:/images/confirm_btn.png</normaloff>:/images/confirm_btn.png</iconset>
     </property>
    </widget>
+   <widget class="QPushButton" name="saveTempbutton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>628</x>
+      <y>520</y>
+      <width>140</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>139</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">min-width:135px;</string>
+    </property>
+    <property name="text">
+     <string>Confirm</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/confirm_btn.png</normaloff>:/images/confirm_btn.png</iconset>
+    </property>
+   </widget>
+   <zorder>saveTempbutton</zorder>
    <zorder>frame1</zorder>
    <zorder>frame_4</zorder>
    <zorder>frame_3</zorder>
