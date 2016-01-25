@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     trafficloader.cpp \
     trafficsaver.cpp \
     tabledelegate.cpp \
-    variabledata.cpp
+    variabledata.cpp \
+    xmlreader.cpp \
+    xmlwriter.cpp
 
 HEADERS  += \
     trafficwindow.h \
@@ -34,7 +36,9 @@ HEADERS  += \
     trafficloader.h \
     trafficsaver.h \
     tabledelegate.h \
-    variabledata.h
+    variabledata.h \
+    xmlreader.h \
+    xmlwriter.h
 
 FORMS    += \
     trafficwindow.ui \
