@@ -354,7 +354,7 @@ void TrafficWindow::on_startButton_clicked()
 
     if(edited_){
         // Create a messagebox that asks overwriting
-        QString overwriteText = "Traffic profile and/or sessions has been edited_. \nSave and continue?";
+        QString overwriteText = "Traffic profile and/or sessions has been edited. \nSave and continue?";
         QMessageBox overw(QMessageBox::Question,"Overwrite",overwriteText,QMessageBox::Yes|QMessageBox::SaveAll|QMessageBox::No);
         overw.setButtonText(QMessageBox::SaveAll,"Overwrite all");
         int answer = overw.exec();
@@ -382,6 +382,17 @@ void TrafficWindow::on_startButton_clicked()
         return;
     }
 
+    // Build the command line command
+    QString reset = "RUGE";
+    QStringList resetarg;
+    resetarg << "-r";
+    resetarg << "soft";
+
+    // Start the RUGE program
+    QProcess *resetProcess = new QProcess(this);
+    resetProcess->start(reset, resetarg);
+
+    resetProcess->waitForFinished();
 
     // Make the command line command.
     QFileInfo name(currentTraffic_);
@@ -442,12 +453,13 @@ void TrafficWindow::on_actionHard_Reset_triggered()
     myProcess->start(program, arguments);
 
     myProcess->waitForFinished();
-    QString strOut = myProcess->readAllStandardOutput();
 
     // Make messagebox for the reset result.
-    QMessageBox messageBox;
-    messageBox.setText(strOut);
-    messageBox.exec();
+
+        QMessageBox messageBox;
+        messageBox.setText("Hard reset has finished.");
+        messageBox.exec();
+
 }
 
 // When table is edited_, set the values to maximum value if necessary.
@@ -517,4 +529,13 @@ void TrafficWindow::deleteSessions(){
         delete sessionList_.at(i);
     }
     sessionList_.clear();
+}
+
+// About button triggered
+void TrafficWindow::on_actionAbout_triggered()
+{
+    // Make messagebox for the reset result.
+    QMessageBox messageBox;
+    messageBox.setText("Ruge Slim GUI version 1.0");
+    messageBox.exec();
 }

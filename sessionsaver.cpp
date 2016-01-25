@@ -18,7 +18,7 @@ void SessionSaver::Save_Session()
     QFile xmlFile2(filename_);
 
     // We use template file to create the final xml.
-    QFile xmlFile("empty_UDP_session template.xml");
+    QFile xmlFile("UDP_session_template.xml");
     xmlFile.open(QIODevice::ReadWrite);
 
     // Make dom document from the template

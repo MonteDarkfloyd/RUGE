@@ -2,8 +2,6 @@
 #define SESSION_H
 
 #include <QObject>
-#include "tcpvalues.h"
-#include "udpvalues.h"
 #include "variabledata.h"
 
 

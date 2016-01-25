@@ -5,11 +5,11 @@ Session::Session (){
     payload_ = "";
     protocol_ = "";
     ipVersion_ = "";
-    multiply_ = "10";
+    multiply_ = "1";
     rampup_ = "100";
-    offset_ = "100";
+    offset_ = "0";
     loopover_ = "1";
-    loopovertimespan_ = "0";
+    loopovertimespan_ = "1000";
 }
 
 Session::~Session(){

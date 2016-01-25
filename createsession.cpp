@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QHostAddress>
 #include <QKeyEvent>
+#include <QSettings>
 
 QVBoxLayout* v_ip4_layout;
 
@@ -36,6 +37,16 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     ui->txt_udp_src_port->setValidator(new QIntValidator(0, 65535, this) );
     ui->txt_udp_dest_port->setValidator(new QIntValidator(0, 65535, this) );
     ui->label_mac_src->move(20,18);
+
+    // Check if we find rugged.ini, if we do read the ip source
+    if(QFile("rugged.ini").exists()){
+        QSettings settings("rugged.ini", QSettings::IniFormat);
+        settings.beginGroup("engine_interfaces");
+        QString ipsource = settings.value("engines_IPv4_addresses", "0.0.0.0").toString();
+        ui->txt_ip_src->setText(ipsource);
+    }
+
+
 }
 
 createsession::~createsession()

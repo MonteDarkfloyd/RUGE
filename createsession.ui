@@ -131,7 +131,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">top-margin: 100px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Ethernet II</string>

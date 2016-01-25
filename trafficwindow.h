@@ -96,6 +96,8 @@ private slots:
     // otherwise enter editing the value in the table.
     void on_tableWidget_itemDoubleClicked(QTableWidgetItem *item);
 
+    void on_actionAbout_triggered();
+
 private:
 
     // Deletes all sessions.

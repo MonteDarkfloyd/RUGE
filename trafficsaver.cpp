@@ -25,7 +25,7 @@ void TrafficSaver::saveTraffic(bool askOverwrite){
     QFile xmlFile2(filename_);
 
     // We use template for saving.
-    QFile xmlFile("empty_UDP_traffic template.xml");
+    QFile xmlFile("UDP_traffic_template.xml");
     xmlFile.open(QIODevice::ReadWrite);
 
     // Make dom document from the template.
@@ -52,7 +52,7 @@ void TrafficSaver::saveTraffic(bool askOverwrite){
         // Add .xml to name of necessary
         sessionList_.at(i)->addXMLextension();
 
-        QFile xmlFile2(sessionList_.at(i)->getName());
+        QFile xmlFile2("session_profiles/" + sessionList_.at(i)->getName());
 
         // Check if we need to ask about overwriting
         if(xmlFile2.exists() && askOverwrite){
