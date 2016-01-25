@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QHostAddress>
 #include <QKeyEvent>
+#include "xmlwriter.h"
 
 QVBoxLayout* v_ip4_layout;
 
@@ -16,6 +17,7 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
 {
     parentPointer = Tparent;
     editMode = false;
+    saveMode = false;
     createdSession_ = 0;
     editSession_ = 0;
     Qt::WindowFlags flags = windowFlags();
@@ -24,6 +26,10 @@ createsession::createsession(QWidget *parent, TrafficWindow* Tparent) :
     this->setWindowFlags(flags | Qt::Window);
     this->setWindowModality(Qt::WindowModal);
     ui->setupUi(this);
+
+    // Hide the buttons for editing template/predefined session
+    ui->saveTempbutton->setEnabled(false);
+    ui->saveTempbutton->hide();
 
     // Hide most information at the beginning
     ui->groupBox_2->setVisible(false);
@@ -268,7 +274,35 @@ void createsession::on_confirm_Button_clicked()
 // Save as Predefined button pressed.
 void createsession::on_predefined_Button_clicked()
 {
-  // Try to create session from the information.
+    xmlWriter xWriter;
+    //set save mode to true
+    setSaveMode(true);
+
+    //Save current edit mode value into temp
+    bool temp = this->editMode;
+
+    //Set edit mode to false
+    this->editMode = false;
+
+    //Create the session with save mode on and edit mode off
+    //Which will save it to predefined template list
+    if(makeSession()){
+        if(xWriter.add(createdSession_)){
+         QMessageBox::information(this,"Info","Session saved as predefined.");
+         emit predefEdited();
+        }
+    }
+
+
+    //Quit from save mode
+    setSaveMode(false);
+
+    //Revert back to old edit mode
+    this->editMode = temp;
+
+
+
+  /*// Try to create session from the information.
   if(!makeSession()){
       return;
   }
@@ -301,7 +335,9 @@ void createsession::on_predefined_Button_clicked()
   predefSaver.Save_Session();
   QMessageBox saveBox;
   saveBox.setText("Save was successful.");
-  saveBox.exec();
+  saveBox.exec();*/
+
+
 }
 
 
@@ -343,8 +379,9 @@ bool createsession::makeSession(){
     }
 
 
-    // Check if name is already in use and we are not in edit mode.
-    if(!parentPointer->checkName(name) && !editMode){
+    // Check if name is already in use and we are not in edit mode or save mode.
+    /* */
+    if(!parentPointer->checkName(name) && (!editMode && !saveMode)){
         QMessageBox messageBox;
         messageBox.critical(0,"Invalid name","Name is already in use.");
         messageBox.setFixedSize(500,200);
@@ -549,3 +586,75 @@ void createsession::keyPressEvent(QKeyEvent* event){
 }
 
 
+/*
+ * Sets save mode to true or false
+ */
+
+
+void createsession::setSaveMode(bool check){
+    this->saveMode = check;
+}
+
+
+/*
+ * Make necessary changes to the view for editing predefined sessions
+ *
+ * Change both buttons to one Save button which saves template session
+ */
+void createsession::editPredefinedView(int row){
+
+             //Hide old buttons that are not used in this view
+             ui->confirm_Button->hide();
+             ui->predefined_Button->hide();
+
+             //Enable save button
+             ui->saveTempbutton->show();
+             ui->saveTempbutton->setEnabled(true);
+
+             //Set which row we are editing
+             predefRow = row;
+
+}
+
+/*
+ * When save predefined/template session button clicked
+ * This function works as deleting old session from file
+ * and inserting updated version into file
+ */
+void createsession::on_saveTempbutton_clicked()
+{
+    //Enter save mode
+    setSaveMode(true);
+
+    //Error check for invalid value
+    if(predefRow == -1){
+        QMessageBox::warning(this,"Error","Invalid session selection. Session can't be saved");
+        }else{
+
+        //Try to make session for inserting into file and insert it to the end
+        if(makeSession()){
+
+        QMessageBox::information(this,"Info","Session edited.");
+        xmlWriter xWriter;
+        //Add updated one
+        xWriter.add(createdSession_);
+
+        //Remove the old session from file
+        xWriter.remove(predefRow);
+
+
+
+        // Send SIGNAL to the parent window ( NewSessionDialog ) so it updates its view
+        emit predefEdited();
+
+
+        this->destroy();
+        }else{
+        QMessageBox::warning(this,"Error","Session couldn't be saved.");
+        }
+
+        }
+        //Exit save mode
+        setSaveMode(false);
+
+}
