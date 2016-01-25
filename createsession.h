@@ -31,6 +31,25 @@ public:
     // edited to existing session and the view doesn't create new session.
     void setEditMode();
 
+
+    // Sets save mode true or false depending,
+    // Save mode is used for predefined templates only
+    // When it is on sessions are created only for templates
+    // Not added or displayed in traffic window unless requested by user
+    void setSaveMode(bool check);
+
+
+    // Switches view into editing Template/predefined sessions
+    // Uses only 1 Save button and also switches to saveMode
+    void editPredefinedView(int row);
+
+signals:
+
+    //Signal for NewSessionDialog
+    //Notifies NewSessionDialog view that the predefined/template sessions have changed
+    //So it can update its view
+    void predefEdited();
+
 private slots:
 
     // Radio buttons are toggled. Show apporiate data to user.
@@ -71,6 +90,8 @@ private slots:
 
     void on_predefined_Button_clicked();
 
+    void on_saveTempbutton_clicked();
+
 protected:
     // Catch enter and escape keys presses.
     // Enter sets focus to confirm button and presses it
@@ -89,6 +110,8 @@ private:
     Session* createdSession_;
     Session* editSession_;
     bool editMode;
+    bool saveMode;
+    int predefRow;
 
 
 
